@@ -1,5 +1,17 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
+  
+   authenticated :user do
+    root "pages#home", as: :authenticated_root
+  end
+  
+  # Unauthenticated user routes
+  unauthenticated do
+    root "pages#landing_page"
+  end
+  
   get 'pages/home'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -8,5 +20,4 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Defines the root path route ("/")
-  root "pages#home"
 end
