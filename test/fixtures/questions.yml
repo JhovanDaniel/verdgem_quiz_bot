@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  content: MyText
+  model_answer: MyText
+  key_concepts: MyText
+  marking_criteria: MyText
+  max_points: 1
+  difficulty_level: 1
+  topic: one
+
+two:
+  content: MyText
+  model_answer: MyText
+  key_concepts: MyText
+  marking_criteria: MyText
+  max_points: 1
+  difficulty_level: 1
+  topic: two
