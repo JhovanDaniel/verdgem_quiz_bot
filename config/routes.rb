@@ -11,14 +11,14 @@ Rails.application.routes.draw do
   get 'subjects/show'
   
   resources :subjects do
-    resources :topics, only: [:index, :new, :create] do
-      resources :questions, only: [:index]
-    end
+    resources :topics, only: [:index, :new, :create]
   end
   
-  resources :topics, only: [:show]
+  resources :topics, except: [:index] do
+    resources :questions, only: [:new, :create]
+  end
   
-  resources :questions, only: [:show]
+  resources :questions, except: [:index, :new, :create]
   
   devise_for :users, controllers: {
     registrations: 'users/registrations'

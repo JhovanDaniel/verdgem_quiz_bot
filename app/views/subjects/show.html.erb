@@ -93,9 +93,9 @@
     </div>
   </div>
 
-  <div class="mt-4">
+  <div class="my-4">
     <% if @topics.any? %>
-      <%= link_to "Start Quiz for #{@subject.name}", start_quiz_path(subject_id: @subject.id), class: "btn btn-success" %>
+      <%= link_to "Start Quiz for #{@subject.name}", quiz_start_path(subject_id: @subject.id), class: "btn btn-success" %>
     <% end %>
     <%= link_to "Back to Subjects", subjects_path, class: "btn btn-outline-secondary ms-2" %>
   </div>
