@@ -11,14 +11,20 @@ Rails.application.routes.draw do
   get 'subjects/show'
   
   resources :subjects, only: [:index, :show] do
-    resources :topics, only: [:index]
+    resources :topics, only: [:index] do
+      resources :questions, only: [:index]
+    end
   end
   
-  resources :questions
+  resources :topics, only: [:show]
+  
+  resources :questions, only: [:show]
   
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }
+  
+  resources :users
   
    authenticated :user do
     root "pages#home", as: :authenticated_root
