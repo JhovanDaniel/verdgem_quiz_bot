@@ -1,4 +1,21 @@
 Rails.application.routes.draw do
+  
+  get 'quiz/start'
+  get 'quiz/show'
+  get 'quiz/evaluate_answer'
+  get 'quiz/result'
+  get 'questions/show'
+  get 'topics/index'
+  get 'topics/show'
+  get 'subjects/index'
+  get 'subjects/show'
+  
+  resources :subjects, only: [:index, :show] do
+    resources :topics, only: [:index]
+  end
+  
+  resources :questions
+  
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }

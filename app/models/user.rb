@@ -4,6 +4,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
          
+  has_many :question_attempts, dependent: :destroy
+         
   enum role: [:student, :teacher, :admin]
          
   validates_presence_of :first_name, :last_name, :email, :role
