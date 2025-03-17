@@ -1,2 +1,102 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+<div class="container-xl mt-4">
+  <h1>Welcome, <%= current_user.first_name || current_user.email %></h1>
+  
+  <div class="row mt-4">
+    <!-- Quick Stats -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">Your Progress</div>
+        <div class="card-body">
+          <p>Questions Attempted: <%= @total_questions_attempted %></p>
+          <p>Correct Answers: <%= @correct_answers %></p>
+          <% if @total_questions_attempted > 0 %>
+            <p>Accuracy: <%= (@correct_answers.to_f / @total_questions_attempted * 100).round %>%</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">Recent Activity</div>
+        <div class="card-body">
+          <% if @recent_attempts.any? %>
+            <ul class="list-group">
+              <% @recent_attempts.each do |attempt| %>
+                <li class="list-group-item">
+                  <strong><%= attempt.question.topic.subject.name %> - <%= attempt.question.topic.name %></strong>
+                  <p class="mb-0"><%= truncate(attempt.question.content, length: 100) %></p>
+                  <small class="text-muted">
+                    Score: <%= attempt.score || "Not graded" %> / <%= attempt.max_score %>
+                    • <%= time_ago_in_words(attempt.created_at) %> ago
+                  </small>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p>You haven't attempted any questions yet. Start a quiz below!</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Start Quiz Section -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">Start a New Quiz</div>
+        <div class="card-body">
+          <%= form_with url: quiz_start_path, method: :get, local: true, class: "row g-3" do |f| %>
+            <div class="col-md-4">
+              <%= f.label :subject_id, "Subject", class: "form-label" %>
+              <%= f.collection_select :subject_id, @subjects, :id, :name, {}, { class: "form-select", required: true } %>
+            </div>
+            
+            <div class="col-md-4">
+              <%= f.label :difficulty, "Difficulty", class: "form-label" %>
+              <%= f.select :difficulty, 
+                           options_for_select([["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"]]), 
+                           {}, { class: "form-select" } %>
+            </div>
+            
+            <div class="col-md-4">
+              <%= f.label :count, "Number of Questions", class: "form-label" %>
+              <%= f.select :count, 
+                          options_for_select([5, 10, 15, 20]),
+                          {}, { class: "form-select" } %>
+            </div>
+            
+            <div class="col-12 mt-3">
+              <%= f.submit "Start Quiz", class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Subject Progress -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">Subject Progress</div>
+        <div class="card-body">
+          <% @subjects.each do |subject| %>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between">
+                <h6><%= subject.name %></h6>
+                <span><%= @subject_progress[subject.id] %>%</span>
+              </div>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: <%= @subject_progress[subject.id] %>%" 
+                     aria-valuenow="<%= @subject_progress[subject.id] %>" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

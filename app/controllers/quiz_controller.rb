@@ -31,8 +31,7 @@ class QuizController < ApplicationController
     # For now, let's just save the attempt
     attempt = current_user.question_attempts.create(
       question: @question,
-      student_answer: student_answer,
-      max_score: @question.max_points
+      student_answer: student_answer
     )
     
     # Move to next question or finish
