@@ -26,7 +26,11 @@ class TopicsController < ApplicationController
   end
   
   def update
-    
+    if @topic.update(topic_params)
+      redirect_to subject_path(@topic.subject), notice: 'Topic was successfully updated.'
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def show

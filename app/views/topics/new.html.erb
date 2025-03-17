@@ -16,26 +16,7 @@
       <h3>Add New Topic for <%= @subject.name %></h3>
     </div>
     <div class="card-body">
-      <%= simple_form_for [@subject, @topic] do |f| %>
-        <%= f.error_notification %>
-        
-        <div class="form-inputs">
-          <%= f.input :name, 
-                      required: true, 
-                      label: 'Topic Name',
-                      placeholder: 'E.g., Data Types, Networks, Hardware Components' %>
-          
-          <%= f.input :description, 
-                      as: :text, 
-                      input_html: { rows: 5 },
-                      placeholder: 'Provide a detailed description of this topic and what students should learn' %>
-        </div>
-        
-        <div class="form-actions mt-4">
-          <%= f.button :submit, 'Create Topic', class: 'btn-primary' %>
-          <%= link_to "Cancel", subject_path(@subject), class: "btn btn-outline-secondary ms-2" %>
-        </div>
-      <% end %>
+      <%= render 'topics/form' %>
     </div>
   </div>
 </div>

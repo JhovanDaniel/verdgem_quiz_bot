@@ -1,4 +1,6 @@
 class SubjectsController < ApplicationController
+  before_action :set_subject, only: [:edit, :update]
+  
   def index
     @subjects = Subject.all
   end
@@ -11,7 +13,7 @@ class SubjectsController < ApplicationController
     @subject = Subject.new(subject_params)
     
     if @subject.save
-      redirect_to subjects_path, notice: "Subject was successfully created."
+      redirect_to subject_path(@subject), notice: "Subject was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -22,7 +24,23 @@ class SubjectsController < ApplicationController
     @topics = @subject.topics
   end
   
+  def edit
+    
+  end
+  
+  def update
+    if @subject.update(subject_params)
+      redirect_to subject_path(@subject), notice: 'Subject was successfully updated.'
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+  
   private
+  
+  def set_subject
+    @subject = Subject.find(params[:id])
+  end
 
   def subject_params
     params.require(:subject).permit(:name, :description, :syllabus_outline)
