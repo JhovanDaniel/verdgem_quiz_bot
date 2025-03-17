@@ -14,7 +14,7 @@
     <%= render 'shared/navbar' %>
     <%= render 'shared/alerts' %>
     <div class="container-xl mt-4">
-      <%= yield %>
+      <%= yield %><%= yield :page_scripts %>
     </div>
   </body>
 </html>

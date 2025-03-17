@@ -14,7 +14,7 @@ class QuizController < ApplicationController
     session[:quiz_questions] = @questions.pluck(:id)
     session[:current_question_index] = 0
     
-    redirect_to show_quiz_path
+    redirect_to quiz_show_path
   end
   
   def show

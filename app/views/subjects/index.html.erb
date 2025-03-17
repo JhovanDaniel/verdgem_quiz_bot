@@ -1,2 +1,38 @@
-<h1>Subjects#index</h1>
-<p>Find me in app/views/subjects/index.html.erb</p>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>CSEC Subjects</h3>
+    
+    <!-- Add Subject Button -->
+    <%= link_to "Add New Subject", new_subject_path, class: "btn btn-primary" %>
+  </div>
+
+  <% if @subjects.empty? %>
+    <div class="alert alert-info">
+      No subjects have been added yet. Create your first subject to get started.
+    </div>
+  <% else %>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <% @subjects.each do |subject| %>
+        <div class="col">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title"><%= subject.name %></h5>
+              <p class="card-text"><%= truncate(subject.description, length: 100) %></p>
+              
+              <!-- Topic count -->
+              <p class="text-muted">
+                <small><%= pluralize(subject.topics.count, 'topic') %></small>
+              </p>
+            </div>
+            <div class="card-footer bg-transparent">
+              <div class="d-flex justify-content-between">
+                <%= link_to "View Topics", subject_topics_path(subject), class: "btn btn-outline-primary btn-sm" %>
+                <%= link_to "View Subject", subject_path(subject), class: "btn btn-outline-secondary btn-sm" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

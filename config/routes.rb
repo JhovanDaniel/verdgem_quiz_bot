@@ -10,8 +10,8 @@ Rails.application.routes.draw do
   get 'subjects/index'
   get 'subjects/show'
   
-  resources :subjects, only: [:index, :show] do
-    resources :topics, only: [:index] do
+  resources :subjects do
+    resources :topics, only: [:index, :new, :create] do
       resources :questions, only: [:index]
     end
   end
