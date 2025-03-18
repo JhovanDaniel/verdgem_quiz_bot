@@ -1,0 +1,43 @@
+<%= simple_form_for @user, url: url, method: method do |f| %>
+  <%= f.error_notification %>
+  
+  <div class="form-inputs">
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.input :first_name, required: true %>
+      </div>
+      <div class="col-md-6">
+        <%= f.input :last_name, required: true %>
+      </div>
+    </div>
+    
+    <%= f.input :email, required: true %>
+    
+    <% if include_password %>
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.input :password, 
+                      hint: "Leave blank to keep current password" %>
+        </div>
+        <div class="col-md-6">
+          <%= f.input :password_confirmation %>
+        </div>
+      </div>
+    <% end %>
+    
+    <% if current_user.admin? %>
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.input :role, 
+                      collection: User::roles.keys, label_method: lambda { |role| role.titleize }, 
+                      required: true %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="form-actions mt-4">
+    <%= f.button :submit, submit_text, class: 'btn-primary' %>
+    <%= link_to "Cancel", cancel_path, class: "btn btn-outline-secondary ms-2" %>
+  </div>
+<% end %>

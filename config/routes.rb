@@ -26,6 +26,9 @@ Rails.application.routes.draw do
   
   get 'users/admin_new', to: 'users#admin_new', as: 'admin_new_user'
   post 'users/admin_create', to: 'users#admin_create', as: 'admin_create_user'
+  get 'users/:id/admin_edit', to: 'users#admin_edit', as: 'admin_edit_user'
+  patch 'users/:id/admin_update', to: 'users#admin_update', as: 'admin_update_user'
+  
   resources :users
   
    authenticated :user do

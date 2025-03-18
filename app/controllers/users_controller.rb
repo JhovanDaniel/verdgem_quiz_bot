@@ -40,6 +40,31 @@ class UsersController < ApplicationController
     end
   end
   
+  def admin_edit
+    @user = User.find(params[:id])
+  end
+  
+  def admin_update
+    @user = User.find(params[:id])
+    
+    if @user.update(user_params)
+      redirect_to user_path(@user), notice: "User was successfully updated."
+    else
+      render :admin_edit, status: :unprocessable_entity
+    end
+  end
+  
+  def show
+    @user = User.find(params[:id])
+    
+    # Security check: only admins can view any user profile
+    # Regular users can only view their own profile
+    unless current_user.admin? || current_user == @user
+      redirect_to root_path, alert: "You are not authorized to view this profile."
+      return
+    end
+  end
+  
   private
   
   def require_admin

@@ -15,46 +15,12 @@
       <h3>Create New User</h3>
     </div>
     <div class="card-body">
-      <%= simple_form_for @user, url: admin_create_user_path do |f| %>
-        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-        <%= f.error_notification %>
-        
-        <div class="form-inputs">
-          <div class="row">
-            <div class="col-md-6">
-              <%= f.input :first_name, required: true %>
-            </div>
-            <div class="col-md-6">
-              <%= f.input :last_name, required: true %>
-            </div>
-          </div>
-          
-          <%= f.input :email, required: true %>
-          
-          <div class="row">
-            <div class="col-md-6">
-              <%= f.input :password, 
-                          hint: "Leave blank to generate a random password" %>
-            </div>
-            <div class="col-md-6">
-              <%= f.input :password_confirmation %>
-            </div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-6">
-              <%= f.input :role, 
-                          collection: User::roles.keys, label_method: lambda { |role| role.titleize }, 
-                          required: true %>
-            </div>
-          </div>
-        </div>
-        
-        <div class="form-actions mt-4">
-          <%= f.button :submit, "Create User", class: 'btn-primary' %>
-          <%= link_to "Cancel", users_path, class: "btn btn-outline-secondary ms-2" %>
-        </div>
-      <% end %>
+      <%= render 'form', 
+                 url: admin_create_user_path, 
+                 method: :post,
+                 include_password: true,
+                 submit_text: "Create User",
+                 cancel_path: users_path %>
     </div>
   </div>
 </div>

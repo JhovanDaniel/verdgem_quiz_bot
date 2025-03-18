@@ -1,0 +1,187 @@
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><%= link_to "Users", users_path %></li>
+          <li class="breadcrumb-item active" aria-current="page"><%= @user.first_name %> <%= @user.last_name %></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- User Information Card -->
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3 class="mb-0">User Profile</h3>
+          <% if current_user.admin? || current_user == @user %>
+            <%= link_to "Edit", admin_edit_user_path(@user), class: "btn btn-outline-secondary" %>
+          <% end %>
+        </div>
+        <div class="card-body">
+          <div class="text-center mb-4">
+            <div class="avatar-placeholder bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 100px; height: 100px; font-size: 2.5rem;">
+              <%= @user.first_name[0].upcase %><%= @user.last_name[0].upcase if @user.last_name.present? %>
+            </div>
+            <h4 class="mt-3"><%= @user.first_name %> <%= @user.last_name %></h4>
+            <p class="text-muted"><%= @user.email %></p>
+          </div>
+          
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Role
+              <span class="badge <%= @user.role == 'admin' ? 'bg-danger' : (@user.role == 'teacher' ? 'bg-warning' : 'bg-primary') %>">
+                <%= @user.role.capitalize %>
+              </span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Joined
+              <span class="text-muted"><%= @user.created_at.strftime('%b %d, %Y') %></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- User Stats Card -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="mb-0">Stats</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="text-center mb-3">
+                <h2><%= @user.question_attempts.count %></h2>
+                <p class="text-muted mb-0">Questions Attempted</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="text-center mb-3">
+                <h2>
+                  <% if @user.question_attempts.any? %>
+                    <%= (@user.question_attempts.where("score >= questions.max_points * 0.7").joins(:question).count.to_f / @user.question_attempts.count * 100).round %>%
+                  <% else %>
+                    0%
+                  <% end %>
+                </h2>
+                <p class="text-muted mb-0">Correct Rate</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Recent Activity Card -->
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h3 class="mb-0">Recent Activity</h3>
+        </div>
+        <div class="card-body">
+          <% if @user.question_attempts.any? %>
+            <div class="list-group">
+              <% @user.question_attempts.order(created_at: :desc).limit(10).each do |attempt| %>
+                <div class="list-group-item list-group-item-action">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">
+                      <%= attempt.question.topic.subject.name %> - 
+                      <%= attempt.question.topic.name %>
+                    </h5>
+                    <small>
+                      <%= time_ago_in_words(attempt.created_at) %> ago
+                    </small>
+                  </div>
+                  <p class="mb-1">
+                    <strong>Question:</strong> <%= truncate(attempt.question.content, length: 100) %>
+                  </p>
+                  <div class="d-flex justify-content-between align-items-end">
+                    <small class="text-muted">
+                      <span class="badge <%= (attempt.score.to_f / attempt.question.max_points) >= 0.7 ? 'bg-success' : 'bg-danger' %>">
+                        <%= attempt.score %> / <%= attempt.question.max_points %> points
+                      </span>
+                    </small>
+                    <div>
+                      <%= link_to "View Question", question_path(attempt.question), class: "btn btn-outline-primary btn-sm" %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            
+            <% if @user.question_attempts.count > 10 %>
+              <div class="mt-3 text-center">
+                <a href="#" class="btn btn-outline-secondary btn-sm">View All Activity</a>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="alert alert-info">
+              No activity recorded yet. This user hasn't attempted any questions.
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Performance By Subject Card (for students) -->
+      <% if @user.role == 'student' && @user.question_attempts.any? %>
+        <div class="card">
+          <div class="card-header">
+            <h3 class="mb-0">Performance By Subject</h3>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Subject</th>
+                    <th>Questions Attempted</th>
+                    <th>Avg. Score</th>
+                    <th>Performance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% Subject.all.each do |subject| %>
+                    <% attempts = @user.question_attempts.joins(question: { topic: :subject }).where(topics: { subject_id: subject.id }) %>
+                    <% if attempts.any? %>
+                      <tr>
+                        <td><%= subject.name %></td>
+                        <td><%= attempts.count %></td>
+                        <td>
+                          <%= (attempts.sum(:score).to_f / attempts.joins(:question).sum(:max_points) * 100).round %>%
+                        </td>
+                        <td>
+                          <div class="progress" style="height: 10px;">
+                            <% performance = (attempts.sum(:score).to_f / attempts.joins(:question).sum(:max_points) * 100).round %>
+                            <div class="progress-bar <%= performance >= 70 ? 'bg-success' : (performance >= 50 ? 'bg-warning' : 'bg-danger') %>" 
+                                 role="progressbar" 
+                                 style="width: <%= performance %>%;" 
+                                 aria-valuenow="<%= performance %>" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="mt-4">
+    <%= link_to "Back to Users", users_path, class: "btn btn-outline-secondary" %>
+    
+    <% if current_user.admin? && @user != current_user %>
+      <%= link_to "Delete User", user_path(@user), 
+          data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this user? This action cannot be undone." }, 
+          class: "btn btn-outline-danger float-end" %>
+    <% end %>
+  </div>
+</div>
