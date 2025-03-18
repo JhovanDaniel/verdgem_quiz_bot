@@ -3,18 +3,142 @@ class QuizController < ApplicationController
   
   def start
     @subject = Subject.find(params[:subject_id])
-    @topics = params[:topic_id].present? ? Topic.where(id: params[:topic_id]) : @subject.topics
+    @topic = Topic.find(params[:topic_id]) if params[:topic_id].present?
     
-    # Get questions based on selected topics and difficulty
-    @questions = Question.where(topic: @topics)
-                        .where(difficulty_level: params[:difficulty] || 'medium')
-                        .order("RANDOM()").limit(params[:count] || 5)
+    # Get questions based on filters
+    questions_scope = Question.joins(:topic)
     
-    # Store questions in session for the quiz
-    session[:quiz_questions] = @questions.pluck(:id)
-    session[:current_question_index] = 0
+    # Filter by subject
+    questions_scope = questions_scope.where(topics: { subject_id: @subject.id })
     
-    redirect_to quiz_show_path
+    # Filter by topic if provided
+    questions_scope = questions_scope.where(topic_id: @topic.id) if @topic.present?
+    
+    # Get the requested number of questions
+    question_count = params[:count].present? ? params[:count].to_i : 5
+    
+    # Handle different difficulty options
+    case params[:difficulty]
+    when "mixed"
+      # Create a mixed distribution of questions
+      @questions = []
+      
+      # Get some easy questions (30%)
+      easy_count = (question_count * 0.3).ceil
+      @questions += questions_scope.where(difficulty_level: "easy")
+                                   .order("RANDOM()")
+                                   .limit(easy_count)
+      
+      # Get some medium questions (40%)
+      medium_count = (question_count * 0.4).ceil
+      @questions += questions_scope.where(difficulty_level: "medium")
+                                   .order("RANDOM()")
+                                   .limit(medium_count) 
+                                   
+      # Get some medium questions (20%)
+      hard_count = (question_count * 0.2).ceil
+      @questions += questions_scope.where(difficulty_level: "hard")
+                                   .order("RANDOM()")
+                                   .limit(hard_count)
+      
+      # Get some very hard questions (10%)
+      very_hard_count = question_count - @questions.length
+      @questions += questions_scope.where(difficulty_level: "very_hard")
+                                   .order("RANDOM()")
+                                   .limit(very_hard_count)
+      
+      # If we don't have enough questions of a certain difficulty, fill in with others
+      if @questions.length < question_count
+        remaining = question_count - @questions.length
+        existing_ids = @questions.map(&:id)
+        
+        @questions += questions_scope.where.not(id: existing_ids)
+                                     .order("RANDOM()")
+                                     .limit(remaining)
+      end
+      
+      # Shuffle the questions to mix the difficulties
+      #@questions = @questions.shuffle
+      
+      #Order questions by difficulty
+      @questions = @questions.sort_by do |question|
+        case question.difficulty_level
+        when "easy" then 1
+        when "medium" then 2
+        when "hard" then 3
+        when "very_hard" then 4
+        else 0
+        end
+      end
+      
+    else
+      # Filter by difficulty if provided (easy, medium, hard)
+      questions_scope = questions_scope.where(difficulty_level: params[:difficulty]) if params[:difficulty].present?
+      
+      # Select random questions up to the requested count
+      @questions = questions_scope.order("RANDOM()").limit(question_count)
+    end
+    
+    # If there are no questions matching the criteria
+    if @questions.empty?
+      redirect_to dashboard_path, alert: "No questions available for the selected criteria. Please try different options."
+      return
+    end
+    
+    # Store quiz data in session
+    session[:quiz] = {
+      question_ids: @questions.map(&:id),
+      current_index: 0,
+      started_at: Time.current
+    }
+    
+    # Redirect to the first question
+    redirect_to quiz_question_path
+  end
+  
+  def question
+    # Load the current question from session
+    return redirect_to dashboard_path, alert: "No active quiz found." unless session[:quiz].present?
+    
+    current_index = session[:quiz]["current_index"]
+    question_ids = session[:quiz]["question_ids"]
+    
+    # If we've gone beyond the available questions, go to results
+    if current_index >= question_ids.length
+      redirect_to quiz_results_path
+      return
+    end
+    
+    @question = Question.find(question_ids[current_index])
+    @question_number = current_index + 1
+    @total_questions = question_ids.length
+  end
+  
+  def submit
+    return redirect_to dashboard_path, alert: "No active quiz found." unless session[:quiz].present?
+    
+    current_index = session[:quiz]["current_index"]
+    question_ids = session[:quiz]["question_ids"]
+    @question = Question.find(question_ids[current_index])
+    
+    # Save the user's answer
+    @attempt = current_user.question_attempts.create(
+      question: @question,
+      student_answer: params[:answer]
+    )
+    
+    # Generate AI feedback if we're going to show it immediately
+    # (For now, we'll skip this and implement it later)
+    
+    # Move to the next question
+    session[:quiz]["current_index"] = current_index + 1
+    
+    # If it was the last question, go to results, otherwise next question
+    if session[:quiz]["current_index"] >= question_ids.length
+      redirect_to quiz_results_path
+    else
+      redirect_to quiz_question_path
+    end
   end
   
   def show
@@ -44,9 +168,20 @@ class QuizController < ApplicationController
     end
   end
   
-  def result
-    # Show quiz results
-    @question_ids = session[:quiz_questions]
-    @attempts = current_user.question_attempts.where(question_id: @question_ids).order(:created_at)
+  def results
+    return redirect_to dashboard_path, alert: "No completed quiz found." unless session[:quiz].present?
+    
+    @question_ids = session[:quiz]["question_ids"]
+    @questions = Question.where(id: @question_ids)
+    @attempts = current_user.question_attempts.where(question_id: @question_ids)
+                            .order(:created_at)
+                            .includes(:question)
+    
+    # Calculate quiz statistics
+    @total_points = @questions.sum(:max_points)
+    @earned_points = @attempts.sum(:score) # This will be 0 initially until scores are added
+    
+    # Clear the session quiz data
+    # (We might want to keep it for a while in case the user wants to review)
   end
 end

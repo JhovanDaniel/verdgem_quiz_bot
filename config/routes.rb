@@ -1,9 +1,5 @@
 Rails.application.routes.draw do
   
-  get 'quiz/start'
-  get 'quiz/show'
-  get 'quiz/evaluate_answer'
-  get 'quiz/result'
   get 'questions/show'
   get 'topics/index'
   get 'topics/show'
@@ -19,6 +15,12 @@ Rails.application.routes.draw do
   end
   
   resources :questions, except: [:index, :new, :create]
+  
+  # Quiz routes
+  get 'quiz/start', to: 'quiz#start', as: 'quiz_start'
+  get 'quiz/question', to: 'quiz#question', as: 'quiz_question'
+  post 'quiz/submit', to: 'quiz#submit', as: 'quiz_submit'
+  get 'quiz/results', to: 'quiz#results', as: 'quiz_results'
   
   devise_for :users, controllers: {
     registrations: 'users/registrations'

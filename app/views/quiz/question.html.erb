@@ -1,0 +1,47 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">Question <%= @question_number %> of <%= @total_questions %></h3>
+        <div class="badge bg-primary">
+          <%= @question.topic.subject.name %> | <%= @question.topic.name %>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <span class="badge <%= @question.difficulty_level == 'easy' ? 'bg-success' : (@question.difficulty_level == 'medium' ? 'bg-warning' : 'bg-danger') %>">
+              <%= @question.difficulty_level.capitalize %>
+            </span>
+            <span class="badge bg-secondary ms-1"><%= pluralize(@question.max_points, 'point') %></span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="question-content mb-4">
+        <h4>Question:</h4>
+        <div class="p-3 bg-light rounded">
+          <%= simple_format(@question.content) %>
+        </div>
+      </div>
+      
+      <%= form_with url: quiz_submit_path, method: :post, local: true, class: "answer-form" do |f| %>
+        <div class="form-group mb-4">
+          <h4><%= f.label :answer, "Your Answer:" %></h4>
+          <%= f.text_area :answer, rows: 8, class: "form-control", required: true %>
+        </div>
+        
+        <div class="d-flex justify-content-between">
+          <% if @question_number > 1 %>
+            <%= link_to "Previous", "#", class: "btn btn-outline-secondary", disabled: true %>
+          <% end %>
+          
+          <%= f.submit @question_number == @total_questions ? "Submit Final Answer" : "Submit & Continue", 
+                       class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
