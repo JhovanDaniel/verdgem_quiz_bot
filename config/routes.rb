@@ -24,6 +24,8 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
   
+  get 'users/admin_new', to: 'users#admin_new', as: 'admin_new_user'
+  post 'users/admin_create', to: 'users#admin_create', as: 'admin_create_user'
   resources :users
   
    authenticated :user do
