@@ -2,6 +2,8 @@ class Question < ApplicationRecord
   belongs_to :topic
   has_many :question_attempts, dependent: :destroy
   
+  enum difficulty_level: [:easy, :medium, :hard, :very_hard] 
+  
   validates :content, presence: true
   validates :model_answer, presence: true
   validates :max_points, numericality: { greater_than: 0 }

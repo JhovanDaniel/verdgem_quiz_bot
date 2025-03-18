@@ -55,7 +55,7 @@
                 <small class="text-muted">
                   <%= pluralize(question.max_points, 'point') %> | 
                   <span class="badge <%= question.difficulty_level == 'easy' ? 'bg-success' : (question.difficulty_level == 'medium' ? 'bg-warning' : 'bg-danger') %>">
-                    <%= question.difficulty_level.capitalize %>
+                    <%= question.difficulty_level.humanize %>
                   </span>
                 </small>
               </div>
@@ -79,9 +79,9 @@
     </div>
   </div>
 
-  <div class="mt-4">
+  <div class="my-4">
     <% if @questions.any? %>
-      <%= link_to "Start Quiz for this Topic", start_quiz_path(subject_id: @topic.subject.id, topic_id: @topic.id), class: "btn btn-success" %>
+      <%= link_to "Start Quiz for this Topic", quiz_start_path(subject_id: @topic.subject.id, topic_id: @topic.id), class: "btn btn-success" %>
     <% end %>
     <%= link_to "Back to #{@topic.subject.name}", subject_path(@topic.subject), class: "btn btn-outline-secondary ms-2" %>
   </div>

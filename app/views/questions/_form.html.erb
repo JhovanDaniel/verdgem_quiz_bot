@@ -1,0 +1,42 @@
+<%= simple_form_for(@question.new_record? ? [@topic, @question] : @question) do |f| %>
+  <%= f.error_notification %>
+  
+  <div class="form-inputs">
+    <%= f.input :content, 
+                label: 'Question',
+                as: :text, 
+                input_html: { rows: 4 },
+                placeholder: 'Enter the full question text here...',
+                required: true %>
+    
+    <%= f.input :model_answer, 
+                as: :text, 
+                input_html: { rows: 5 },
+                placeholder: 'Provide a comprehensive model answer to this question',
+                required: true %>
+    
+    <%= f.input :key_concepts, 
+                as: :text, 
+                input_html: { rows: 3 },
+                placeholder: 'List the key concepts students should demonstrate in their answer (e.g., "Object-oriented principles, Inheritance, Encapsulation")' %>
+    
+    <%= f.input :marking_criteria, 
+                as: :text, 
+                input_html: { rows: 3 },
+                placeholder: 'Specify criteria for marking (e.g., "Definition (1 point), Example (2 points), Application (2 points)")' %>
+    
+    <%= f.input :max_points, 
+                as: :integer,
+                input_html: { min: 1, max: 20 },
+                hint: 'The maximum number of points a student can earn for this question' %>
+
+    <%= f.input :difficulty_level, collection: Question::difficulty_levels.keys, label_method: lambda { |difficulty| difficulty.titleize },
+                prompt: "Select difficulty level",
+                required: true %>
+  </div>
+  
+  <div class="form-actions mt-4">
+    <%= f.button :submit, @question.new_record? ? "Create Question" : "Update Question", class: 'btn-primary' %>
+    <%= link_to "Cancel", topic_path(@topic), class: "btn btn-outline-secondary ms-2" %>
+  </div>
+<% end %>
