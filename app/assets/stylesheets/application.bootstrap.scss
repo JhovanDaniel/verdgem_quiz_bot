@@ -5196,7 +5196,7 @@ a.badge:hover, a.badge:focus {
 
 .badge-primary {
   color: #fff;
-  background-color: #2c3e50;
+  background-color: #059332;
 }
 
 a.badge-primary:hover, a.badge-primary:focus {
@@ -5313,6 +5313,11 @@ a.badge-dark:focus, a.badge-dark.focus {
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(123, 138, 139, 0.5);
 }
+
+.badge-white {
+  background-color: #fff;
+}
+
 
 .jumbotron {
   padding: 2rem 1rem;
@@ -6787,7 +6792,7 @@ a.close.disabled {
 }
 
 .bg-primary {
-  background-color: #2c3e50 !important;
+  background-color: #059332 !important;
 }
 
 a.bg-primary:hover, a.bg-primary:focus,

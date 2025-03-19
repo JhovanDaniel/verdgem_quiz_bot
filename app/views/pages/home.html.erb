@@ -1,119 +1,97 @@
-<div class="container-xl mt-4">
-  <h3>Welcome, <%= current_user.first_name || current_user.email %></h3>
-  
-  <div class="row mt-4">
-    <!-- Quick Stats -->
-    <div class="col-md-4">
-      <div class="card">
-        <div class="card-header">Your Progress</div>
-        <div class="card-body">
-          <p>Questions Attempted: <%= @total_questions_attempted %></p>
-          <p>Correct Answers: <%= @correct_answers %></p>
-          <% if @total_questions_attempted > 0 %>
-            <p>Accuracy: <%= (@correct_answers.to_f / @total_questions_attempted * 100).round %>%</p>
-          <% end %>
-        </div>
-      </div>
+<div class="container col-xxl-8 px-4">
+  <div class="row flex-lg-row-reverse align-items-center g-5 pb-5">
+    <div class="col-10 col-sm-8 col-lg-6 mt-0">
+      <%= image_tag "quiz-hero.png", alt: "Quiz Hero Image", class: "navbar-logo", width: 700 %>
     </div>
-    
-    <!-- Start Quiz Section -->
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header">Start a New Quiz</div>
-        <div class="card-body">
-          <%= form_with url: quiz_start_path, method: :get, local: true, class: "row g-3" do |f| %>
-            <div class="col-md-4">
-              <%= f.label :subject_id, "Subject", class: "form-label" %>
-              <%= f.collection_select :subject_id, @subjects, :id, :name, {}, { class: "form-select", required: true } %>
-            </div>
-            
-            <div class="col-md-4">
-              <%= f.label :difficulty, "Difficulty", class: "form-label" %>
-              <%= f.select :difficulty, 
-                           options_for_select([["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"], ["Very hard", "very_hard"],["Mixed", "mixed"]]), 
-                           {}, { class: "form-select" } %>
-            </div>
-            
-            <div class="col-md-4">
-              <%= f.label :count, "Number of Questions", class: "form-label" %>
-              <%= f.select :count, 
-                          options_for_select([5, 10, 15, 20]),
-                          {}, { class: "form-select" } %>
-            </div>
-            
-            <div class="col-12 mt-3">
-              <%= f.submit "Start Quiz", class: "btn btn-primary" %>
-            </div>
-          <% end %>
+    <div class="col-lg-6">
+      <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Welcome, <%= current_user.first_name || current_user.email %></h1>
+      <p class="lead">Ready to challenge yourself? Start a CSEC IT quiz and see how much you know!</p>
+      <%= form_with url: quiz_start_path, method: :get, local: true, class: "row g-3" do |f| %>
+        <div class="col-md-4">
+          <%= f.label :subject_id, "Subject", class: "form-label" %>
+          <%= f.collection_select :subject_id, @subjects, :id, :name, {}, { class: "form-select", required: true } %>
+        </div>
+        
+        <div class="col-md-4">
+          <%= f.label :difficulty, "Difficulty", class: "form-label" %>
+          <%= f.select :difficulty, 
+                       options_for_select([["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"], ["Very hard", "very_hard"],["Mixed", "mixed"]]), 
+                       {}, { class: "form-select" } %>
+        </div>
+        
+        <div class="col-md-4">
+          <%= f.label :count, "Number of Questions", class: "form-label" %>
+          <%= f.select :count, 
+                      options_for_select([5, 10, 15, 20]),
+                      {}, { class: "form-select" } %>
+        </div>
+        
+        <div class="col-12 mt-3">
+          <%= f.submit "Start Quiz", class: "btn btn-lg btn-primary" %>
+        </div>
+      <% end %>
+      <div class="row mt-2">
+        <div class="col-auto">
+          <%= image_tag "sample-badge.png", alt: "Quiz Hero Image", class: "navbar-logo", width: 30 %>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="row mt-4">
-    <!-- Recent Activity -->
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">Recent Activity</div>
-        <div class="card-body">
-          <div class="container mt-4">
-            <h2>Your Quiz History</h2>
-          
-            <% if @quiz_sessions.empty? %>
-              <div class="alert alert-info">
-                You haven't taken any quizzes yet. 
-                <%= link_to "Start a quiz now", authenticated_root_path, class: "alert-link" %>.
-              </div>
-            <% else %>
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Subject</th>
-                      <th>Questions</th>
-                      <th>Score</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% @quiz_sessions.each do |session| %>
-                      <tr>
-                        <td><%= format_date(session.created_at) %></td>
-                        <td><%= session.subject.name %></td>
-                        <td><%= session.question_attempts.count %></td>
-                        <td>
-                          <% if session.completed? %>
-                            <span class="badge <%= session.score_percentage >= 70 ? 'bg-success' : 'bg-danger' %>">
-                              <%= session.score_percentage %>%
-                            </span>
-                          <% else %>
-                            <span class="badge bg-warning">In Progress</span>
-                          <% end %>
-                        </td>
-                        <td>
-                          <% if session.completed? %>
-                            <span class="badge bg-success">Completed</span>
-                          <% else %>
-                            <span class="badge bg-warning">In Progress</span>
-                          <% end %>
-                        </td>
-                        <td>
-                          <%= link_to "View", quiz_session_path(session), class: "btn btn-sm btn-outline-primary mx-1" %>
-                          <% if !session.completed? %>
-                              <%= link_to "Resume Quiz", resume_quiz_path(@unfinished_quiz), class: "btn btn-sm btn-primary mx-1" %>
-                          <% end %>
-                        </td>
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-              </div>
-              
-              <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
-            <% end %>
-          </div>
+<div class="container col-xxl-8 px-4">
+  <h1 class="display-6 fw-bold text-body-emphasis lh-1 mb-3">Your quiz history</h1>
+  <% if @quiz_sessions.empty? %>
+    <div class="alert alert-info">
+      You haven't taken any quizzes yet. 
+      <%= link_to "Start a quiz now", authenticated_root_path, class: "alert-link" %>.
     </div>
-  </div>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-borderless">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Subject</th>
+            <th>Questions</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @quiz_sessions.each do |session| %>
+            <tr>
+              <td><%= format_date(session.created_at) %></td>
+              <td><%= session.subject.name %></td>
+              <td><%= session.question_attempts.count %></td>
+              <td>
+                <% if session.completed? %>
+                  <span class="badge <%= session.score_percentage >= 70 ? 'bg-primary' : 'bg-danger' %>">
+                    <%= session.score_percentage %>%
+                  </span>
+                <% else %>
+                  <span class="badge bg-white text-dark">In Progress</span>
+                <% end %>
+              </td>
+              <td>
+                <% if session.completed? %>
+                  <span class="badge badge-primary">Completed</span>
+                <% else %>
+                  <span class="badge bg-white text-dark">In Progress</span>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to "View", quiz_session_path(session), class: "btn btn-sm btn-outline-primary mx-1" %>
+                <% if !session.completed? %>
+                    <%= link_to "Resume Quiz", resume_quiz_path(@unfinished_quiz), class: "btn btn-sm btn-primary mx-1" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
+  <% end %>
 </div>
