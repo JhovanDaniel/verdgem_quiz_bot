@@ -90,7 +90,8 @@ class QuizController < ApplicationController
       subject: @subject,
       topic: @topic,
       started_at: Time.current,
-      max_score: @questions.sum(&:max_points)
+      max_score: @questions.sum(&:max_points),
+      question_count: @questions.length 
     )
     
     # Store quiz data in session
