@@ -32,7 +32,10 @@
       <% end %>
       <div class="row mt-2">
         <div class="col-auto">
-          <%= image_tag "sample-badge.png", alt: "Quiz Hero Image", class: "navbar-logo", width: 30 %>
+          <div class="col-auto position-relative badge-container">
+            <%= image_tag "sample-badge.png", alt: "Quiz Hero Badge", class: "navbar-logo", width: 30 %>
+            <span class="badge-tooltip">Quiz Hero: Completed all quizzes</span>
+          </div>
         </div>
       </div>
     </div>
