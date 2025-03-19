@@ -1,0 +1,123 @@
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><%= link_to "Dashboard", authenticated_root_path %></li>
+          <li class="breadcrumb-item"><%= link_to "Quiz History", quiz_history_path %></li>
+          <li class="breadcrumb-item active" aria-current="page">Quiz Results</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3 class="mb-0">Quiz Results: <%= @quiz_session.subject.name %></h3>
+      <p class="text-muted mb-0">
+        <%= @quiz_session.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+        <% if @quiz_session.topic.present? %>
+          • Topic: <%= @quiz_session.topic.name %>
+        <% end %>
+      </p>
+    </div>
+    <div class="card-body">
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body text-center">
+              <h1 class="display-4">
+                <%= @attempts.count %> / <%= @attempts.count %>
+              </h1>
+              <p class="text-muted mb-0">Questions Completed</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body text-center">
+              <% if @quiz_session.total_score.present? %>
+                <h1 class="display-4">
+                  <%= @quiz_session.total_score %> / <%= @quiz_session.max_score %>
+                </h1>
+                <p class="text-muted mb-0">Points Scored</p>
+              <% else %>
+                <h1 class="display-4">
+                  Pending
+                </h1>
+                <p class="text-muted mb-0">Grading in Progress</p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body text-center">
+              <h1 class="display-4">
+                <% if @quiz_session.total_score.present? %>
+                  <%= @quiz_session.score_percentage %>%
+                <% else %>
+                  --
+                <% end %>
+              </h1>
+              <p class="text-muted mb-0">Overall Score</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <h4 class="mb-3">Question Summary</h4>
+      
+      <div class="list-group">
+        <% @attempts.each_with_index do |attempt, index| %>
+          <div class="list-group-item">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">Question <%= index + 1 %></h5>
+              <% if attempt.score.present? %>
+                <span class="badge <%= (attempt.score.to_f / attempt.question.max_points) >= 0.7 ? 'bg-success' : 'bg-danger' %>">
+                  <%= attempt.score %> / <%= attempt.question.max_points %> points
+                </span>
+              <% else %>
+                <span class="badge bg-secondary">Pending</span>
+              <% end %>
+            </div>
+            <p class="mb-1"><%= truncate(attempt.question.content, length: 150) %></p>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <small class="text-muted">
+                <%= attempt.question.topic.subject.name %> | 
+                <%= attempt.question.topic.name %>
+              </small>
+              <button class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#attempt-<%= attempt.id %>">
+                View Details
+              </button>
+            </div>
+            
+            <div class="collapse mt-3" id="attempt-<%= attempt.id %>">
+              <div class="card card-body bg-light">
+                <h6>Your Answer:</h6>
+                <p><%= simple_format(attempt.student_answer) %></p>
+                
+                <% if attempt.feedback.present? %>
+                  <h6>Feedback:</h6>
+                  <p><%= simple_format(attempt.feedback) %></p>
+                <% else %>
+                  <p class="text-muted"><em>Feedback will be available soon.</em></p>
+                <% end %>
+                
+                <h6>Model Answer:</h6>
+                <p><%= simple_format(attempt.question.model_answer) %></p>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="d-flex justify-content-between mb-4">
+    <%= link_to "Back to History", quiz_history_path, class: "btn btn-outline-secondary" %>
+    <%= link_to "Start New Quiz", authenticated_root_path, class: "btn btn-primary" %>
+  </div>
+</div>
