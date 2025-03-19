@@ -12,4 +12,10 @@ class QuizSession < ApplicationRecord
   def completed?
     completed_at.present?
   end
+  
+  def score_percentage
+    return 0 if max_score.nil? || max_score == 0
+    ((total_score.to_f / max_score) * 100).round
+  end
+  
 end
