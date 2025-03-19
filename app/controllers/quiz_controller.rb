@@ -260,4 +260,46 @@ class QuizController < ApplicationController
                            .includes(:question)
                            .order(:created_at)
   end
+  
+  def resume
+    @quiz_session = current_user.quiz_sessions.find(params[:id])
+    
+    # Only allow resuming incomplete quizzes
+    unless @quiz_session.completed_at.nil?
+      redirect_to authenticated_root_path, alert: "This quiz has already been completed."
+      return
+    end
+    
+    # Get the questions from this session
+    question_ids = @quiz_session.question_attempts.pluck(:question_id)
+    
+    # Find the next unanswered question
+    answered_question_ids = @quiz_session.question_attempts.pluck(:question_id)
+    all_question_ids = Question.where(topic_id: @quiz_session.topic_id).pluck(:id)
+    
+    # If no specific topic was chosen, get all questions from the subject
+    if all_question_ids.empty? && @quiz_session.subject.present?
+      all_question_ids = Question.joins(:topic)
+                                 .where(topics: { subject_id: @quiz_session.subject_id })
+                                 .pluck(:id)
+    end
+    
+    # Find the current position
+    remaining_ids = all_question_ids - answered_question_ids
+    current_index = answered_question_ids.length
+    
+    # Store quiz data in session
+    session[:quiz] = {
+      quiz_session_id: @quiz_session.id,
+      question_ids: all_question_ids,
+      current_index: current_index
+    }
+    
+    # Redirect to current question or results if all questions answered
+    if current_index >= all_question_ids.length
+      redirect_to quiz_results_path
+    else
+      redirect_to quiz_question_path
+    end
+  end
 end

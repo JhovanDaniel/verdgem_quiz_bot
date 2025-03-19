@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get 'quiz/results', to: 'quiz#results', as: 'quiz_results'
   get 'quiz/history', to: 'quiz#history', as: 'quiz_history'
   get 'quiz/sessions/:id', to: 'quiz#show_session', as: 'quiz_session'
+  get 'quiz/resume/:id', to: 'quiz#resume', as: 'resume_quiz'
   
   devise_for :users, controllers: {
     registrations: 'users/registrations'

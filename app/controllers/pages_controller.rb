@@ -25,6 +25,12 @@ class PagesController < ApplicationController
         @subject_progress[subject.id] = 0
       end
     end
+    
+    #Check for unfinished quizzes
+    @unfinished_quiz = current_user.quiz_sessions
+                                 .where(completed_at: nil)
+                                 .order(created_at: :desc)
+                                 .first
   end
   
   def landing_page
