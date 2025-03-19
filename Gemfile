@@ -31,6 +31,8 @@ gem "jbuilder"
 
 gem "devise"
 gem "simple_form"
+gem "dotenv-rails"
+gem 'httparty'
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"

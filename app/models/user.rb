@@ -5,6 +5,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
          
   has_many :question_attempts, dependent: :destroy
+  has_many :quiz_sessions, dependent: :destroy
          
   enum role: [:student, :teacher, :admin]
          

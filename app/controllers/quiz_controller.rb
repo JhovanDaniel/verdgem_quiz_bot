@@ -85,11 +85,19 @@ class QuizController < ApplicationController
       return
     end
     
+    # Create a new quiz session
+    @quiz_session = current_user.quiz_sessions.create(
+      subject: @subject,
+      topic: @topic,
+      started_at: Time.current,
+      max_score: @questions.sum(&:max_points)
+    )
+    
     # Store quiz data in session
     session[:quiz] = {
+      quiz_session_id: @quiz_session.id,
       question_ids: @questions.map(&:id),
-      current_index: 0,
-      started_at: Time.current
+      current_index: 0
     }
     
     # Redirect to the first question
@@ -98,7 +106,7 @@ class QuizController < ApplicationController
   
   def question
     # Load the current question from session
-    return redirect_to dashboard_path, alert: "No active quiz found." unless session[:quiz].present?
+    return redirect_to authenticated_root_path, alert: "No active quiz found." unless session[:quiz].present?
     
     current_index = session[:quiz]["current_index"]
     question_ids = session[:quiz]["question_ids"]
@@ -112,23 +120,56 @@ class QuizController < ApplicationController
     @question = Question.find(question_ids[current_index])
     @question_number = current_index + 1
     @total_questions = question_ids.length
+    
+    # Get the quiz session
+    @quiz_session = QuizSession.find(session[:quiz]["quiz_session_id"])
   end
   
   def submit
-    return redirect_to dashboard_path, alert: "No active quiz found." unless session[:quiz].present?
+    return redirect_to authenticated_root_path, alert: "No active quiz found." unless session[:quiz].present?
     
     current_index = session[:quiz]["current_index"]
     question_ids = session[:quiz]["question_ids"]
+    quiz_session_id = session[:quiz]["quiz_session_id"]
     @question = Question.find(question_ids[current_index])
     
-    # Save the user's answer
+    # Save the user's answer with the quiz session reference
     @attempt = current_user.question_attempts.create(
       question: @question,
-      student_answer: params[:answer]
+      student_answer: params[:answer],
+      quiz_session_id: quiz_session_id  # Add this line
     )
     
-    # Generate AI feedback if we're going to show it immediately
-    # (For now, we'll skip this and implement it later)
+    # Evaluate the answer using Claude
+    if current_user
+      begin
+        # Show loading state
+        @attempt.update(evaluation_status: "processing")
+        
+        # Call Claude API
+        claude_service = ClaudeService.new
+        evaluation = claude_service.evaluate_answer(@question, params[:answer])
+        
+        if evaluation[:success]
+          @attempt.update(
+            score: evaluation[:score],
+            feedback: evaluation[:feedback],
+            evaluation_status: "completed"
+          )
+        else
+          @attempt.update(
+            evaluation_status: "error",
+            evaluation_error: evaluation[:error]
+          )
+        end
+      rescue => e
+        Rails.logger.error("Evaluation error: #{e.message}")
+        @attempt.update(evaluation_status: "error", evaluation_error: e.message)
+      end
+    else
+      # For non-premium users, mark for manual review or limited AI feedback
+      @attempt.update(evaluation_status: "pending")
+    end
     
     # Move to the next question
     session[:quiz]["current_index"] = current_index + 1
@@ -162,26 +203,61 @@ class QuizController < ApplicationController
     session[:current_question_index] += 1
     
     if session[:current_question_index] >= session[:quiz_questions].length
-      redirect_to result_quiz_path
+      redirect_to quiz_results_path
     else
       redirect_to show_quiz_path
     end
   end
   
   def results
-    return redirect_to dashboard_path, alert: "No completed quiz found." unless session[:quiz].present?
+    return redirect_to authenticated_root_path, alert: "No completed quiz found." unless session[:quiz].present?
+    
+    # Get the quiz session
+    quiz_session_id = session[:quiz]["quiz_session_id"]
+    @quiz_session = QuizSession.find(quiz_session_id)
     
     @question_ids = session[:quiz]["question_ids"]
     @questions = Question.where(id: @question_ids)
-    @attempts = current_user.question_attempts.where(question_id: @question_ids)
+    @attempts = current_user.question_attempts
+                            .where(quiz_session_id: quiz_session_id)
                             .order(:created_at)
                             .includes(:question)
     
     # Calculate quiz statistics
     @total_points = @questions.sum(:max_points)
-    @earned_points = @attempts.sum(:score) # This will be 0 initially until scores are added
+    @earned_points = @attempts.sum(:score) || 0 # Handle nil values
     
-    # Clear the session quiz data
-    # (We might want to keep it for a while in case the user wants to review)
+    # Update the quiz session with final results if not already completed
+    unless @quiz_session.completed?
+      @quiz_session.update(
+        completed_at: Time.current,
+        total_score: @earned_points,
+        max_score: @total_points
+      )
+    end
+    
+    # We'll keep the session data for now, but you might want to clear it
+    # when the user starts a new quiz or after some time
+  end
+  
+  def history
+    @quiz_sessions = current_user.quiz_sessions
+                                .order(created_at: :desc)
+                                .includes(:subject, :topic)
+                                .paginate(page: params[:page], per_page: 10)
+  end
+  
+  def show_session
+    @quiz_session = QuizSession.find(params[:id])
+    
+    # Ensure users can only see their own quiz sessions
+    unless @quiz_session.user == current_user || current_user.admin?
+      redirect_to authenticated_root_path, alert: "You are not authorized to view this quiz session."
+      return
+    end
+    
+    @attempts = @quiz_session.question_attempts
+                           .includes(:question)
+                           .order(:created_at)
   end
 end

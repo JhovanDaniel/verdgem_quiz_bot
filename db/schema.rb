@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_17_173939) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_19_032519) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -23,7 +23,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_17_173939) do
     t.text "feedback"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "evaluation_status", default: "pending"
+    t.text "evaluation_error"
+    t.uuid "quiz_session_id"
     t.index ["question_id"], name: "index_question_attempts_on_question_id"
+    t.index ["quiz_session_id"], name: "index_question_attempts_on_quiz_session_id"
     t.index ["user_id"], name: "index_question_attempts_on_user_id"
   end
 
@@ -38,6 +42,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_17_173939) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["topic_id"], name: "index_questions_on_topic_id"
+  end
+
+  create_table "quiz_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "subject_id", null: false
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.integer "total_score"
+    t.integer "max_score"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "topic_id"
+    t.index ["subject_id"], name: "index_quiz_sessions_on_subject_id"
+    t.index ["topic_id"], name: "index_quiz_sessions_on_topic_id"
+    t.index ["user_id"], name: "index_quiz_sessions_on_user_id"
   end
 
   create_table "subjects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -78,7 +97,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_17_173939) do
   end
 
   add_foreign_key "question_attempts", "questions"
+  add_foreign_key "question_attempts", "quiz_sessions"
   add_foreign_key "question_attempts", "users"
   add_foreign_key "questions", "topics"
+  add_foreign_key "quiz_sessions", "subjects"
+  add_foreign_key "quiz_sessions", "topics"
+  add_foreign_key "quiz_sessions", "users"
   add_foreign_key "topics", "subjects"
 end
