@@ -1,5 +1,16 @@
 <div class="container mt-4">
-  <h1>Edit <%= @subject.name %> </h1>
+  <div class="row">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-white">
+          <li class="breadcrumb-item"><%= link_to "Subjects", subjects_path %></li>
+          <li class="breadcrumb-item active" aria-current="page"><%= @subject.name %></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  
+  <h2>Edit <%= @subject.name %> </h2>
   
   <%= render 'subjects/form' %>
 </div>

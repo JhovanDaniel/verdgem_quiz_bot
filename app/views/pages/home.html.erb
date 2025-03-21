@@ -57,8 +57,8 @@
             <th>Date</th>
             <th>Subject</th>
             <th>Progress</th>
-            <th>Score</th>
             <th>Status</th>
+            <th>Score</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -70,16 +70,16 @@
               <td><%= session.completed_questions %> / <%= session.question_count %></td>
               <td>
                 <% if session.completed? %>
-                  <span class="badge <%= session.score_percentage >= 70 ? 'bg-primary' : 'bg-danger' %>">
-                    <%= session.score_percentage %>%
-                  </span>
+                  <span class="badge badge-primary">Completed</span>
                 <% else %>
                   <span class="badge bg-white text-dark">In Progress</span>
                 <% end %>
               </td>
               <td>
                 <% if session.completed? %>
-                  <span class="badge badge-primary">Completed</span>
+                  <span class="badge <%= session.score_percentage >= 70 ? 'bg-primary' : 'bg-danger' %>">
+                    <%= session.score_percentage %>%
+                  </span>
                 <% else %>
                   <span class="badge bg-white text-dark">In Progress</span>
                 <% end %>

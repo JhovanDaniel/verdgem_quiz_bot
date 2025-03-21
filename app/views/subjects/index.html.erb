@@ -23,8 +23,8 @@
           <p class="text-muted">
             <small><%= pluralize(subject.topics.count, 'topic') %></small>
           </p>
-          <%= link_to "View Topics", subject_topics_path(subject), class: "btn btn-outline-primary btn-sm" %>
           <%= link_to "View Subject", subject_path(subject), class: "btn btn-outline-primary btn-sm" %>
+          <%= link_to "View Topics", subject_topics_path(subject), class: "btn btn-outline-primary btn-sm" %>
         </div>
       <% end %>
     <% end %>

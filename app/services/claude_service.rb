@@ -25,7 +25,7 @@ class ClaudeService
       response = self.class.post(
         '/v1/messages',
         body: {
-          model: "claude-3-7-sonnet-20250219",
+          model: "claude-3-5-haiku-20241022",
           max_tokens: 1000,
           system: system_prompt, # This is the correct way to provide a system prompt
           messages: [

@@ -1,102 +1,86 @@
-<div class="container mt-4">
-  <div class="row mb-4">
+<div class="container px-4" id="featured-3">
+  <div class="row">
     <div class="col">
       <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
+        <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item"><%= link_to "Subjects", subjects_path %></li>
           <li class="breadcrumb-item active" aria-current="page"><%= @subject.name %></li>
         </ol>
       </nav>
     </div>
   </div>
-
-  <div class="card mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h3 class="mb-0"><%= @subject.name %></h3>
-      <div>
-        <%= link_to "Edit", edit_subject_path(@subject), class: "btn btn-outline-secondary btn-sm" %>
-        <%= link_to "Delete", subject_path(@subject), method: :delete, data: { confirm: "Are you sure? This will also delete all topics and questions within this subject." }, class: "btn btn-outline-danger btn-sm ms-2" %>
+  
+  <div class="card-header d-flex justify-content-between align-items-center bg-white border-0 px-0">
+    <h2 class="pb-2 border-bottom"><%= @subject.name %></h2>
+    <div>
+      <%= link_to "Edit", edit_subject_path(@subject), class: "btn btn-outline-primary btn-sm" %>
+      <%= link_to "Delete", subject_path(@subject), method: :delete, data: { confirm: "Are you sure? This will also delete all topics and questions within this subject." }, class: "btn btn-outline-danger btn-sm ms-2" %>
+    </div>
+  </div>
+  
+  <h3>Description</h3>
+  <% if @subject.description.present? %>
+    <p><%= @subject.description %></p>
+  <% end %>
+  
+  <h3>Syllabus Outline</h3>
+  <% if @subject.syllabus_outline.present? %>
+    <div class="syllabus-outline mb-4">
+      <div id="syllabus-preview">
+        <%= simple_format(@subject.syllabus_outline.truncate(300)) %>
+        
+        <% if @subject.syllabus_outline.length > 300 %>
+          <button 
+            onclick="document.getElementById('syllabus-preview').style.display='none'; document.getElementById('syllabus-full').style.display='block';" 
+            class="btn btn-sm btn-link p-0">
+            Read more
+          </button>
+        <% end %>
+      </div>
+      
+      <div id="syllabus-full" style="display: none;">
+        <%= simple_format(@subject.syllabus_outline) %>
+        <button 
+          onclick="document.getElementById('syllabus-preview').style.display='block'; document.getElementById('syllabus-full').style.display='none';" 
+          class="btn btn-sm btn-link p-0">
+          Show less
+        </button>
       </div>
     </div>
-    <div class="card-body">
-      <% if @subject.description.present? %>
-        <h5>Description</h5>
-        <p><%= @subject.description %></p>
-      <% end %>
-      
-      <% if @subject.syllabus_outline.present? %>
-        <h5>Syllabus Outline</h5>
-        <div class="syllabus-outline">
-          <div id="syllabus-preview">
-            <%= simple_format(@subject.syllabus_outline.truncate(300)) %>
-            
-            <% if @subject.syllabus_outline.length > 300 %>
-              <button 
-                onclick="document.getElementById('syllabus-preview').style.display='none'; document.getElementById('syllabus-full').style.display='block';" 
-                class="btn btn-sm btn-link p-0">
-                Read more
-              </button>
-            <% end %>
-          </div>
-          
-          <div id="syllabus-full" style="display: none;">
-            <%= simple_format(@subject.syllabus_outline) %>
-            <button 
-              onclick="document.getElementById('syllabus-preview').style.display='block'; document.getElementById('syllabus-full').style.display='none';" 
-              class="btn btn-sm btn-link p-0">
-              Show less
-            </button>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h3 class="mb-0">Topics</h3>
+  <% end %>
+  
+  <h3>Topics</h3>
+  <% if @subject.topics.empty? %>
+    <div class="alert alert-info">
+      This subject does not have any topics yet yet. 
       <%= link_to "Add New Topic", new_subject_topic_path(@subject), class: "btn btn-primary btn-sm" %>
     </div>
-    <div class="card-body">
-      <% if @topics.empty? %>
-        <div class="alert alert-info">
-          No topics have been added to this subject yet.
-        </div>
-      <% else %>
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Topic Name</th>
-                <th>Questions</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @topics.each do |topic| %>
-                <tr>
-                  <td><%= topic.name %></td>
-                  <td><%= topic.questions.count %></td>
-                  <td>
-                    <div class="btn-group btn-group-sm" role="group">
-                      <%= link_to "View", topic_path(topic), class: "btn btn-outline-primary" %>
-                      <%= link_to "Add Question", new_topic_question_path(topic), class: "btn btn-outline-success" %>
-                      <%= link_to "Edit", edit_topic_path(topic), class: "btn btn-outline-secondary" %>
-                    </div>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% end %>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table table-borderless">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Questions</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @subject.topics.each do |topic| %>
+            <tr>
+              <td><%= topic.name %></td>
+              <td><%= topic.questions.count %></td>
+              <td>
+                <%= link_to "View", topic_path(topic), class: "btn btn-outline-primary" %>
+                <%= link_to "Add Question", new_topic_question_path(topic), class: "btn btn-outline-primary" %>
+                <%= link_to "Edit", edit_topic_path(topic), class: "btn btn btn-outline-primary" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
-  </div>
-
-  <div class="my-4">
-    <% if @topics.any? %>
-      <%= link_to "Start Quiz for #{@subject.name}", quiz_start_path(subject_id: @subject.id), class: "btn btn-success" %>
-    <% end %>
-    <%= link_to "Back to Subjects", subjects_path, class: "btn btn-outline-secondary ms-2" %>
-  </div>
+    <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
+  <% end %>
+  <%= link_to "Add New Topic", new_subject_topic_path(@subject), class: "btn btn-primary" %>
 </div>
