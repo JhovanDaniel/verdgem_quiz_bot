@@ -1,17 +1,9 @@
 <div class="container mt-4">
-  <div class="row mb-4">
-    <div class="col">
-      <h3>User Management</h3>
-      <p class="text-muted">Manage all users of the CSEC Quiz Bot application</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h3 class="mb-0">All Users</h3>
+  <div class="card border-0">
+    <div class="card-header d-flex justify-content-between align-items-center bg-white border-0">
+      <h2 class="mb-0">All Users</h2>
       <div>
         <%= link_to "New User", admin_new_user_path, class: "btn btn-primary btn-sm" %>
-        <%= link_to "Invite New User", new_user_invitation_path, class: "btn btn-outline-primary btn-sm ms-2" if defined?(Devise::InvitableHelper) %>
       </div>
     </div>
     <div class="card-body">
@@ -33,14 +25,12 @@
                 <td>
                   <%= "#{user.first_name} #{user.last_name}".strip %>
                   <% if user == current_user %>
-                    <span class="badge bg-info ms-1">You</span>
+                    <span class="badge bg-dark ms-1">You</span>
                   <% end %>
                 </td>
                 <td><%= user.email %></td>
                 <td>
-                  <span class="badge <%= user.role == 'admin' ? 'bg-danger' : (user.role == 'teacher' ? 'bg-warning' : 'bg-primary') %>">
                     <%= user.role.humanize %>
-                  </span>
                 </td>
                 <td><%= user.created_at.strftime('%b %d, %Y') %></td>
                 <td><%= user.question_attempts.count %></td>
@@ -70,43 +60,37 @@
   </div>
 
   <div class="mt-4">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="mb-0">User Statistics</h3>
+    <h3>User Statistics</h3>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card bg-light">
+          <div class="card-body text-center">
+            <h3><%= @users.count %></h3>
+            <p class="mb-0">Total Users</p>
+          </div>
+        </div>
       </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-3">
-            <div class="card bg-light">
-              <div class="card-body text-center">
-                <h3><%= @users.count %></h3>
-                <p class="mb-0">Total Users</p>
-              </div>
-            </div>
+      <div class="col-md-3">
+        <div class="card bg-light">
+          <div class="card-body text-center">
+            <h3><%= @users.where(role: 'admin').count %></h3>
+            <p class="mb-0">Administrators</p>
           </div>
-          <div class="col-md-3">
-            <div class="card bg-light">
-              <div class="card-body text-center">
-                <h3><%= @users.where(role: 'admin').count %></h3>
-                <p class="mb-0">Administrators</p>
-              </div>
-            </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-light">
+          <div class="card-body text-center">
+            <h3><%= @users.where(role: 'teacher').count %></h3>
+            <p class="mb-0">Teachers</p>
           </div>
-          <div class="col-md-3">
-            <div class="card bg-light">
-              <div class="card-body text-center">
-                <h3><%= @users.where(role: 'teacher').count %></h3>
-                <p class="mb-0">Teachers</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card bg-light">
-              <div class="card-body text-center">
-                <h3><%= @users.where(role: 'student').count %></h3>
-                <p class="mb-0">Students</p>
-              </div>
-            </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-light">
+          <div class="card-body text-center">
+            <h3><%= @users.where(role: 'student').count %></h3>
+            <p class="mb-0">Students</p>
           </div>
         </div>
       </div>
