@@ -1,8 +1,8 @@
 <div class="container mt-4">
-  <div class="row mb-4">
+  <div class="row">
     <div class="col">
       <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
+        <ol class="breadcrumb bg-white">
           <li class="breadcrumb-item"><%= link_to "Users", users_path %></li>
           <li class="breadcrumb-item active" aria-current="page">New User</li>
         </ol>
@@ -10,17 +10,13 @@
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-header">
-      <h3>Create New User</h3>
-    </div>
-    <div class="card-body">
-      <%= render 'form', 
-                 url: admin_create_user_path, 
-                 method: :post,
-                 include_password: true,
-                 submit_text: "Create User",
-                 cancel_path: users_path %>
-    </div>
-  </div>
+
+  <h3>Create New User</h3>
+  <%= render 'form', 
+             url: admin_create_user_path, 
+             method: :post,
+             include_password: true,
+             submit_text: "Create User",
+             cancel_path: users_path %>
+
 </div>
