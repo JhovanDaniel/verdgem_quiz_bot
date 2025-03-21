@@ -5,6 +5,11 @@ class TopicsController < ApplicationController
   def index
     @subject = Subject.find(params[:subject_id])
     @topics = @subject.topics
+    
+    respond_to do |format|
+      format.html # Your existing HTML view
+      format.json { render json: @topics.as_json(only: [:id, :name]) }
+    end
   end
   
   def new
