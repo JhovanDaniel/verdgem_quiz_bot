@@ -51,7 +51,7 @@
           <% @questions.each do |question| %>
             <div class="list-group-item list-group-item-action">
               <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1 text-black"><%= truncate(question.content, length: 100) %></h5>
+                <h5 class="mb-1 text-black"><%= truncate(question.content, length: 200) %></h5>
                 <small class="">
                   <%= pluralize(question.max_points, 'point') %> | 
                   <span class="badge <%= question.difficulty_level == 'easy' ? 'bg-success' : (question.difficulty_level == 'medium' ? 'bg-warning' : 'bg-danger') %>">
@@ -59,7 +59,7 @@
                   </span>
                 </small>
               </div>
-              <p class="mb-1 text-black">
+              <p class="mb-1">
                 <strong>Key Concepts:</strong> 
                 <%= truncate(question.key_concepts || "None specified", length: 150) %>
               </p>
