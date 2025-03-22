@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'subscribers/create'
   
   get 'questions/show'
   get 'topics/index'
@@ -44,6 +45,8 @@ Rails.application.routes.draw do
   unauthenticated do
     root "pages#landing_page"
   end
+  
+  resources :subscribers, only: [:create]
   
   get 'pages/home'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
