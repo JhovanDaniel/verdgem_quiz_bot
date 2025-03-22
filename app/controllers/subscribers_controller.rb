@@ -1,5 +1,5 @@
 class SubscribersController < ApplicationController
-    skip_before_action :authenticate_user!, only: [:create], if: -> { respond_to?(:authenticate_user!) }
+    #skip_before_action :authenticate_user!, only: [:create], if: -> { respond_to?(:authenticate_user!) }
   
   def create
     @subscriber = Subscriber.new(subscriber_params)
@@ -10,7 +10,7 @@ class SubscribersController < ApplicationController
         format.json { render json: { success: true } }
         format.turbo_stream { flash.now[:notice] = "Thanks for subscribing to our newsletter!" }
       else
-        format.html { redirect_back fallback_location: root_path, alert: @subscriber.errors.full_messages.join(", ") }
+        format.html { redirect_back fallback_location: unauthenticated_root_path, alert: @subscriber.errors.full_messages.join(", ") }
         format.json { render json: { success: false, errors: @subscriber.errors.full_messages } }
         format.turbo_stream { flash.now[:alert] = @subscriber.errors.full_messages.join(", ") }
       end
