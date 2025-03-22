@@ -103,6 +103,7 @@
           <% end %>
         </tbody>
       </table>
+      <%= link_to "See all quiz history", '#', class: "btn btn-sm btn-dark mx-1" %>
     </div>
     <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
   <% end %>

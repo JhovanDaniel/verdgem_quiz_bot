@@ -3,7 +3,7 @@ class PagesController < ApplicationController
   
   def home
     @subjects = Subject.all
-    @quiz_sessions = current_user.quiz_sessions
+    @quiz_sessions = current_user.quiz_sessions.order(created_at: :desc).limit(10)
     @recent_attempts = current_user.question_attempts.includes(question: { topic: :subject }).order(created_at: :desc).limit(5)
     
     # Get some stats for the dashboard
