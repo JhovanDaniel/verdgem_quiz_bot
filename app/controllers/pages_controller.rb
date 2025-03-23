@@ -35,4 +35,10 @@ class PagesController < ApplicationController
   
   def landing_page
   end
+  
+  def about
+  end
+  
+  def our_blog
+  end
 end
