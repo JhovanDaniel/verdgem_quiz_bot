@@ -38,9 +38,17 @@ Rails.application.routes.draw do
   
   resources :users
   
-   authenticated :user do
-    root "pages#home", as: :authenticated_root
+  authenticated :user, -> (user) { user.teacher? || user.admin? } do
+    root to: "pages#teacher_dashboard", as: :teacher_root
   end
+  
+  authenticated :user, -> (user) { !user.teacher? && !user.admin? } do
+    root to: "pages#home", as: :authenticated_root
+  end
+
+  # Create the actual routes for these dashboards
+  get 'pages/home', to: 'pages#home'
+  get 'pages/teacher_dashboard', to: 'pages#teacher_dashboard'
   
   # Unauthenticated user routes
   unauthenticated do
