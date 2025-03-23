@@ -23,7 +23,7 @@
   <div class="col">
     <div class="card mb-4 rounded-3 shadow-sm">
       <div class="card-header py-3">
-        <h4 class="my-0 fw-normal">Free</h4>
+        <h4 class="my-0 fw-normal">Explorer (Free)</h4>
       </div>
       <div class="card-body">
         <h1 class="card-title pricing-card-title">$0<small class="text-body-secondary fw-light">/year</small></h1>
@@ -39,12 +39,12 @@
   <div class="col">
     <div class="card mb-4 rounded-3 shadow-sm">
       <div class="card-header py-3">
-        <h4 class="my-0 fw-normal">Pro</h4>
+        <h4 class="my-0 fw-normal">Scholar</h4>
       </div>
       <div class="card-body">
-        <h1 class="card-title pricing-card-title">$15<small class="text-body-secondary fw-light">/year</small></h1>
+        <h1 class="card-title pricing-card-title">$9.99<small class="text-body-secondary fw-light">/month</small></h1>
         <ul class="list-unstyled mt-3 mb-4">
-          <li>30 quiz attempts per month</li>
+          <li>50 quiz attempts per month</li>
           <li>Priority email support</li>
           <li>Help center access</li>
         </ul>
@@ -55,12 +55,12 @@
   <div class="col">
     <div class="card mb-4 rounded-3 shadow-sm">
       <div class="card-header py-3 bg-primary text-white">
-        <h4 class="my-0 fw-normal">Enterprise</h4>
+        <h4 class="my-0 fw-normal">Master</h4>
       </div>
       <div class="card-body">
-        <h1 class="card-title pricing-card-title">$50<small class="text-body-secondary fw-light">/year</small></h1>
+        <h1 class="card-title pricing-card-title">$25.99<small class="text-body-secondary fw-light">/month</small></h1>
         <ul class="list-unstyled mt-3 mb-4">
-          <li>Unlimited quiz attempts</li>
+          <li>150 quiz attempts</li>
           <li>Phone and email support</li>
           <li>Help center access</li>
         </ul>
@@ -118,19 +118,17 @@
 </div>
 
 <div class="container col-xxl-8">
-  <div class="row flex-lg-row-reverse g-5">
+  <div class="row flex-lg-row-reverse align-items-center g-5">
     <div class="col-10 col-sm-8 col-lg-6">
       <%= image_tag "hero_img_sm.png", alt: "Quiz Hero Image", class: "navbar-logo", width: 700 %>
     </div>
-    <div class="col-lg-6" style="padding-top:100px">
-      <div class="card mt-4 mb-4 border-0">
-        <div class="card-body">
-          <h3 class="display-5 fs-2 text-body-emphasis">Our on demand CSEC Prep courses are coming soon!</h3>
-          <p class="card-text">Exciting news! 🚀 We're launching on-demand CSEC preparation 
+    <div class="col-lg-6">
+      <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Our on demand CSEC Prep courses are coming soon!</h1>
+      <p class="lead">Exciting news! 🚀 We're launching on-demand CSEC preparation 
           courses with expert-led video lessons to help you master every subject. Be the first to 
           know when they drop—subscribe now and stay ahead of the game!</p>
-          
-          <%= form_with model: Subscriber.new, class: "row g-3 align-items-center" do |f| %>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+        <%= form_with model: Subscriber.new, class: "row g-3 align-items-center" do |f| %>
             <div class="col-auto flex-grow-1">
               <%= f.email_field :email, class: "form-control", placeholder: "Your email address", required: true %>
             </div>
@@ -138,7 +136,6 @@
               <%= f.submit "Subscribe", class: "btn btn-primary" %>
             </div>
           <% end %>
-        </div>
       </div>
     </div>
   </div>
