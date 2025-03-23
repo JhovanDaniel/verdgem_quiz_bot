@@ -9,6 +9,11 @@ class QuizController < ApplicationController
     @subject = Subject.find(params[:subject_id])
     @topic = Topic.find(params[:topic_id]) if params[:topic_id].present?
     
+    if current_user.quiz_limit_reached?
+      redirect_to authenticated_root_path, alert: "You've reached your maximum quiz attempts. Please upgrade your account for unlimited quizzes."
+      return
+    end
+    
     # Get questions based on filters
     questions_scope = Question.joins(:topic)
     
@@ -88,6 +93,8 @@ class QuizController < ApplicationController
       redirect_to dashboard_path, alert: "No questions available for the selected criteria. Please try different options."
       return
     end
+    
+    current_user.increment_quiz_attempts!
     
     # Create a new quiz session
     @quiz_session = current_user.quiz_sessions.create(

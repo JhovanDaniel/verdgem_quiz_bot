@@ -19,4 +19,20 @@ class User < ApplicationRecord
   def initials
     "#{first_name.first}#{last_name.first}".upcase 
   end
+  
+  def increment_quiz_attempts!
+    update(quiz_attempts: quiz_attempts + 1)
+  end
+  
+  def attempts_remaining
+    max_quiz_attempts - quiz_attempts
+  end
+  
+  def can_attempt_quiz?
+    quiz_attempts < max_quiz_attempts
+  end
+  
+  def quiz_limit_reached?
+    !can_attempt_quiz?
+  end
 end
