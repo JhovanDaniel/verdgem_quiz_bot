@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   post 'quiz/submit', to: 'quiz#submit', as: 'quiz_submit'
   get 'quiz/results', to: 'quiz#results', as: 'quiz_results'
   get 'quiz/history', to: 'quiz#history', as: 'quiz_history'
+  get 'quiz/quiz_select', to: 'quiz#quiz_select', as: 'quiz_select'
   get 'quiz/sessions/:id', to: 'quiz#show_session', as: 'quiz_session'
   get 'quiz/resume/:id', to: 'quiz#resume', as: 'resume_quiz'
   

@@ -1,6 +1,10 @@
 class QuizController < ApplicationController
   before_action :authenticate_user!
   
+  def quiz_select
+    @subjects = Subject.all
+  end
+  
   def start
     @subject = Subject.find(params[:subject_id])
     @topic = Topic.find(params[:topic_id]) if params[:topic_id].present?
