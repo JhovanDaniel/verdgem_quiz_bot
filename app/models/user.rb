@@ -6,6 +6,7 @@ class User < ApplicationRecord
          
   has_many :question_attempts, dependent: :destroy
   has_many :quiz_sessions, dependent: :destroy
+  has_many :created_subjects, class_name: 'Subject', foreign_key: 'created_by_id'
          
   enum role: [:student, :teacher, :admin]
          
