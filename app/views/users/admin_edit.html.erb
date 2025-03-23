@@ -1,17 +1,19 @@
 <div class="container mt-4">
-  <div class="row">
-    <div class="col">
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb bg-white">
-          <li class="breadcrumb-item"><%= link_to "Users", users_path %></li>
-          <li class="breadcrumb-item"><%= link_to "#{@user.first_name} #{@user.last_name}", user_path(@user) %></li>
-          <li class="breadcrumb-item active" aria-current="page">Admin Edit</li>
-        </ol>
-      </nav>
+  <% if current_user.admin? %>
+    <div class="row">
+      <div class="col">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-white">
+            <li class="breadcrumb-item"><%= link_to "Users", users_path %></li>
+            <li class="breadcrumb-item"><%= link_to "#{@user.first_name} #{@user.last_name}", user_path(@user) %></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit</li>
+          </ol>
+        </nav>
+      </div>
     </div>
-  </div>
+  <% end %>
   
-  <h3>Admin Edit User</h3>
+  <h3>Edit <%= @user.name %></h3>
   <%= render 'form', 
              url: admin_update_user_path(@user), 
              method: :patch,
