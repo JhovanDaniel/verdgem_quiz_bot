@@ -85,8 +85,8 @@
           <tr>
             <th>Date</th>
             <th>Subject</th>
+            <th>Topic</th>
             <th>Progress</th>
-            <th>Status</th>
             <th>Score</th>
             <th>Actions</th>
           </tr>
@@ -96,14 +96,8 @@
             <tr>
               <td><%= format_date(session.created_at) %></td>
               <td><%= session.subject.name %></td>
+              <td><%= session.topic.blank? ? "All Topics" : session.topic.name %></td>
               <td><%= session.completed_questions %> / <%= session.question_count %></td>
-              <td>
-                <% if session.completed? %>
-                  <span class="badge badge-primary">Completed</span>
-                <% else %>
-                  <span class="badge bg-white text-dark">In Progress</span>
-                <% end %>
-              </td>
               <td>
                 <% if session.completed? %>
                   <span class="badge <%= session.score_percentage >= 70 ? 'bg-primary' : 'bg-danger' %>">

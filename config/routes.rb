@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   # Create the actual routes for these dashboards
   get 'pages/home', to: 'pages#home'
   get 'pages/teacher_dashboard', to: 'pages#teacher_dashboard'
+  get 'pages/reports', to: 'pages#reports', as: 'reports'
   
   # Unauthenticated user routes
   unauthenticated do

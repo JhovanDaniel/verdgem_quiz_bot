@@ -44,4 +44,7 @@ class PagesController < ApplicationController
   
   def our_blog
   end
+  
+  def reports
+  end
 end
