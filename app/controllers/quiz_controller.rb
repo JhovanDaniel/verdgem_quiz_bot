@@ -10,7 +10,7 @@ class QuizController < ApplicationController
     @topic = Topic.find(params[:topic_id]) if params[:topic_id].present?
     
     if current_user.quiz_limit_reached?
-      redirect_to authenticated_root_path, alert: "You've reached your maximum quiz attempts. Please upgrade your account for unlimited quizzes."
+      redirect_to authenticated_root_path, alert: "You've reached your maximum quiz attempts for this month. Please upgrade your account or try again next month!"
       return
     end
     
@@ -312,6 +312,26 @@ class QuizController < ApplicationController
       redirect_to quiz_results_path
     else
       redirect_to quiz_question_path
+    end
+  end
+  
+  def sessions
+    if current_user.admin?
+      @quiz_sessions = QuizSession.order(created_at: :desc)
+    else
+      @quiz_sessions = current_user.quiz_sessions.order(created_at: :desc)
+    end
+    
+    if current_user.admin?
+    @unfinished_quiz = QuizSession
+       .where(completed_at: nil)
+       .order(created_at: :desc)
+       .first
+    else
+      @unfinished_quiz = current_user.quiz_sessions
+       .where(completed_at: nil)
+       .order(created_at: :desc)
+       .first
     end
   end
 end

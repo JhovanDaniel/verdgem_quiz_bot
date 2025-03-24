@@ -1,9 +1,9 @@
 <div class="container col-xxl-8 px-4">
   <div class="row flex-lg-row-reverse align-items-center g-5 pb-5">
-    <div class="col-10 col-sm-8 col-lg-4 mt-0">
+    <div class="col-10 col-sm-8 col-lg-6 mt-0">
       <%= image_tag "quiz-hero.png", alt: "Quiz Hero Image", class: "navbar-logo", width: 700 %>
     </div>
-    <div class="col-lg-8">
+    <div class="col-lg-6">
       <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Welcome, <%= current_user.first_name || current_user.email %>!</h1>
       <p class="lead">Ready to challenge yourself? Start a CSEC quiz and see how much you know!</p>
       <%= form_with url: quiz_start_path, method: :get, local: true, class: "row g-3", data: { controller: "quiz-form" } do |f| %>
@@ -24,7 +24,7 @@
         <div class="col-md-4">
           <%= f.label :difficulty, "Difficulty", class: "form-label" %>
           <%= f.select :difficulty, 
-                       options_for_select([["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"], ["Very hard", "very_hard"], ["Mixed", "mixed"]]), 
+                       options_for_select([["Mixed", "mixed"], ["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"], ["Very hard", "very_hard"]]), 
                        {}, { class: "form-select" } %>
         </div>
         
@@ -53,7 +53,7 @@
           <span class="text-primary"><%= current_user.quiz_attempts %></span> / 
           <span><%= current_user.max_quiz_attempts %></span>
         </h5>
-        <p class="text-muted mb-0">Attempts used</p>
+        <p class="text-muted mb-0">Attempts used this month</p>
       </div>
       <div class="col-auto">
         <div class="progress" style="width: 200px; height: 8px;">
