@@ -94,4 +94,24 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  config.hosts << "quiz.verdgem.com"
+  
+  config.action_mailer.default_url_options = { :host => 'https://quiz.verdgem.com' }  
+  #config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
+    
+  #~~~~~~~~~~~~~~~~ OUTLOOK CONFIG ~~~~~~~~~~~~~~~~~~~~#
+  
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp-mail.outlook.com',
+    port:                 587,
+    domain:               'quiz.verdgem.com', # Your domain or any domain you have access to
+    user_name:            ENV['TEST_EMAIL'], # Your Outlook email address
+    password:             ENV['TEST_EMAIL_PASS'], # Your Outlook email password
+    authentication:       :login,
+    enable_starttls_auto: true 
+  }
+  
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 end
