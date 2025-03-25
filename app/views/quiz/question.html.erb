@@ -1,9 +1,9 @@
 <div class="container mt-4">
-  <div class="card">
-    <div class="card-header">
+  <div class="card border-0">
+    <div class="card-header bg-white">
       <div class="d-flex justify-content-between align-items-center">
         <h3 class="mb-0">Question <%= @question_number %> of <%= @total_questions %></h3>
-        <div class="badge bg-primary">
+        <div class="badge bg-secondary">
           <%= @question.topic.subject.name %> | <%= @question.topic.name %>
         </div>
       </div>
