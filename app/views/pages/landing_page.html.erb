@@ -4,11 +4,13 @@
       <%= image_tag "hero-img-cropped.png", alt: "Quiz Hero Image", class: "navbar-logo", width: 700 %>
     </div>
     <div class="col-lg-6">
-      <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Responsive left-aligned hero with image</h1>
-      <p class="lead">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
+      <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Ace Your CSEC Exams!</h1>
+      <p class="lead"><u class="text-uppercase">We're offering 30 free quiz sessions per month this exam period!</u> Prepare for your CSEC exams with fun, interactive quizzes designed to boost your
+      confidence and knowledge. Track your progress, identify weak areas, and get exam-ready with 
+      Verdgem Quiz! 🚀 </p>
       <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-        <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Primary</button>
-        <button type="button" class="btn btn-outline-primary btn-lg px-4">Default</button>
+        <%= link_to "Sign up", new_user_registration_path, class:"btn btn-primary btn-lg px-4 me-md-2" %>
+        <%= link_to "Learn more", '#', class:"btn btn-outline-primary btn-lg px-4 me-md-2" %>
       </div>
     </div>
   </div>
@@ -33,38 +35,6 @@
           <li>Help center access</li>
         </ul>
         <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>
-      </div>
-    </div>
-  </div>
-  <div class="col">
-    <div class="card mb-4 rounded-3 shadow-sm">
-      <div class="card-header py-3">
-        <h4 class="my-0 fw-normal">Scholar</h4>
-      </div>
-      <div class="card-body">
-        <h1 class="card-title pricing-card-title">$9.99<small class="text-body-secondary fw-light">/month</small></h1>
-        <ul class="list-unstyled mt-3 mb-4">
-          <li>50 quiz attempts per month</li>
-          <li>Priority email support</li>
-          <li>Help center access</li>
-        </ul>
-        <button type="button" class="w-100 btn btn-lg btn-outline-primary">Get started</button>
-      </div>
-    </div>
-  </div>
-  <div class="col">
-    <div class="card mb-4 rounded-3 shadow-sm">
-      <div class="card-header py-3 bg-primary text-white">
-        <h4 class="my-0 fw-normal">Master</h4>
-      </div>
-      <div class="card-body">
-        <h1 class="card-title pricing-card-title">$25.99<small class="text-body-secondary fw-light">/month</small></h1>
-        <ul class="list-unstyled mt-3 mb-4">
-          <li>150 quiz attempts</li>
-          <li>Phone and email support</li>
-          <li>Help center access</li>
-        </ul>
-        <button type="button" class="w-100 btn btn-lg btn-primary">Get started</button>
       </div>
     </div>
   </div>
@@ -108,7 +78,7 @@
         </svg>
       </button>
       <h3 class="fs-2 text-body-emphasis">Instant Feedback</h3>
-      <p>Get immediate answers and explanations after each question to improve your understanding.</p>
+      <p>Get immediate answers and explanations after each quiz to improve your understanding.</p>
       <a href="#" class="icon-link">
         Call to action
         <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
