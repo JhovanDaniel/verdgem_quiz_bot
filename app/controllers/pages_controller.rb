@@ -45,6 +45,9 @@ class PagesController < ApplicationController
   def our_blog
   end
   
+  def csec_quizzes
+  end
+  
   def reports
   end
 end
