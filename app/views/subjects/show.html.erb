@@ -88,5 +88,7 @@
     </div>
     <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
   <% end %>
-  <%= link_to "Add New Topic", new_subject_topic_path(@subject), class: "btn btn-primary" %>
+  <% if current_user && current_user.admin? %>
+    <%= link_to "Add New Topic", new_subject_topic_path(@subject), class: "btn btn-primary" %>
+  <% end %>
 </div>

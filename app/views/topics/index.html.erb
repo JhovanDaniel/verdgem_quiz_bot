@@ -13,8 +13,9 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="pb-2 border-bottom"><%= @subject.name %> Topics</h2>
     
-    <!-- Add Subject Button -->
-    <%= link_to "Add New Topic", new_subject_topic_path, class: "btn btn-primary" %>
+    <% if current_user && current_user.admin? %>
+      <%= link_to "Add New Topic", new_subject_topic_path, class: "btn btn-primary" %>
+    <% end %>
   </div>
   <div class="row g-4 py-5 row-cols-1 row-cols-lg-2">
     <% if @subject.topics.empty? %>
@@ -34,9 +35,11 @@
           <p class="text-muted">
             <small><%= pluralize(topic.questions.count, 'question') %></small>
           </p>
-          <%= link_to "View Questions", topic_questions_path(topic), class: "btn btn-outline-primary btn-sm" %>
           <%= link_to "View Topic", topic_path(topic), class: "btn btn-outline-primary btn-sm" %>
-          <%= link_to "Add Question", new_topic_question_path(topic), class: "btn btn-dark btn-sm" %>
+          <% if current_user && current_user.admin? %>
+            <%= link_to "View Questions", topic_questions_path(topic), class: "btn btn-outline-primary btn-sm" %>
+            <%= link_to "Add Question", new_topic_question_path(topic), class: "btn btn-dark btn-sm" %>
+          <% end %>
         </div>
       <% end %>
     <% end %>

@@ -15,8 +15,10 @@
     <div class="card-header d-flex justify-content-between align-items-center bg-white border-0 px-0">
       <h2 class="mb-0"><%= @topic.name %></h2>
       <div>
-        <%= link_to "Edit", edit_topic_path(@topic), class: "btn btn-outline-primary btn-sm" %>
-        <%= link_to "Delete", topic_path(@topic), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure? This will also delete all questions within this topic." }, class: "btn btn-outline-danger btn-sm ms-2" %>
+        <% if current_user && current_user.admin? %>
+          <%= link_to "Edit", edit_topic_path(@topic), class: "btn btn-outline-primary btn-sm" %>
+          <%= link_to "Delete", topic_path(@topic), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure? This will also delete all questions within this topic." }, class: "btn btn-outline-danger btn-sm ms-2" %>
+        <% end %>
       </div>
     </div>
     <div class="card-body">
@@ -36,53 +38,55 @@
     </div>
   </div>
   
-  <div class="card border-0 p-0">
-    <div class="card-header d-flex justify-content-between align-items-center bg-white border-0">
-      <h3 class="mb-0">Questions</h3>
-      <%= link_to "Add New Question", new_topic_question_path(@topic), class: "btn btn-primary btn-sm" %>
-    </div>
-    <div class="card-body">
-      <% if @questions.empty? %>
-        <div class="alert alert-info">
-          No questions have been added to this topic yet.
-        </div>
-      <% else %>
-        <div class="list-group">
-          <% @questions.each do |question| %>
-            <div class="list-group-item list-group-item-action">
-              <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1 text-black"><%= truncate(question.content, length: 200) %></h5>
-                <small class="">
-                  <%= pluralize(question.max_points, 'point') %> | 
-                  <span class="badge <%= question.difficulty_level == 'easy' ? 'bg-success' : (question.difficulty_level == 'medium' ? 'bg-warning' : 'bg-danger') %>">
-                    <%= question.difficulty_level.humanize %>
-                  </span>
-                </small>
-              </div>
-              <p class="mb-1">
-                <strong>Key Concepts:</strong> 
-                <%= truncate(question.key_concepts || "None specified", length: 150) %>
-              </p>
-              <div class="d-flex justify-content-between align-items-center mt-2">
-                <div class="btn-group btn-group-sm">
-                  <%= link_to "View", question_path(question), class: "btn btn-outline-primary" %>
-                  <%= link_to "Edit", edit_question_path(question), class: "btn btn-outline-secondary" %>
+  <% if current_user && current_user.admin? %>
+    <div class="card border-0 p-0">
+      <div class="card-header d-flex justify-content-between align-items-center bg-white border-0">
+        <h3 class="mb-0">Questions</h3>
+        <%= link_to "Add New Question", new_topic_question_path(@topic), class: "btn btn-primary btn-sm" %>
+      </div>
+      <div class="card-body">
+        <% if @questions.empty? %>
+          <div class="alert alert-info">
+            No questions have been added to this topic yet.
+          </div>
+        <% else %>
+          <div class="list-group">
+            <% @questions.each do |question| %>
+              <div class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1 text-black"><%= truncate(question.content, length: 200) %></h5>
+                  <small class="">
+                    <%= pluralize(question.max_points, 'point') %> | 
+                    <span class="badge <%= question.difficulty_level == 'easy' ? 'bg-success' : (question.difficulty_level == 'medium' ? 'bg-warning' : 'bg-danger') %>">
+                      <%= question.difficulty_level.humanize %>
+                    </span>
+                  </small>
                 </div>
-                <small>
-                  <%= question.question_attempts.count %> attempts by students
-                </small>
+                <p class="mb-1">
+                  <strong>Key Concepts:</strong> 
+                  <%= truncate(question.key_concepts || "None specified", length: 150) %>
+                </p>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                  <div class="btn-group btn-group-sm">
+                    <%= link_to "View", question_path(question), class: "btn btn-outline-primary" %>
+                    <%= link_to "Edit", edit_question_path(question), class: "btn btn-outline-secondary" %>
+                  </div>
+                  <small>
+                    <%= question.question_attempts.count %> attempts by students
+                  </small>
+                </div>
               </div>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <div class="my-4">
     <% if @questions.any? %>
       <%= link_to "Start Quiz for this Topic", quiz_start_path(subject_id: @topic.subject.id, topic_id: @topic.id), class: "btn btn-primary" %>
     <% end %>
-    <%= link_to "Back to #{@topic.subject.name}", subject_path(@topic.subject), class: "btn btn-outline-secondary ms-2" %>
+    <%= link_to "Back to #{@topic.subject.name}", subject_path(@topic.subject), class: "btn btn-outline-primary ms-2" %>
   </div>
 </div>
