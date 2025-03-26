@@ -2,8 +2,9 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="pb-2 border-bottom">CSEC Subjects</h2>
     
-    <!-- Add Subject Button -->
-    <%= link_to "Add New Subject", new_subject_path, class: "btn btn-primary" %>
+    <% if current_user && current_user.admin? %>
+      <%= link_to "Add New Subject", new_subject_path, class: "btn btn-primary" %>
+    <% end %>
   </div>
   <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
     <% if @subjects.empty? %>
