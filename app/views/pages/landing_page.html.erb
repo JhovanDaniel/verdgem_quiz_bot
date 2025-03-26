@@ -5,9 +5,8 @@
     </div>
     <div class="col-lg-6">
       <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Ace Your CSEC Exams!</h1>
-      <p class="lead"><u class="text-uppercase">We're offering 30 free quiz sessions per month this exam period!</u> Prepare for your CSEC exams with fun, interactive quizzes designed to boost your
-      confidence and knowledge. Track your progress, identify weak areas, and get exam-ready with 
-      Verdgem Quiz! 🚀 </p>
+      <p class="lead"><u class="">We're offering 30 free quiz sessions per month this exam period!</u> Prepare for your CSEC exams with AI powered quizzes designed to boost your
+      confidence and knowledge! 🚀 </p>
       <div class="d-grid gap-2 d-md-flex justify-content-md-start">
         <%= link_to "Sign up", new_user_registration_path, class:"btn btn-primary btn-lg px-4 me-md-2" %>
         <%= link_to "Learn more", pages_csec_quizzes_path, class:"btn btn-outline-primary btn-lg px-4 me-md-2" %>
@@ -18,14 +17,15 @@
 
 <div class="pricing-header p-3 pb-md-4 mx-auto text-center" style="margin-top:100px;">
   <h2 class="display-5 fw-normal text-body-emphasis">Pricing</h2>
-  <p class="fs-5 text-body-secondary">Quickly build an effective pricing table for your potential customers with this Bootstrap example. It’s built with default Bootstrap components and utilities with little customization.</p>
+  <p class="fs-5 text-body-secondary">We are currently offering 30 quizzes per month absolutely free until June 30th! Take advantage of this
+  opportunity to test your exam readiness and get instant feedback on your work.</p>
 </div>
 
 <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
   <div class="col">
     <div class="card mb-4 rounded-3 shadow-sm">
       <div class="card-header py-3">
-        <h4 class="my-0 fw-normal">Explorer (Free)</h4>
+        <h4 class="my-0 fw-normal">Early Explorer</h4>
       </div>
       <div class="card-body">
         <h1 class="card-title pricing-card-title">$0<small class="text-body-secondary fw-light">/year</small></h1>
@@ -34,7 +34,7 @@
           <li>Email support</li>
           <li>Help center access</li>
         </ul>
-        <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>
+        <%= link_to "Sign up for free", new_user_registration_path, class:"w-100 btn btn-lg btn-outline-primary"%>
       </div>
     </div>
   </div>
@@ -51,10 +51,7 @@
       </button>
       <h3 class="fs-2 text-body-emphasis">Exam-style questions</h3>
       <p>Access hundreds of past-paper-style questions covering all sections of the syllabus.</p>
-      <a href="#" class="icon-link">
-        Call to action
-        <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
-      </a>
+      <%= link_to "Learn more", pages_csec_quizzes_path, class:"icon-link" %>
     </div>
     <div class="feature col">
       <button type="button" class="btn btn-primary mb-2">
@@ -65,10 +62,7 @@
       </button>
       <h3 class="fs-2 text-body-emphasis">Topic-Based Quizzes</h3>
       <p>Focus on specific subjects and topics to strengthen weak spots.</p>
-      <a href="#" class="icon-link">
-        Call to action
-        <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
-      </a>
+      <%= link_to "Learn more", pages_csec_quizzes_path, class:"icon-link" %>
     </div>
     <div class="feature col">
       <button type="button" class="btn btn-primary mb-2">
@@ -79,10 +73,7 @@
       </button>
       <h3 class="fs-2 text-body-emphasis">Instant Feedback</h3>
       <p>Get immediate answers and explanations after each quiz to improve your understanding.</p>
-      <a href="#" class="icon-link">
-        Call to action
-        <svg class="bi"><use xlink:href="#chevron-right"></use></svg>
-      </a>
+      <%= link_to "Learn more", pages_csec_quizzes_path, class:"icon-link" %>
     </div>
   </div>
 </div>
