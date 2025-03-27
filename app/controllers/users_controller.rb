@@ -42,12 +42,13 @@ class UsersController < ApplicationController
   
   def user_edit
     @user = User.find(params[:id])
+    @include_password = true
   end
   
   def user_update
     @user = User.find(params[:id])
     
-    if @user.update(user_params)
+    if @user.update_with_password(user_params)
       redirect_to user_path(@user), notice: "User was successfully updated."
     else
       render :user_edit, status: :unprocessable_entity

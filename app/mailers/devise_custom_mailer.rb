@@ -10,4 +10,9 @@ class DeviseCustomMailer < Devise::Mailer
     attachments["icons-white-check.png"] = File.read(Rails.root.join("app/assets/images/icons-white-check.png"))
     super
   end
+  
+  def reset_password_instructions(record, token, opts=[])
+    attachments["icons-white-unlock.png"] = File.read(Rails.root.join("app/assets/images/icons-white-unlock.png"))
+    super
+  end
 end

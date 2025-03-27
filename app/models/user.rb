@@ -2,7 +2,7 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable, :confirmable
+         :recoverable, :rememberable, :validatable
          
   has_many :question_attempts, dependent: :destroy
   has_many :quiz_sessions, dependent: :destroy
@@ -34,5 +34,14 @@ class User < ApplicationRecord
   
   def quiz_limit_reached?
     !can_attempt_quiz?
+  end
+  
+  def update_with_password(params)
+    if params[:password].blank?
+      params.delete(:password)
+      params.delete(:password_confirmation) if params[:password_confirmation].blank?
+    end
+    
+    update(params)
   end
 end

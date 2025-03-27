@@ -13,18 +13,15 @@
     
     <%= f.input :email, required: true %>
     
-    <% if include_password %>
-      <div class="row">
-        <div class="col-md-6">
-          <%= f.input :password, 
-                      hint: "Leave blank to keep current password" %>
-        </div>
-        <div class="col-md-6">
-          <%= f.input :password_confirmation %>
-        </div>
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.input :password, required: false, hint: "Leave blank to keep current password" %>
       </div>
-    <% end %>
-    
+      <div class="col-md-6">
+        <%= f.input :password_confirmation, required: false %>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-md-6">
         <%= f.input :country %>
