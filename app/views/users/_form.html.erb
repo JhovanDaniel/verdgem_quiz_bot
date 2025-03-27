@@ -25,12 +25,28 @@
       </div>
     <% end %>
     
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.input :country %>
+      </div>
+    </div>
+    
     <% if current_user.admin? %>
       <div class="row">
         <div class="col-md-6">
           <%= f.input :role, 
                       collection: User::roles.keys, label_method: lambda { |role| role.titleize }, 
                       required: true %>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
+          <%= f.input :quiz_attempts %>
+        </div> 
+        
+        <div class="col-md-6">
+          <%= f.input :max_quiz_attempts %>
         </div>
       </div>
     <% end %>
