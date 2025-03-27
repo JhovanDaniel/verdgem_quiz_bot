@@ -2,7 +2,7 @@ class QuizSession < ApplicationRecord
   belongs_to :user
   belongs_to :subject
   belongs_to :topic, optional: true
-  has_many :question_attempts, dependent: :nullify
+  has_many :question_attempts, dependent: :destroy
   
   def total_questions
     # This gets the question_ids from the question_attempts

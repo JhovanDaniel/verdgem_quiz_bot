@@ -32,10 +32,10 @@ Rails.application.routes.draw do
     registrations: 'users/registrations'
   }
   
-  get 'users/admin_new', to: 'users#admin_new', as: 'admin_new_user'
-  post 'users/admin_create', to: 'users#admin_create', as: 'admin_create_user'
-  get 'users/:id/admin_edit', to: 'users#admin_edit', as: 'admin_edit_user'
-  patch 'users/:id/admin_update', to: 'users#admin_update', as: 'admin_update_user'
+  get 'users/user_new', to: 'users#user_new', as: 'user_new_user'
+  post 'users/user_create', to: 'users#user_create', as: 'user_create_user'
+  get 'users/:id/user_edit', to: 'users#user_edit', as: 'user_edit_user'
+  patch 'users/:id/user_update', to: 'users#user_update', as: 'user_update_user'
   
   resources :users
   

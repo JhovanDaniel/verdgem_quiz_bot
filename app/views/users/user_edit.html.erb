@@ -15,7 +15,7 @@
   
   <h3>Edit <%= @user.name %></h3>
   <%= render 'form', 
-             url: admin_update_user_path(@user), 
+             url: user_update_user_path(@user), 
              method: :patch,
              include_password: false,
              submit_text: "Update User",

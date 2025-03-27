@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_admin, except: [:show, :admin_edit]
+  before_action :require_admin, except: [:show, :user_edit, :user_update]
   
   def index
     @users = User.all
@@ -23,11 +23,11 @@ class UsersController < ApplicationController
     end
   end
   
-  def admin_new
+  def user_new
     @user = User.new
   end
   
-  def admin_create
+  def user_create
     @user = User.new(user_params)
     
     # Generate a random password if none provided
@@ -36,21 +36,21 @@ class UsersController < ApplicationController
     if @user.save
       redirect_to users_path, notice: "User was successfully created."
     else
-      render :admin_new, status: :unprocessable_entity
+      render :user_new, status: :unprocessable_entity
     end
   end
   
-  def admin_edit
+  def user_edit
     @user = User.find(params[:id])
   end
   
-  def admin_update
+  def user_update
     @user = User.find(params[:id])
     
     if @user.update(user_params)
       redirect_to user_path(@user), notice: "User was successfully updated."
     else
-      render :admin_edit, status: :unprocessable_entity
+      render :user_edit, status: :unprocessable_entity
     end
   end
   
