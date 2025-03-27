@@ -9,41 +9,39 @@
     <div class="card card-md p-4">
       <div class="card-body p-4">
         <h4 class="h4 text-center mb-4">Sign up</h4>
-        <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-        <%= render "devise/shared/error_messages", resource: resource %>
-        
-          <div class="field my-4">
-            <%= f.label :email, class:"form-label" %><br />
-            <%= f.email_field :email, class:"form-control", autofocus: true, autocomplete: "email" %>
-          </div>
+        <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+          <%= render "devise/shared/error_messages", resource: resource %>
           
-          <div class="field my-4">
-            <%= f.label :first_name, class:"form-label" %><br />
-            <%= f.text_field :first_name, class:"form-control" %>
-          </div>
+          <%= f.input :email, 
+                      wrapper_html: { class: 'my-4' },
+                      input_html: { autocomplete: "email", autofocus: true },
+                      label_html: { class: 'form-label' } %>
           
-          <div class="field my-4">
-            <%= f.label :last_name, class:"form-label" %><br />
-            <%= f.text_field :last_name, class:"form-control" %>
-          </div>
+          <%= f.input :first_name, 
+                      wrapper_html: { class: 'my-4' },
+                      label_html: { class: 'form-label' } %>
           
+          <%= f.input :last_name, 
+                      wrapper_html: { class: 'my-4' },
+                      label_html: { class: 'form-label' } %>
           
+          <%= f.input :country, 
+                      wrapper_html: { class: 'my-4' },
+                      label_html: { class: 'form-label' } %>
           
-          <div class="field my-4">
-            <%= f.label :password, class:"form-label" %>
-            <% if @minimum_password_length %>
-            <em>(<%= @minimum_password_length %> characters minimum)</em>
-            <% end %><br />
-            <%= f.password_field :password, class:"form-control", autocomplete: "new-password" %>
-          </div>
-        
-          <div class="field my-4">
-            <%= f.label :password_confirmation, class:"form-label"  %><br />
-            <%= f.password_field :password_confirmation, class:"form-control", autocomplete: "new-password" %>
-          </div>
-        
+          <%= f.input :password,
+                      wrapper_html: { class: 'my-4' },
+                      input_html: { autocomplete: "new-password" },
+                      label_html: { class: 'form-label' },
+                      hint: @minimum_password_length ? "#{@minimum_password_length} characters minimum" : nil %>
+          
+          <%= f.input :password_confirmation,
+                      wrapper_html: { class: 'my-4' },
+                      input_html: { autocomplete: "new-password" },
+                      label_html: { class: 'form-label' } %>
+          
           <div class="actions mt-4">
-            <%= f.submit "Sign up", class:"btn btn-primary w-100" %>
+            <%= f.button :submit, "Sign up", class: "btn btn-primary w-100" %>
           </div>
         <% end %>
     
