@@ -24,14 +24,14 @@
         <div class="col-md-4">
           <%= f.label :difficulty, "Difficulty", class: "form-label" %>
           <%= f.select :difficulty, 
-                       options_for_select([["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"], ["Very hard", "very_hard"], ["Mixed", "mixed"]]), 
+                       options_for_select([["Mixed", "mixed"], ["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"]]), 
                        {}, { class: "form-select" } %>
         </div>
         
         <div class="col-md-4">
           <%= f.label :count, "Number of Questions", class: "form-label" %>
           <%= f.select :count, 
-                      options_for_select([5, 10, 15, 20, 30]),
+                      options_for_select([10, 15, 20, 30]),
                       {}, { class: "form-select" } %>
         </div>
         
