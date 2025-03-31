@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_27_000159) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_31_004132) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -26,6 +26,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_27_000159) do
     t.string "evaluation_status", default: "pending"
     t.text "evaluation_error"
     t.uuid "quiz_session_id"
+    t.boolean "has_problem", default: false
     t.index ["question_id"], name: "index_question_attempts_on_question_id"
     t.index ["quiz_session_id"], name: "index_question_attempts_on_quiz_session_id"
     t.index ["user_id"], name: "index_question_attempts_on_user_id"

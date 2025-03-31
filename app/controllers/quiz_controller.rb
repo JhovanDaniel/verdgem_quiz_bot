@@ -149,6 +149,7 @@ class QuizController < ApplicationController
     @attempt = current_user.question_attempts.create(
       question: @question,
       student_answer: params[:answer],
+      has_problem: params[:question_has_problem],
       quiz_session_id: quiz_session_id  # Add this line
     )
     
