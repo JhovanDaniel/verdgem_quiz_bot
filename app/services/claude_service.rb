@@ -79,7 +79,9 @@ class ClaudeService
       
       Follow these evaluation guidelines:
       
-      1. Compare the student's answer against the model answer and key concepts
+      1. Compare the student's answer against the model answer and key concepts. Examples that 
+      students give in their answers do not have to be exact to model answer but should still be
+      a correct example.
       2. Assign a fair score based on the marking criteria provided
       3. Provide specific feedback on what the student did well
       4. Point out any misconceptions or areas for improvement
@@ -87,7 +89,9 @@ class ClaudeService
       6. Be encouraging and educational in your feedback
       7. Start your response with the score in the format: "Score: X/Y points"
       
-      Remember that there may be multiple valid approaches to answering the question. Evaluate the substance of the student's understanding rather than expecting exact wording from the model answer.
+      Remember that there may be multiple valid approaches to answering the question. 
+      Evaluate the substance of the student's understanding rather than expecting exact 
+      wording from the model answer.
     PROMPT
   end
   
