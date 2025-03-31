@@ -40,7 +40,7 @@
         
         <div class="d-flex justify-content-between">
           <% if @question_number > 1 %>
-            <%= link_to "Previous", "#", class: "btn btn-outline-secondary", disabled: true %>
+            <%# link_to "Previous", quiz_previous_question_path, class: "btn btn-outline-secondary" %>
           <% end %>
           
           <%= f.submit @question_number == @total_questions ? "Submit Final Answer" : "Submit & Continue", 

@@ -253,6 +253,20 @@ class QuizController < ApplicationController
     # when the user starts a new quiz or after some time
   end
   
+  def previous_question
+    return redirect_to authenticated_root_path, alert: "No active quiz found." unless session[:quiz].present?
+    
+    # Decrease the index to go to the previous question
+    current_index = session[:quiz]["current_index"]
+    
+    # Don't go below the first question
+    if current_index > 0
+      session[:quiz]["current_index"] = current_index - 1
+    end
+    
+    redirect_to quiz_question_path
+  end
+  
   def history
     @quiz_sessions = current_user.quiz_sessions
                                 .order(created_at: :desc)

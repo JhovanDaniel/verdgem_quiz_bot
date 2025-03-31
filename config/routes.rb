@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   # Quiz routes
   get 'quiz/start', to: 'quiz#start', as: 'quiz_start'
   get 'quiz/question', to: 'quiz#question', as: 'quiz_question'
+  get 'quiz/previous', to: 'quiz#previous_question', as: 'quiz_previous_question'
   post 'quiz/submit', to: 'quiz#submit', as: 'quiz_submit'
   get 'quiz/results', to: 'quiz#results', as: 'quiz_results'
   get 'quiz/history', to: 'quiz#history', as: 'quiz_history'
