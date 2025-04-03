@@ -31,7 +31,16 @@
 						  <span>Quiz Sessions</span>
 					  <% end %>
 					</li>
+				<% end %>
 					
+				<li class="nav-item mx-2">
+				  <%= link_to leaderboard_path, class:"nav-link" do %>
+					  <i class="bi bi-trophy"></i>
+					  <span>Leaderboard</span>
+				  <% end %>
+				</li>
+					
+				<% if current_user %>
 					<li class="nav-item mx-2">
 					  <%= link_to reports_path, class:"nav-link" do %>
 						  <i class="bi bi-file-earmark-bar-graph"></i>

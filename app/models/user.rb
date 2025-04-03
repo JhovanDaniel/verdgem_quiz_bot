@@ -44,4 +44,30 @@ class User < ApplicationRecord
     
     update(params)
   end
+  
+  #Leaderboard methods
+  def total_score(start_date = nil, end_date = nil)
+    scope = question_attempts
+    scope = scope.where(created_at: start_date..end_date) if start_date && end_date
+    scope.sum(:score)
+  end
+  
+  def total_possible_score(start_date = nil, end_date = nil)
+    scope = question_attempts.joins(:question)
+    scope = scope.where(question_attempts: { created_at: start_date..end_date }) if start_date && end_date
+    scope.sum('questions.max_points')
+  end
+  
+  def score_percentage(start_date = nil, end_date = nil)
+    possible = total_possible_score(start_date, end_date)
+    return 0 if possible == 0
+    (total_score(start_date, end_date).to_f / possible * 100).round(1)
+  end
+  
+  def completed_questions_count(start_date = nil, end_date = nil)
+    scope = question_attempts.where.not(score: nil)
+    scope = scope.where(created_at: start_date..end_date) if start_date && end_date
+    scope.count
+  end
+  
 end
