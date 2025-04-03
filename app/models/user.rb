@@ -11,7 +11,9 @@ class User < ApplicationRecord
   enum role: [:student, :teacher, :admin]
          
   validates_presence_of :first_name, :last_name, :email, :role
-  validate :nickname_not_offensive, if: -> { nickname.present? }
+  validate :check_profanity_in_nickname, if: -> { nickname.present? }
+  validate :check_profanity_in_first_name, if: -> { first_name.present? }
+  validate :check_profanity_in_last_name, if: -> { last_name.present? }
 
   
   def name
@@ -74,26 +76,73 @@ class User < ApplicationRecord
   
   private
   
-  def nickname_not_offensive
-    # Check original nickname
-    if Obscenity.profane?(nickname)
-      errors.add(:nickname, "contains inappropriate language")
-      return
-    end
+  def check_profanity_in_nickname
+    check_profanity_in_attribute(:nickname)
+  end
+  
+  # Method to check for profanity in first name
+  def check_profanity_in_first_name
+    check_profanity_in_attribute(:first_name)
+  end
+  
+  # Method to check for profanity in last name
+  def check_profanity_in_last_name
+    check_profanity_in_attribute(:last_name)
+  end
+  
+  # Generic method to check for profanity in any attribute
+  def check_profanity_in_attribute(attribute)
+    value = self.send(attribute)
     
-    # Check leetspeak version
-    leet_nickname = nickname.downcase
-                           .gsub('0', 'o')
-                           .gsub('1', 'i')
-                           .gsub('3', 'e')
-                           .gsub('4', 'a')
-                           .gsub('5', 's')
-                           .gsub('7', 't')
-                           .gsub('@', 'a')
-                           .gsub('$', 's')
-    
-    if leet_nickname != nickname.downcase && Obscenity.profane?(leet_nickname)
-      errors.add(:nickname, "contains inappropriate language")
+    begin
+      # Check using Obscenity gem
+      if Obscenity.profane?(value)
+        errors.add(attribute, "contains inappropriate language")
+        return
+      end
+      
+      # Load custom offensive words
+      custom_words_path = Rails.root.join('config', 'offensive_words.txt')
+      custom_words = File.exist?(custom_words_path) ? 
+                    File.read(custom_words_path).split("\n").map(&:strip).reject(&:empty?) : 
+                    []
+      
+      # Check custom words directly
+      custom_words.each do |word|
+        if value.downcase.include?(word.downcase)
+          errors.add(attribute, "contains inappropriate language")
+          return
+        end
+      end
+      
+      # Check leetspeak version
+      leet_value = value.downcase
+                        .gsub('0', 'o')
+                        .gsub('1', 'i')
+                        .gsub('3', 'e')
+                        .gsub('4', 'a')
+                        .gsub('5', 's')
+                        .gsub('7', 't')
+                        .gsub('@', 'a')
+                        .gsub('$', 's')
+      
+      if leet_value != value.downcase
+        # Check custom words against leetspeak version
+        custom_words.each do |word|
+          if leet_value.include?(word.downcase)
+            errors.add(attribute, "contains inappropriate language")
+            return
+          end
+        end
+        
+        # Check Obscenity against leetspeak version
+        if Obscenity.profane?(leet_value)
+          errors.add(attribute, "contains inappropriate language")
+        end
+      end
+    rescue => e
+      # Log error but don't block validation if checks fail
+      Rails.logger.error "Error in profanity check for #{attribute}: #{e.message}"
     end
   end
   
