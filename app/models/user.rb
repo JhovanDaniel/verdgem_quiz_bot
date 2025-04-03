@@ -11,6 +11,8 @@ class User < ApplicationRecord
   enum role: [:student, :teacher, :admin]
          
   validates_presence_of :first_name, :last_name, :email, :role
+  validate :nickname_not_offensive, if: -> { nickname.present? }
+
   
   def name
     "#{first_name} #{last_name}"
@@ -68,6 +70,31 @@ class User < ApplicationRecord
     scope = question_attempts.where.not(score: nil)
     scope = scope.where(created_at: start_date..end_date) if start_date && end_date
     scope.count
+  end
+  
+  private
+  
+  def nickname_not_offensive
+    # Check original nickname
+    if Obscenity.profane?(nickname)
+      errors.add(:nickname, "contains inappropriate language")
+      return
+    end
+    
+    # Check leetspeak version
+    leet_nickname = nickname.downcase
+                           .gsub('0', 'o')
+                           .gsub('1', 'i')
+                           .gsub('3', 'e')
+                           .gsub('4', 'a')
+                           .gsub('5', 's')
+                           .gsub('7', 't')
+                           .gsub('@', 'a')
+                           .gsub('$', 's')
+    
+    if leet_nickname != nickname.downcase && Obscenity.profane?(leet_nickname)
+      errors.add(:nickname, "contains inappropriate language")
+    end
   end
   
 end

@@ -30,7 +30,12 @@
                   <tr class="<%= 'table-primary' if user == current_user %>">
                     <td><%= index + 1 %></td>
                     <td>
-                      <%= user.first_name %> <%= user.last_name&.first %>
+                      <% if !current_user.nickname.blank? %>
+                        <%= user.nickname %>
+                      <% else %>
+                        <%= user.first_name %> <%= user.last_name&.first %>
+                      <% end %>
+                      
                       <% if user == current_user %>
                         <span class="badge bg-info">You</span>
                       <% end %>
@@ -74,7 +79,12 @@
                   <tr class="<%= 'table-success' if user == current_user %>">
                     <td><%= index + 1 %></td>
                     <td>
-                      <%= user.first_name %> <%= user.last_name&.first %>
+                      <% if !current_user.nickname.blank? %>
+                        <%= user.nickname %>
+                      <% else %>
+                        <%= user.first_name %> <%= user.last_name&.first %>
+                      <% end %>
+                      
                       <% if user == current_user %>
                         <span class="badge bg-info">You</span>
                       <% end %>
