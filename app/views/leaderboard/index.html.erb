@@ -9,7 +9,7 @@
   
   <div class="row">
     <!-- Total Points Leaderboard -->
-    <div class="col-md-6">
+    <div class="col-md-10">
       <div class="card mb-4">
         <div class="card-header bg-primary text-white">
           <h3 class="mb-0">Total Points Leaders</h3>
@@ -19,6 +19,7 @@
             <table class="table table-hover">
               <thead>
                 <tr>
+                  <th>Country</th>
                   <th>Rank</th>
                   <th>Student</th>
                   <th>Points</th>
@@ -27,7 +28,25 @@
               </thead>
               <tbody>
                 <% @top_by_score.each_with_index do |user, index| %>
-                  <tr class="<%= 'table-primary' if user == current_user %>">
+                  <tr class="<%= 
+                    if user == current_user
+                      'table-primary'
+                    elsif index == 0
+                      'gold-rank'
+                    elsif index == 1
+                      'silver-rank'
+                    elsif index == 2
+                      'bronze-rank'
+                    end %>">
+                    
+                    <td>
+                      <% if current_user.country.present? %>
+                        <% country_code = current_user.country.upcase[0..1] %>
+                        <span title="<%= current_user.country %>"><%= country_code_to_emoji(country_code) %></span>
+                      <% else %>
+                        <span>-</span>
+                      <% end %>
+                    </td>
                     <td><%= index + 1 %></td>
                     <td>
                       <% if !current_user.nickname.blank? %>
@@ -56,9 +75,11 @@
         </div>
       </div>
     </div>
-    
+  </div>
+  
+  <div class="row">
     <!-- Percentage Leaders -->
-    <div class="col-md-6">
+    <div class="col-md-10">
       <div class="card mb-4">
         <div class="card-header bg-primary text-white">
           <h3 class="mb-0">Highest Accuracy</h3>
@@ -68,6 +89,7 @@
             <table class="table table-hover">
               <thead>
                 <tr>
+                  <th>Country</th>
                   <th>Rank</th>
                   <th>Student</th>
                   <th>Accuracy</th>
@@ -77,6 +99,14 @@
               <tbody>
                 <% @top_by_percentage.each_with_index do |user, index| %>
                   <tr class="<%= 'table-success' if user == current_user %>">
+                    <td>
+                      <% if current_user.country.present? %>
+                        <% country_code = current_user.country.upcase[0..1] %>
+                        <span title="<%= current_user.country %>"><%= country_code_to_emoji(country_code) %></span>
+                      <% else %>
+                        <span>-</span>
+                      <% end %>
+                    </td>
                     <td><%= index + 1 %></td>
                     <td>
                       <% if !current_user.nickname.blank? %>
@@ -151,7 +181,7 @@
     </div>
   <% end %>
   
-  <p class="text-muted text-center">
+  <p class="text-muted">
     Only students with at least 10 completed questions are ranked on the leaderboard.
   </p>
   
