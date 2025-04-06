@@ -30,9 +30,7 @@
               <tbody>
                 <% @top_by_score.each_with_index do |user, index| %>
                   <tr class="<%= 
-                    if user_signed_in? && user == current_user
-                      'table-primary'
-                    elsif index == 0
+                    if index == 0
                       'gold-rank'
                     elsif index == 1
                       'silver-rank'
