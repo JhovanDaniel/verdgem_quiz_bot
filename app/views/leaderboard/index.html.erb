@@ -3,9 +3,7 @@
     <h2 class="pb-2 border-bottom"><%= "#{@current_month.strftime("%B %Y")} Leaderboard" %> </h2>
     
     <div class="btn-group">
-      <div style="font-size: 20px; margin: 10px;">
-        Direct flag test: 🇺🇸 🇬🇧 🇫🇷 🇯🇵 🇧🇷
-      </div>
+
     </div>
   </div>
   
@@ -45,10 +43,10 @@
                     <td>
                       <% if user.country.present? %>
                         <% country_code = user.country.strip.upcase[0..1].downcase %>
-                        <img src="https://flagcdn.com/16x12/<%= country_code %>.png" 
+                        <img src="https://flagcdn.com/28x21/<%= country_code %>.png" 
                              alt="<%= user.country %>" 
                              title="<%= user.country %>"
-                             width="24" height="24">
+                             width="28" height="21">
                       <% else %>
                         -
                       <% end %>
@@ -117,10 +115,13 @@
                     
                     <td>
                       <% if user.country.present? %>
-                        <% country_code = user.country.upcase[0..1] %>
-                        <span title="<%= user.country %>"><%= country_code_to_emoji(country_code) %></span>
+                        <% country_code = user.country.strip.upcase[0..1].downcase %>
+                        <img src="https://flagcdn.com/28x21/<%= country_code %>.png" 
+                             alt="<%= user.country %>" 
+                             title="<%= user.country %>"
+                             width="28" height="21">
                       <% else %>
-                        <span>-</span>
+                        -
                       <% end %>
                     </td>
                     <td><%= index + 1 %></td>
