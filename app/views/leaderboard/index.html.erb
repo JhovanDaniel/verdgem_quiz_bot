@@ -185,7 +185,7 @@
             <div class="card bg-light mb-3">
               <div class="card-body">
                 <h2><%= current_user.quiz_sessions.where(completed_at: @start_date..@end_date).count %></h2>
-                <p class="mb-0">Quizzes Completed</p>
+                <p class="mb-0"><%= pluralize(current_user.quiz_sessions.where(completed_at: @start_date..@end_date).count, "Quiz") %> Completed</p>
               </div>
             </div>
           </div>
