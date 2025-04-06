@@ -8,9 +8,12 @@ module ApplicationHelper
   def country_code_to_emoji(country_code)
     return "" if country_code.blank?
     
-    # Convert 2-letter country code to flag emoji
-    # Each country code character is converted to a regional indicator symbol
-    # (offset by 127397 from the ASCII value)
-    country_code.upcase.chars.map { |c| (c.ord + 127397).chr(Encoding::UTF_8) }.join
+    # Ensure we have exactly 2 characters
+    code = country_code.to_s.strip.upcase[0..1]
+    return "" unless code.length == 2
+    
+    # Convert to regional indicator symbols
+    base = 127462 - 65  # Regional Indicator Symbol Letter A - 'A'
+    code.bytes.map { |b| [base + b].pack('U') }.join
   end
 end

@@ -3,6 +3,9 @@
     <h2 class="pb-2 border-bottom"><%= "#{@current_month.strftime("%B %Y")} Leaderboard" %> </h2>
     
     <div class="btn-group">
+      <div style="font-size: 20px; margin: 10px;">
+        Direct flag test: 🇺🇸 🇬🇧 🇫🇷 🇯🇵 🇧🇷
+      </div>
     </div>
   </div>
   
@@ -41,7 +44,7 @@
                     
                     <td>
                       <% if user.country.present? %>
-                        <% country_code = user.country[0..1].upcase %>
+                        <% country_code = user.country.strip.upcase[0..1] %>
                         <span title="<%= user.country %>"><%= country_code_to_emoji(country_code) %></span>
                       <% else %>
                         <span>-</span>
