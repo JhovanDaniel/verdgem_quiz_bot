@@ -29,7 +29,7 @@
               <tbody>
                 <% @top_by_score.each_with_index do |user, index| %>
                   <tr class="<%= 
-                    if user == current_user
+                    if user_signed_in? && user == current_user
                       'table-primary'
                     elsif index == 0
                       'gold-rank'
@@ -40,22 +40,22 @@
                     end %>">
                     
                     <td>
-                      <% if current_user.country.present? %>
-                        <% country_code = current_user.country.upcase[0..1] %>
-                        <span title="<%= current_user.country %>"><%= country_code_to_emoji(country_code) %></span>
+                      <% if user.country.present? %>
+                        <% country_code = user.country.upcase[0..1] %>
+                        <span title="<%= user.country %>"><%= country_code_to_emoji(country_code) %></span>
                       <% else %>
                         <span>-</span>
                       <% end %>
                     </td>
                     <td><%= index + 1 %></td>
                     <td>
-                      <% if !current_user.nickname.blank? %>
+                      <% if !user.nickname.blank? %>
                         <%= user.nickname %>
                       <% else %>
                         <%= user.first_name %> <%= user.last_name&.first %>
                       <% end %>
                       
-                      <% if user == current_user %>
+                      <% if user_signed_in? && user == current_user %>
                         <span class="badge bg-info">You</span>
                       <% end %>
                     </td>
@@ -67,7 +67,7 @@
             </table>
           </div>
           
-          <% if @score_rank && @score_rank > 10 %>
+          <% if user_signed_in? && @score_rank && @score_rank > 10 %>
             <div class="alert alert-info mt-3">
               Your rank: <strong>#<%= @score_rank %></strong> with <%= current_user.total_score %> points
             </div>
@@ -99,7 +99,7 @@
               <tbody>
                 <% @top_by_percentage.each_with_index do |user, index| %>
                   <tr class="<%= 
-                    if user == current_user
+                    if user_signed_in? && user == current_user
                       'table-primary'
                     elsif index == 0
                       'gold-rank'
@@ -110,22 +110,22 @@
                     end %>">
                     
                     <td>
-                      <% if current_user.country.present? %>
-                        <% country_code = current_user.country.upcase[0..1] %>
-                        <span title="<%= current_user.country %>"><%= country_code_to_emoji(country_code) %></span>
+                      <% if user.country.present? %>
+                        <% country_code = user.country.upcase[0..1] %>
+                        <span title="<%= user.country %>"><%= country_code_to_emoji(country_code) %></span>
                       <% else %>
                         <span>-</span>
                       <% end %>
                     </td>
                     <td><%= index + 1 %></td>
                     <td>
-                      <% if !current_user.nickname.blank? %>
+                      <% if !user.nickname.blank? %>
                         <%= user.nickname %>
                       <% else %>
                         <%= user.first_name %> <%= user.last_name&.first %>
                       <% end %>
                       
-                      <% if user == current_user %>
+                      <% if user_signed_in? && user == current_user %>
                         <span class="badge bg-info">You</span>
                       <% end %>
                     </td>
@@ -137,7 +137,7 @@
             </table>
           </div>
           
-          <% if @percentage_rank && @percentage_rank > 10 %>
+          <% if user_signed_in? && @percentage_rank && @percentage_rank > 10 %>
             <div class="alert alert-info mt-3">
               Your rank: <strong>#<%= @percentage_rank %></strong> with <%= current_user.score_percentage %>% accuracy
             </div>
@@ -147,7 +147,7 @@
     </div>
   </div>
   
-  <% if current_user %>
+  <% if user_signed_in? %>
     <div class="card mb-4">
       <div class="card-header bg-light">
         <h3 class="mb-0">Your Statistics for <%= @current_month.strftime("%B %Y") %></h3>
@@ -196,13 +196,13 @@
   </p>
   
   <div class="mt-4">
-    <% if current_user %>
+    <% if user_signed_in? %>
       <%= link_to "Back to Dashboard", authenticated_root_path, class: "btn btn-outline-primary" %>
     <% else %>
-      <%= link_to "Back to Home", authenticated_root_path, class: "btn btn-outline-primary" %>
+      <%= link_to "Back to Home", root_path, class: "btn btn-outline-primary" %>
     <% end %>
     
-    <% if current_user %>
+    <% if user_signed_in? %>
       <%= link_to "Start a New Quiz", quiz_select_path, class: "btn btn-primary" %>
     <% end %>
   </div>
