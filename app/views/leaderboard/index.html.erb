@@ -42,8 +42,16 @@
                       'bronze-rank'
                     end %>">
                     
-                    <td style="font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;">
-                      <%= country_code_to_emoji(user.country.strip.upcase[0..1]) if user.country.present? %>
+                    <td>
+                      <% if user.country.present? %>
+                        <% country_code = user.country.strip.upcase[0..1].downcase %>
+                        <img src="https://flagcdn.com/16x12/<%= country_code %>.png" 
+                             alt="<%= user.country %>" 
+                             title="<%= user.country %>"
+                             width="16" height="12">
+                      <% else %>
+                        -
+                      <% end %>
                     </td>
                     <td><%= index + 1 %></td>
                     <td>
