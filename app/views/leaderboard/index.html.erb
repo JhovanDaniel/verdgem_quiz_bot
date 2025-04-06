@@ -43,10 +43,10 @@
                     <td>
                       <% if user.country.present? %>
                         <% country_code = user.country.strip.upcase[0..1].downcase %>
-                        <img src="https://flagcdn.com/28x21/<%= country_code %>.png" 
+                        <img src="https://flagcdn.com/16x12/<%= country_code %>.png" 
                              alt="<%= user.country %>" 
                              title="<%= user.country %>"
-                             width="28" height="21">
+                             width="16" height="16">
                       <% else %>
                         -
                       <% end %>
@@ -116,10 +116,10 @@
                     <td>
                       <% if user.country.present? %>
                         <% country_code = user.country.strip.upcase[0..1].downcase %>
-                        <img src="https://flagcdn.com/28x21/<%= country_code %>.png" 
+                        <img src="https://flagcdn.com/16x12/<%= country_code %>.png" 
                              alt="<%= user.country %>" 
                              title="<%= user.country %>"
-                             width="28" height="21">
+                             width="16" height="16">
                       <% else %>
                         -
                       <% end %>
