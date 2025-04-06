@@ -10659,3 +10659,10 @@ a.text-dark:hover, a.text-dark:focus {
   margin-right: 5px;
 }
 /* Medal rank styling */
+
+.gold-rank td:nth-child(2)::before,
+.silver-rank td:nth-child(2)::before,
+.bronze-rank td:nth-child(2)::before {
+  background: transparent !important;
+  box-shadow: none !important;
+}
