@@ -10606,11 +10606,9 @@ a.text-dark:hover, a.text-dark:focus {
 
 /* Medal rank styling */
 .gold-rank {
-  background-color: rgba(255, 215, 0, 0.2) !important;
 }
 
 .gold-rank td:nth-child(2) {
-  background-color: #FFD700;
   color: #000;
   font-weight: bold;
   text-align: center;
@@ -10626,11 +10624,9 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .silver-rank {
-  background-color: rgba(192, 192, 192, 0.2) !important;
 }
 
 .silver-rank td:nth-child(2) {
-  background-color: #C0C0C0;
   color: #000;
   font-weight: bold;
   text-align: center;
@@ -10646,11 +10642,9 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .bronze-rank {
-  background-color: rgba(205, 127, 50, 0.2) !important;
 }
 
 .bronze-rank td:nth-child(2) {
-  background-color: #CD7F32;
   color: #000;
   font-weight: bold;
   text-align: center;
