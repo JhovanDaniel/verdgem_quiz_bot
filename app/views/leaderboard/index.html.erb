@@ -184,8 +184,8 @@
           <div class="col-md-3">
             <div class="card bg-light mb-3">
               <div class="card-body">
-                <h2><%= quiz_count %></h2>
-                <p class="mb-0"><%= quiz_count == 1 ? 'Quiz' : 'Quizzes' %> Completed</p>
+                <h2><%= current_user.quiz_sessions.where(completed_at: @start_date..@end_date).count %></h2>
+                <p class="mb-0"><%= current_user.quiz_sessions.where(completed_at: @start_date..@end_date).count == 1 ? 'Quiz' : 'Quizzes' %> Completed</p>
               </div>
             </div>
           </div>
