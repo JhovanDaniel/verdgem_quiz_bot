@@ -38,7 +38,7 @@
           <div class="card">
             <div class="card-body text-center">
               <h1 class="display-4">
-                <% if @earned_points > 0 %>
+                <% if @earned_points > 0 && @total_points > 0 %>
                   <%= (@earned_points.to_f / @total_points * 100).round %>%
                 <% else %>
                   --

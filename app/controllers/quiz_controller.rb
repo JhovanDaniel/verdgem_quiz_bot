@@ -241,8 +241,9 @@ class QuizController < ApplicationController
                             .includes(:question)
     
     # Calculate quiz statistics
-    @total_points = @questions.sum(:max_points)
-    @earned_points = @attempts.sum(:score) || 0 # Handle nil values
+    @total_points = @questions.sum(:max_points) || 0
+    @earned_points = @attempts.sum(:score) || 0
+    @total_questions = @question_ids.length
     
     # Update the quiz session with final results if not already completed
     unless @quiz_session.completed?
