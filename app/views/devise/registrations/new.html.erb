@@ -1,5 +1,5 @@
 <div class="page page-center">
-  <div class="container container-tight py-4" style="width:500px;">
+  <div class="container container-tight py-4" style="width:800px;">
     <div class="text-center mb-4">
       <!-- BEGIN NAVBAR LOGO -->
       
@@ -16,34 +16,43 @@
                       wrapper_html: { class: 'my-4' },
                       input_html: { autocomplete: "email", autofocus: true },
                       label_html: { class: 'form-label' } %>
-          
-          <%= f.input :first_name, 
+          <div class="row">
+            <div class="col">
+              <%= f.input :first_name, 
                       wrapper_html: { class: 'my-4' },
                       label_html: { class: 'form-label' } %>
-          
-          <%= f.input :last_name, 
+            </div>
+            <div class="col">
+              <%= f.input :last_name, 
                       wrapper_html: { class: 'my-4' },
                       label_html: { class: 'form-label' } %>
+            </div>
+          </div>
                       
-                      <%= f.input :nickname, 
+          <%= f.input :nickname, label: 'Display Name',
                       wrapper_html: { class: 'my-4' },
                       label_html: { class: 'form-label' } %>
           
           <%= f.input :country, 
                       wrapper_html: { class: 'my-4' },
                       label_html: { class: 'form-label' } %>
-          
-          <%= f.input :password,
+                      
+          <div class="row">
+            <div class="col">
+              <%= f.input :password,
                       wrapper_html: { class: 'my-4' },
                       input_html: { autocomplete: "new-password" },
                       label_html: { class: 'form-label' },
                       hint: @minimum_password_length ? "#{@minimum_password_length} characters minimum" : nil %>
-          
-          <%= f.input :password_confirmation,
+            </div>
+            <div class="col">
+              <%= f.input :password_confirmation,
                       wrapper_html: { class: 'my-4' },
                       input_html: { autocomplete: "new-password" },
                       label_html: { class: 'form-label' } %>
-          
+            </div>
+          </div>
+        
           <div class="actions mt-4">
             <%= f.button :submit, "Sign up", class: "btn btn-primary w-100" %>
           </div>
