@@ -122,6 +122,7 @@
       <% else %>
         <%= form_with model: [@quiz_session, Feedback.new], local: true, class: "feedback-form" do |f| %>
           <p>How would you rate this quiz experience?</p>
+          <p class="text-muted">Your feedback helps us improve our platform for thousands of students, just like you! 😊 </p>
           
           <div class="mb-3">
             <div class="rating">
