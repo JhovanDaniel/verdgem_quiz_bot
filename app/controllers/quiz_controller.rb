@@ -231,9 +231,12 @@ class QuizController < ApplicationController
     
     # Get the quiz session
     quiz_session_id = session[:quiz]["quiz_session_id"]
-    @quiz_session = QuizSession.find(quiz_session_id)
+    @quiz_session = QuizSession.find(quiz_session_id))
     
-    @question_ids = session[:quiz]["question_ids"]
+    @question_ids = @quiz_session.question_ids || []
+    
+    @question_ids = [] if @question_ids.nil?
+    
     @questions = Question.where(id: @question_ids)
     @attempts = current_user.question_attempts
                             .where(quiz_session_id: quiz_session_id)
