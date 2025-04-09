@@ -74,6 +74,40 @@ class User < ApplicationRecord
     scope.count
   end
   
+  def completed_questions_from_finished_quizzes_count(start_date, end_date)
+    question_attempts
+      .joins(:quiz_session)
+      .where(quiz_sessions: { completed_at: start_date..end_date })
+      .where.not(score: nil)
+      .count
+  end
+  
+  # Total score from only completed quizzes
+  def total_score_from_finished_quizzes(start_date, end_date)
+    question_attempts
+      .joins(:quiz_session)
+      .where(quiz_sessions: { completed_at: start_date..end_date })
+      .sum(:score) || 0
+  end
+  
+  # Total max possible score from completed quizzes
+  def max_possible_score_from_finished_quizzes(start_date, end_date)
+    attempted_questions = question_attempts
+      .joins(:quiz_session)
+      .where(quiz_sessions: { completed_at: start_date..end_date })
+      .includes(:question)
+    
+    attempted_questions.sum { |attempt| attempt.question.max_points }
+  end
+  
+  # Percentage score from completed quizzes
+  def score_percentage_from_finished_quizzes(start_date, end_date)
+    max_score = max_possible_score_from_finished_quizzes(start_date, end_date)
+    return 0 if max_score == 0
+    
+    (total_score_from_finished_quizzes(start_date, end_date).to_f / max_score) * 100
+  end
+  
   private
   
   def check_profanity_in_nickname
