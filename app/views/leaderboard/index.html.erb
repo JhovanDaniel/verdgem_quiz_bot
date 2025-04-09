@@ -61,8 +61,8 @@
                         <span class="badge bg-info">You</span>
                       <% end %>
                     </td>
-                    <td><%= user.total_score %></td>
-                    <td><%= user.completed_questions_count %></td>
+                    <td><%= user.total_score_from_finished_quizzes(@start_date, @end_date) %></td>
+                    <td><%= user.completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></td>
                   </tr>
                 <% end %>
               </tbody>
@@ -71,7 +71,7 @@
           
           <% if user_signed_in? && @score_rank && @score_rank > 10 %>
             <div class="alert alert-info mt-3">
-              Your rank: <strong>#<%= @score_rank %></strong> with <%= current_user.total_score %> points
+              Your rank: <strong>#<%= @score_rank %></strong> with <%= current_user.total_score_from_finished_quizzes(@start_date, @end_date) %> points
             </div>
           <% end %>
         </div>
@@ -132,8 +132,8 @@
                         <span class="badge bg-info">You</span>
                       <% end %>
                     </td>
-                    <td><%= user.score_percentage %>%</td>
-                    <td><%= user.completed_questions_count %></td>
+                    <td><%= user.score_percentage_from_finished_quizzes(@start_date, @end_date).round %>%</td>
+                    <td><%= user.completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></td>
                   </tr>
                 <% end %>
               </tbody>
@@ -142,7 +142,7 @@
           
           <% if user_signed_in? && @percentage_rank && @percentage_rank > 10 %>
             <div class="alert alert-info mt-3">
-              Your rank: <strong>#<%= @percentage_rank %></strong> with <%= current_user.score_percentage %>% accuracy
+              Your rank: <strong>#<%= @percentage_rank %></strong> with <%= current_user.score_percentage_from_finished_quizzes(@start_date, @end_date).round %>% accuracy
             </div>
           <% end %>
         </div>
@@ -160,7 +160,7 @@
           <div class="col-md-3">
             <div class="card bg-light mb-3">
               <div class="card-body">
-                <h2><%= current_user.total_score(@start_date, @end_date) %></h2>
+                <h2><%= current_user.total_score_from_finished_quizzes(@start_date, @end_date) %></h2>
                 <p class="mb-0">Total Points</p>
               </div>
             </div>
@@ -168,7 +168,7 @@
           <div class="col-md-3">
             <div class="card bg-light mb-3">
               <div class="card-body">
-                <h2><%= current_user.score_percentage(@start_date, @end_date) %>%</h2>
+                <h2><%= current_user.score_percentage_from_finished_quizzes(@start_date, @end_date).round %>%</h2>
                 <p class="mb-0">Accuracy</p>
               </div>
             </div>
@@ -176,7 +176,7 @@
           <div class="col-md-3">
             <div class="card bg-light mb-3">
               <div class="card-body">
-                <h2><%= current_user.completed_questions_count(@start_date, @end_date) %></h2>
+                <h2><%= current_user.completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></h2>
                 <p class="mb-0">Questions Answered</p>
               </div>
             </div>
