@@ -127,7 +127,7 @@ class QuizController < ApplicationController
     question_ids = @quiz_session.question_ids
     
     # If we've gone beyond the available questions, go to results
-    if current_index >= question_ids.length
+    if current_index >= question_ids.length  
       redirect_to quiz_results_path
       return
     end
