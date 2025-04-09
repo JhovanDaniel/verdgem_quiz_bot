@@ -98,7 +98,55 @@
     </div>
   </div>
   
-  <div class="d-flex justify-content-between mb-4">
+  <!---------- Quiz Feedback ---------->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3 class="mb-0">Your Feedback</h3>
+    </div>
+    <div class="card-body">
+      <% if @quiz_session.feedback.present? %>
+        <div class="alert alert-success">
+          <h5>Thank you for your feedback!</h5>
+          <p>Your rating: 
+            <% @quiz_session.feedback.rating.times do %>
+              <i class="bi bi-star-fill text-warning"></i>
+            <% end %>
+            <% (5 - @quiz_session.feedback.rating).times do %>
+              <i class="bi bi-star text-warning"></i>
+            <% end %>
+          </p>
+          <% if @quiz_session.feedback.comment.present? %>
+            <p><strong>Your comment:</strong> <%= @quiz_session.feedback.comment %></p>
+          <% end %>
+        </div>
+      <% else %>
+        <%= form_with model: [@quiz_session, Feedback.new], local: true, class: "feedback-form" do |f| %>
+          <p>How would you rate this quiz experience?</p>
+          
+          <div class="mb-3">
+            <div class="rating">
+              <% 5.downto(1) do |i| %>
+                <div class="form-check form-check-inline">
+                  <%= f.radio_button :rating, i, class: "form-check-input", required: true %>
+                  <%= f.label "rating_#{i}", "#{i} stars", class: "form-check-label" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <%= f.label :comment, "Any additional comments? (optional)", class: "form-label" %>
+            <%= f.text_area :comment, class: "form-control", rows: 3 %>
+          </div>
+          
+          <%= f.submit "Submit Feedback", class: "btn btn-primary" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <!---------- Quiz Feedback ---------->
+  
+  <div class="d-flex justify-content-between my-4">
     <%= link_to "Back to Dashboard", authenticated_root_path, class: "btn btn-outline-secondary" %>
     <%= link_to "Start New Quiz", '#', class: "btn btn-primary" %>
   </div>

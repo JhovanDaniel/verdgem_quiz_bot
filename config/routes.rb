@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   
   resources :questions, except: [:index, :new, :create]
   
+  
+  
   # Quiz routes
   get 'quiz/start', to: 'quiz#start', as: 'quiz_start'
   get 'quiz/question', to: 'quiz#question', as: 'quiz_question'
@@ -28,6 +30,8 @@ Rails.application.routes.draw do
   get 'quiz/quiz_select', to: 'quiz#quiz_select', as: 'quiz_select'
   get 'quiz/sessions/:id', to: 'quiz#show_session', as: 'quiz_session'
   get 'quiz/resume/:id', to: 'quiz#resume', as: 'resume_quiz'
+  
+  post 'quiz/sessions/:quiz_session_id/feedback', to: 'feedbacks#create', as: 'quiz_session_feedbacks'
   
   devise_for :users, controllers: {
     registrations: 'users/registrations'

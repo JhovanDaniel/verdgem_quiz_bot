@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  quiz_session: one
+  rating: 1
+  comment: MyText
+
+two:
+  quiz_session: two
+  rating: 1
+  comment: MyText
