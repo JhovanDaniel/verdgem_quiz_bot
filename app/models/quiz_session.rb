@@ -1,4 +1,6 @@
 class QuizSession < ApplicationRecord
+  serialize :question_ids, coder: YAML
+  
   belongs_to :user
   belongs_to :subject
   belongs_to :topic, optional: true

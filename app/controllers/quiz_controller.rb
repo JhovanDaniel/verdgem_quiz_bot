@@ -6,6 +6,7 @@ class QuizController < ApplicationController
   end
   
   def start
+  
     @subject = Subject.find(params[:subject_id])
     @topic = Topic.find(params[:topic_id]) if params[:topic_id].present?
     
@@ -25,7 +26,7 @@ class QuizController < ApplicationController
     
     # Get the requested number of questions
     question_count = params[:count].present? ? params[:count].to_i : 5
-    
+
     # Handle different difficulty options
     case params[:difficulty]
     when "mixed"
@@ -51,7 +52,7 @@ class QuizController < ApplicationController
                                    .limit(hard_count)
       
       # Get some very hard questions (10%)
-      very_hard_count = question_count - @questions.length
+      very_hard_count = question_count - (easy_count + medium_count + hard_count)
       @questions += questions_scope.where(difficulty_level: "very_hard")
                                    .order("RANDOM()")
                                    .limit(very_hard_count)
@@ -102,13 +103,13 @@ class QuizController < ApplicationController
       topic: @topic,
       started_at: Time.current,
       max_score: @questions.sum(&:max_points),
-      question_count: @questions.length 
+      question_count: @questions.length,
+      question_ids: @questions.map(&:id)  # Store the ordered question IDs
     )
     
     # Store quiz data in session
     session[:quiz] = {
       quiz_session_id: @quiz_session.id,
-      question_ids: @questions.map(&:id),
       current_index: 0
     }
     
@@ -117,11 +118,13 @@ class QuizController < ApplicationController
   end
   
   def question
-    # Load the current question from session
     return redirect_to authenticated_root_path, alert: "No active quiz found." unless session[:quiz].present?
     
     current_index = session[:quiz]["current_index"]
-    question_ids = session[:quiz]["question_ids"]
+    @quiz_session = QuizSession.find(session[:quiz]["quiz_session_id"])
+    
+    # Get the ordered question IDs from the database
+    question_ids = @quiz_session.question_ids
     
     # If we've gone beyond the available questions, go to results
     if current_index >= question_ids.length
@@ -132,17 +135,18 @@ class QuizController < ApplicationController
     @question = Question.find(question_ids[current_index])
     @question_number = current_index + 1
     @total_questions = question_ids.length
-    
-    # Get the quiz session
-    @quiz_session = QuizSession.find(session[:quiz]["quiz_session_id"])
   end
   
   def submit
     return redirect_to authenticated_root_path, alert: "No active quiz found." unless session[:quiz].present?
     
     current_index = session[:quiz]["current_index"]
-    question_ids = session[:quiz]["question_ids"]
     quiz_session_id = session[:quiz]["quiz_session_id"]
+    @quiz_session = QuizSession.find(quiz_session_id)
+    
+    # Get question IDs from the database, not the session
+    question_ids = @quiz_session.question_ids
+    
     @question = Question.find(question_ids[current_index])
     
     # Save the user's answer with the quiz session reference
@@ -297,33 +301,17 @@ class QuizController < ApplicationController
       return
     end
     
-    # Get the questions from this session
-    question_ids = @quiz_session.question_attempts.pluck(:question_id)
+    # Find the current position - how many questions have been answered
+    current_index = @quiz_session.question_attempts.count
     
-    # Find the next unanswered question
-    answered_question_ids = @quiz_session.question_attempts.pluck(:question_id)
-    all_question_ids = Question.where(topic_id: @quiz_session.topic_id).pluck(:id)
-    
-    # If no specific topic was chosen, get all questions from the subject
-    if all_question_ids.empty? && @quiz_session.subject.present?
-      all_question_ids = Question.joins(:topic)
-                                 .where(topics: { subject_id: @quiz_session.subject_id })
-                                 .pluck(:id)
-    end
-    
-    # Find the current position
-    remaining_ids = all_question_ids - answered_question_ids
-    current_index = answered_question_ids.length
-    
-    # Store quiz data in session
+    # Store minimal data in the session
     session[:quiz] = {
       quiz_session_id: @quiz_session.id,
-      question_ids: all_question_ids,
       current_index: current_index
     }
     
     # Redirect to current question or results if all questions answered
-    if current_index >= all_question_ids.length
+    if current_index >= @quiz_session.question_count
       redirect_to quiz_results_path
     else
       redirect_to quiz_question_path
