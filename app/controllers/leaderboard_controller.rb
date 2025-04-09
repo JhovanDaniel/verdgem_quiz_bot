@@ -7,16 +7,22 @@ class LeaderboardController < ApplicationController
     @start_date = @current_month.beginning_of_month
     @end_date = @current_month.end_of_month
     
+    # Get only completed quiz sessions for the date range
+    completed_quiz_sessions = QuizSession.where(completed_at: @start_date..@end_date)
+    
+    # Get question attempts from only completed quizzes
+    completed_quiz_attempts = QuestionAttempt.where(quiz_session_id: completed_quiz_sessions.pluck(:id))
+    
     # Get top users by total score for the current month (minimum 10 questions attempted)
     @top_by_score = User.where(role: 'student')
-                .select { |user| user.completed_questions_count(@start_date, @end_date) >= 10 }
-                .sort_by { |user| -user.total_score(@start_date, @end_date) }
+                .select { |user| user.completed_questions_from_finished_quizzes_count(@start_date, @end_date) >= 10 }
+                .sort_by { |user| -user.total_score_from_finished_quizzes(@start_date, @end_date) }
                 .take(10)
     
     # Get top users by percentage for the current month (minimum 10 questions attempted)
     @top_by_percentage = User.where(role: 'student')
-                             .select { |user| user.completed_questions_count(@start_date, @end_date) >= 10 }
-                             .sort_by { |user| -user.score_percentage(@start_date, @end_date) }
+                             .select { |user| user.completed_questions_from_finished_quizzes_count(@start_date, @end_date) >= 10 }
+                             .sort_by { |user| -user.score_percentage_from_finished_quizzes(@start_date, @end_date) }
                              .take(10)
     
     # Get current user's rank for each category
