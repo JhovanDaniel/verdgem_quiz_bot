@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   post 'users/user_create', to: 'users#user_create', as: 'user_create_user'
   get 'users/:id/user_edit', to: 'users#user_edit', as: 'user_edit_user'
   patch 'users/:id/user_update', to: 'users#user_update', as: 'user_update_user'
+  post 'reset_progress', to: 'users#reset_progress'
   
   resources :users
   

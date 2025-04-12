@@ -108,6 +108,25 @@
           
         </div>
       </div>
+      <div class="card mt-4">
+  <div class="card-header bg-light">
+    <h3>Reset Progress</h3>
+  </div>
+  <div class="card-body">
+    <p class="text-danger">
+      This will reset all your quiz statistics. Your quiz history will still be available,
+      but won't be counted in your leaderboard standings or profile statistics.
+      This action cannot be undone.
+    </p>
+    
+    <%= button_to reset_progress_path(@user), 
+                  method: :post, 
+                  class: "btn btn-danger", 
+                  data: { confirm: "Are you sure you want to reset your progress? This cannot be undone!" } do %>
+      <i class="fas fa-sync-alt me-2"></i> Reset My Progress
+    <% end %>
+  </div>
+</div>
     </div>
     
     <!-- Recent Activity Card -->

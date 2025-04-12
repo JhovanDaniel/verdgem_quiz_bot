@@ -108,6 +108,19 @@ class User < ApplicationRecord
     (total_score_from_finished_quizzes(start_date, end_date).to_f / max_score) * 100
   end
   
+  def reset_progress!
+    # Set the reset timestamp to current time
+    #update(reset_at: Time.current)
+    
+    # Reset quiz attempts count
+    #update(quiz_attempts: 0)
+    
+    quiz_sessions.update_all(archived: true)
+    
+    # You could also add more reset actions here if needed
+    true
+  end
+  
   private
   
   def check_profanity_in_nickname

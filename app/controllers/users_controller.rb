@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_admin, except: [:show, :user_edit, :user_update]
+  before_action :require_admin, except: [:show, :user_edit, :user_update, :reset_progress]
   
   def index
     @users = User.all
@@ -63,6 +63,14 @@ class UsersController < ApplicationController
     unless current_user.admin? || current_user == @user
       redirect_to root_path, alert: "You are not authorized to view this profile."
       return
+    end
+  end
+  
+  def reset_progress
+    if current_user.reset_progress!
+      redirect_to user_path(current_user), notice: "Your progress has been reset successfully!"
+    else
+      redirect_to user_path(current_user), alert: "There was an error resetting your progress."
     end
   end
   
