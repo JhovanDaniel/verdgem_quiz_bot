@@ -55,18 +55,14 @@
           <div class="row">
             <div class="col-6">
               <div class="text-center mb-3">
-                <h2><%= @user.question_attempts.count %></h2>
+                <h2><%= @user.completed_questions_from_finished_quizzes_count(nil, nil) %></h2>
                 <p class="text-muted mb-0">Questions Attempted</p>
               </div>
             </div>
             <div class="col-6">
               <div class="text-center mb-3">
                 <h2>
-                  <% if @user.question_attempts.any? %>
-                    <%= (@user.question_attempts.where("score >= questions.max_points * 0.7").joins(:question).count.to_f / @user.question_attempts.count * 100).round %>%
-                  <% else %>
-                    0%
-                  <% end %>
+                  <%= @user.score_percentage_from_finished_quizzes(nil, nil) %>%
                 </h2>
                 <p class="text-muted mb-0">Correct Rate</p>
               </div>
