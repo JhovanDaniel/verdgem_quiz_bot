@@ -29,11 +29,18 @@ class User < ApplicationRecord
   end
   
   def attempts_remaining
-    max_quiz_attempts - quiz_attempts
+    max_quiz_attempts - monthly_quiz_attempts
+  end
+  
+  def monthly_quiz_attempts
+    quiz_sessions
+      .unscope(where: :archived)  # Remove the archived filter from default scope
+      .where(started_at: Time.current.beginning_of_month..Time.current.end_of_month)
+      .count
   end
   
   def can_attempt_quiz?
-    quiz_attempts < max_quiz_attempts
+    monthly_quiz_attempts < max_quiz_attempts
   end
   
   def quiz_limit_reached?
@@ -50,6 +57,11 @@ class User < ApplicationRecord
   end
   
   #Leaderboard methods
+  def completed_questions
+    question_attempts
+      .joins(:quiz_session)
+  end
+  
   def total_score(start_date = nil, end_date = nil)
     scope = question_attempts
     scope = scope.where(created_at: start_date..end_date) if start_date && end_date

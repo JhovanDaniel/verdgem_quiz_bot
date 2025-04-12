@@ -33,7 +33,7 @@ class ClaudeService
           ]
         }.to_json,
         headers: @headers,
-        timeout: 15 # 15 seconds timeout
+        timeout: 120 # 45 seconds timeout
       )
       
       if response.success?
