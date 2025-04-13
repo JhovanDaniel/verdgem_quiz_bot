@@ -69,15 +69,15 @@
   
   <div class="list-group">
     <% @attempts.each_with_index do |attempt, index| %>
-      <div class="list-group-item border-0 mb-1 rounded-2 <%= (attempt.score.to_f / attempt.question.max_points) >= 0.7 ? 'list-group-item-success' : 'list-group-item-danger' %>">
+      <div class="list-group-item border-0 mb-2 rounded-2 <%= (attempt.score.to_f / attempt.question.max_points) >= 0.7 ? 'list-group-item-success' : 'list-group-item-danger' %>">
         <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">Question <%= index + 1 %></h5>
+          <h5 class="mb-1 fw-bold">Question <%= index + 1 %></h5>
           <% if attempt.score.present? %>
             <span class="badge text-black">
               <%= attempt.score %> / <%= attempt.question.max_points %> points
             </span>
           <% else %>
-            <span class="badge bg-secondary">Pending</span>
+            <span class="badge text-black">Pending</span>
           <% end %>
         </div>
         <p class="mb-1 text-black"><%= truncate(attempt.question.content, length: 150) %></p>
@@ -92,18 +92,18 @@
         </div>
         
         <div class="collapse mt-3" id="attempt-<%= attempt.id %>">
-          <div class="card card-body bg-light">
-            <h6>Your Answer:</h6>
+          <div class="card card-body bg-white text-black">
+            <h5 class="fw-bold">Your Answer:</h5>
             <p><%= simple_format(attempt.student_answer) %></p>
             
             <% if attempt.feedback.present? %>
-              <h6>Feedback:</h6>
+              <h5 class="fw-bold">Feedback:</h5>
               <p><%= simple_format(attempt.feedback) %></p>
             <% else %>
               <p class="text-muted"><em>Feedback will be available soon.</em></p>
             <% end %>
             
-            <h6>Model Answer:</h6>
+            <h5 class="fw-bold">Model Answer:</h5>
             <p><%= simple_format(attempt.question.model_answer) %></p>
           </div>
         </div>

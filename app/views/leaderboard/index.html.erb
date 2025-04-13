@@ -10,14 +10,14 @@
   
   <div class="row">
     <!-- Total Points Leaderboard -->
-    <div class="col-md-10">
+    <div class="col-md-12">
       <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-          <h3 class="mb-0">Total Points Leaders</h3>
+        <div class="card-header bg-white border-0">
+          <h4 class="fw-bold mb-0">Total Points Leaders</h4>
         </div>
         <div class="card-body">
           <div class="table-responsive">
-            <table class="table">
+            <table class="table table-borderless">
               <thead>
                 <tr>
                   <th>Country</th>
@@ -81,14 +81,14 @@
   
   <div class="row">
     <!-- Percentage Leaders -->
-    <div class="col-md-10">
+    <div class="col-md-12">
       <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-          <h3 class="mb-0">Highest Accuracy</h3>
+        <div class="card-header bg-white border-0">
+          <h4 class="fw-bold mb-0">Highest Accuracy</h4>
         </div>
         <div class="card-body">
           <div class="table-responsive">
-            <table class="table">
+            <table class="table table-borderless">
               <thead>
                 <tr>
                   <th>Country</th>
@@ -152,13 +152,13 @@
   
   <% if user_signed_in? %>
     <div class="card mb-4">
-      <div class="card-header bg-white">
-        <h3 class="mb-0">Your Statistics for <%= @current_month.strftime("%B %Y") %></h3>
+      <div class="card-header bg-white border-0">
+        <h4 class="fw-bold mb-0">Your Statistics for <%= @current_month.strftime("%B %Y") %></h4>
       </div>
       <div class="card-body">
         <div class="row text-center">
           <div class="col-md-3">
-            <div class="card bg-light mb-3">
+            <div class="card bg-white border-0 mb-3">
               <div class="card-body">
                 <h2><%= current_user.total_score_from_finished_quizzes(@start_date, @end_date) %></h2>
                 <p class="mb-0">Total Points</p>
@@ -166,7 +166,7 @@
             </div>
           </div>
           <div class="col-md-3">
-            <div class="card bg-light mb-3">
+            <div class="card bg-white border-0 mb-3">
               <div class="card-body">
                 <h2><%= current_user.score_percentage_from_finished_quizzes(@start_date, @end_date).round %>%</h2>
                 <p class="mb-0">Accuracy</p>
@@ -174,7 +174,7 @@
             </div>
           </div>
           <div class="col-md-3">
-            <div class="card bg-light mb-3">
+            <div class="card bg-white border-0 mb-3">
               <div class="card-body">
                 <h2><%= current_user.completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></h2>
                 <p class="mb-0">Questions Answered</p>
@@ -182,7 +182,7 @@
             </div>
           </div>
           <div class="col-md-3">
-            <div class="card bg-light mb-3">
+            <div class="card bg-white border-0 mb-3">
               <div class="card-body">
                 <h2><%= current_user.quiz_sessions.where(completed_at: @start_date..@end_date).count %></h2>
                 <p class="mb-0"><%= current_user.quiz_sessions.where(completed_at: @start_date..@end_date).count == 1 ? 'Quiz' : 'Quizzes' %> Completed</p>
