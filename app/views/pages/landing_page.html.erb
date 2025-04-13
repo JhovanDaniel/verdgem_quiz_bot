@@ -8,7 +8,7 @@
       <p class="lead"><u class="">We're offering 30 free quiz sessions per month this exam period!</u> Prepare for your CSEC exams with AI powered quizzes designed to boost your
       confidence and knowledge! 🚀 </p>
       <div class="d-grid gap-2 d-md-flex justify-content-md-start pb-4">
-        <%= link_to "Sign up", new_user_registration_path, class:"btn btn-primary btn-lg px-4 me-md-2" %>
+        <%= link_to "Start Practicing", new_user_registration_path, class:"btn btn-primary btn-lg px-4 me-md-2" %>
         <%= link_to "Learn more", pages_csec_quizzes_path, class:"btn btn-outline-primary btn-lg px-4 me-md-2" %>
       </div>
       <hr class="mt-4" style="border-color:black !important; border-width:1px;"/>
@@ -16,7 +16,8 @@
         <div class="feature col">
           <h4 class="fs-3">More subjects and features are coming!</h4>
           <p>Stay in the loop—follow us on Facebook and Instagram for updates, new features, and CSEC study tips!</p>
-          <%= link_to "Facebook", '#', class:"icon-link green-link" %> | <%= link_to "Instagram", '#', class:"icon-link green-link"  %>
+          <span><a href="#"><i class="bi bi-facebook green-link mx-1"></i></a></span><%= link_to "Facebook", '#', class:"icon-link green-link" %> | 
+          <span><a href="#"><i class="bi bi-instagram green-link mx-1"></i></a></span><%= link_to "Instagram", '#', class:"icon-link green-link"  %>
         </div>
       </div>
       
