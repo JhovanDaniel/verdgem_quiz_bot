@@ -23,8 +23,9 @@
             </div>
           </div>
         </div>
+        <% random_image, alt_text = QuestionAttempt.question_character_image %>
         <div class="col-auto d-none d-md-block">
-          <%= image_tag "jade-expression-1.PNG", alt: "Jade Happy", class: "navbar-logo", width: 200 %>
+          <%= image_tag random_image, alt: alt_text, class: "navbar-logo", width: 200 %>
         </div>
       </div>
     </div>
