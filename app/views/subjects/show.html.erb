@@ -1,4 +1,4 @@
-<div class="container px-4" id="featured-3">
+<div class="container mt-4" id="featured-3">
   <div class="row">
     <div class="col">
       <nav aria-label="breadcrumb">
@@ -11,7 +11,7 @@
   </div>
   
   <div class="card-header d-flex justify-content-between align-items-center bg-white border-0 px-0">
-    <h2 class="pb-2 border-bottom"><%= @subject.name %></h2>
+    <h2 class="display-6 fw-bold"><%= @subject.name %></h2>
     <div>
       <% if current_user && current_user.admin? %>
         <%= link_to "Edit", edit_subject_path(@subject), class: "btn btn-outline-primary btn-sm" %>
@@ -20,12 +20,12 @@
     </div>
   </div>
   
-  <h3>Description</h3>
+  <h4>Description</h4>
   <% if @subject.description.present? %>
     <p><%= @subject.description %></p>
   <% end %>
   
-  <h3>Syllabus Outline</h3>
+  <h4>Syllabus Outline</h4>
   <% if @subject.syllabus_outline.present? %>
     <div class="syllabus-outline mb-4">
       <div id="syllabus-preview">
@@ -34,7 +34,7 @@
         <% if @subject.syllabus_outline.length > 300 %>
           <button 
             onclick="document.getElementById('syllabus-preview').style.display='none'; document.getElementById('syllabus-full').style.display='block';" 
-            class="btn btn-sm btn-link p-0">
+            class="btn btn-sm btn-link green-link p-0">
             Read more
           </button>
         <% end %>
@@ -44,14 +44,14 @@
         <%= simple_format(@subject.syllabus_outline) %>
         <button 
           onclick="document.getElementById('syllabus-preview').style.display='block'; document.getElementById('syllabus-full').style.display='none';" 
-          class="btn btn-sm btn-link p-0">
+          class="btn btn-sm btn-link green-link p-0">
           Show less
         </button>
       </div>
     </div>
   <% end %>
   
-  <h3>Topics</h3>
+  <h4>Topics</h4>
   <% if @subject.topics.empty? %>
     <div class="alert alert-info">
       This subject does not have any topics yet yet. 

@@ -2,7 +2,7 @@
   <div class="card border-0">
     <div class="card-header border-0 pb-0 bg-white">
       <div class="row justify-content-between align-items-center">
-        <div class="col-auto">
+        <div class="col-8">
           <div class="d-flex justify-content-between align-items-center">
             <h3 class="mb-0 display-6 fw-bold">Question <%= @question_number %> of <%= @total_questions %></h3>
           </div>
@@ -23,8 +23,9 @@
             </div>
           </div>
         </div>
-        <% random_image, alt_text = QuestionAttempt.question_character_image %>
+        
         <div class="col-auto d-none d-md-block">
+          <% random_image, alt_text = QuestionAttempt.question_character_image %>
           <%= image_tag random_image, alt: alt_text, class: "navbar-logo", width: 200 %>
         </div>
       </div>
