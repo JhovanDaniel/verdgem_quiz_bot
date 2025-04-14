@@ -1,62 +1,64 @@
-<div class="card-header d-flex justify-content-between align-items-center bg-white border-0 px-0">
-  <h2 class="pb-2 border-bottom">Your Quiz Sessions</h2>
-  <div>
-    <%= link_to "Start New Quiz", quiz_select_path, class: "btn btn-primary" %>
+<div class="container px-4" id="featured-3">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0 display-6 fw-bold">Your Quiz Sessions</h2>
+    <div>
+      <%= link_to "Start New Quiz", quiz_select_path, class: "btn btn-primary" %>
+    </div>
   </div>
-</div>
-
-<div class="container col-xxl-8 px-4">
-  <% if @quiz_sessions.empty? %>
-    <div class="alert alert-info">
-      You haven't taken any quizzes yet. 
-      <%= link_to "Start a quiz now", authenticated_root_path, class: "alert-link" %>.
-    </div>
-  <% else %>
-    <div class="table-responsive">
-      <table class="table table-borderless">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Subject</th>
-            <th>Progress</th>
-            <th>Status</th>
-            <th>Score</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @quiz_sessions.each do |session| %>
+  
+  <div class="container col-xxl-8 px-4">
+    <% if @quiz_sessions.empty? %>
+      <div class="alert alert-info">
+        You haven't taken any quizzes yet. 
+        <%= link_to "Start a quiz now", authenticated_root_path, class: "alert-link" %>.
+      </div>
+    <% else %>
+      <div class="table-responsive">
+        <table class="table table-borderless">
+          <thead>
             <tr>
-              <td><%= format_date(session.created_at) %></td>
-              <td><%= session.subject.name %></td>
-              <td><%= session.completed_questions %> / <%= session.question_count %></td>
-              <td>
-                <% if session.completed? %>
-                  <span class="badge badge-primary">Completed</span>
-                <% else %>
-                  <span class="badge bg-white text-dark">In Progress</span>
-                <% end %>
-              </td>
-              <td>
-                <% if session.completed? %>
-                  <span class="badge <%= session.score_percentage >= 70 ? 'bg-primary' : 'bg-danger' %>">
-                    <%= session.score_percentage %>%
-                  </span>
-                <% else %>
-                  <span class="badge bg-white text-dark">In Progress</span>
-                <% end %>
-              </td>
-              <td>
-                <%= link_to "View", quiz_session_path(session), class: "btn btn-sm btn-outline-primary mx-1" %>
-                <% if !session.completed? %>
-                    <%= link_to "Resume Quiz", resume_quiz_path(@unfinished_quiz), class: "btn btn-sm btn-primary mx-1" %>
-                <% end %>
-              </td>
+              <th>Date</th>
+              <th>Subject</th>
+              <th>Progress</th>
+              <th>Status</th>
+              <th>Score</th>
+              <th>Actions</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-    <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
-  <% end %>
+          </thead>
+          <tbody>
+            <% @quiz_sessions.each do |session| %>
+              <tr>
+                <td><%= format_date(session.created_at) %></td>
+                <td><%= session.subject.name %></td>
+                <td><%= session.completed_questions %> / <%= session.question_count %></td>
+                <td>
+                  <% if session.completed? %>
+                    <span class="badge badge-primary">Completed</span>
+                  <% else %>
+                    <span class="badge bg-white text-dark">In Progress</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if session.completed? %>
+                    <span class="badge <%= session.score_percentage >= 70 ? 'bg-primary' : 'bg-danger' %>">
+                      <%= session.score_percentage %>%
+                    </span>
+                  <% else %>
+                    <span class="badge bg-white text-dark">In Progress</span>
+                  <% end %>
+                </td>
+                <td>
+                  <%= link_to "View", quiz_session_path(session), class: "btn btn-sm btn-outline-primary mx-1" %>
+                  <% if !session.completed? %>
+                      <%= link_to "Resume Quiz", resume_quiz_path(@unfinished_quiz), class: "btn btn-sm btn-primary mx-1" %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
+    <% end %>
+  </div>
 </div>
