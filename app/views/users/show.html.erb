@@ -16,7 +16,7 @@
     <!-- User Information Card -->
     <div class="col-md-4">
       <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center bg-white">
+        <div class="card-header d-flex justify-content-between align-items-center border-0 bg-white">
           <h3 class="mb-0">User Profile</h3>
           <% if current_user.admin? || current_user == @user %>
             <%= link_to "Edit", user_edit_user_path(@user), class: "btn btn-outline-primary" %>
@@ -30,14 +30,8 @@
             <h4 class="mt-3"><%= @user.first_name %> <%= @user.last_name %></h4>
             <p class="text-muted"><%= @user.email %></p>
           </div>
-          
+          <hr style="border-color:grey !important; border-width:1px;"/>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              Role
-              <span class="badge <%= @user.role == 'admin' ? 'bg-danger' : (@user.role == 'teacher' ? 'bg-warning' : 'bg-primary') %>">
-                <%= @user.role.capitalize %>
-              </span>
-            </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
               Joined
               <span class="text-muted"><%= @user.created_at.strftime('%b %d, %Y') %></span>
@@ -48,7 +42,7 @@
       
       <!-- User Stats Card -->
       <div class="card mb-4">
-        <div class="card-header bg-white">
+        <div class="card-header bg-white border-0">
           <h3 class="mb-0">Stats</h3>
         </div>
         <div class="card-body">
@@ -105,7 +99,7 @@
         </div>
       </div>
       <div class="card mt-4">
-  <div class="card-header bg-white">
+  <div class="card-header bg-white border-0">
     <h3>Reset Progress</h3>
   </div>
   <div class="card-body">
@@ -128,15 +122,15 @@
     <!-- Recent Activity Card -->
     <div class="col-md-8">
       <div class="card mb-4">
-        <div class="card-header bg-white">
+        <div class="card-header bg-white border-0">
           <h3 class="mb-0">Recent Activity</h3>
         </div>
         <div class="card-body">
           <% if @user.question_attempts.any? %>
             <div class="list-group">
               <% @user.completed_questions
-                .order(created_at: :desc).limit(10).each do |attempt| %>
-                <div class="list-group-item list-group-item-action">
+                .order(created_at: :desc).limit(5).each do |attempt| %>
+                <div class="list-group-item list-group-item-action border-0">
                   <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">
                       <%= attempt.question.topic.subject.name %> - 
@@ -165,7 +159,7 @@
             
             <% if @user.completed_questions.count > 10 %>
               <div class="mt-3 text-center">
-                <a href="#" class="btn btn-outline-secondary btn-sm">View All Activity</a>
+                <%= link_to 'View All Activity', quiz_sessions_path, class:"btn btn-outline-primary btn-sm"%>
               </div>
             <% end %>
           <% else %>
@@ -179,12 +173,12 @@
       <!-- Performance By Subject Card (for students) -->
       <% if @user.role == 'student' && @user.question_attempts.any? %>
         <div class="card">
-          <div class="card-header">
+          <div class="card-header bg-white border-0">
             <h3 class="mb-0">Performance By Subject</h3>
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table class="table">
+              <table class="table table-borderless">
                 <thead>
                   <tr>
                     <th>Subject</th>
