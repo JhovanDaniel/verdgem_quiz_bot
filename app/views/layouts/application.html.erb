@@ -2,13 +2,24 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>VerdGem | AI powered CSEC quizzes</title>
+    <title>VerdGem — AI-powered CSEC quizzes</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+    
+    <meta name="description" content="Ace your CSEC exams with VerdGem's AI-powered quizzes! Get 30 free quiz sessions this exam period. Practice smarter, not harder.">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "VerdGem — AI-powered CSEC Quizzes",
+      "url": "https://quiz.verdgem.com"
+    }
+    </script>
     
     <%= favicon_link_tag 'Logo-icon-2.jpg' %>
   </head>
