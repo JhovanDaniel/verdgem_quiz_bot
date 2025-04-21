@@ -10605,52 +10605,111 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 /* Medal rank styling */
-.gold-rank {
+
+.top-performer {
+  position: relative;
+  min-width: 150px;
 }
 
-.gold-rank td:nth-child(2) {
-  color: #000;
-  font-weight: bold;
+.avatar-container {
+  position: relative;
+  margin: 0 auto;
+  width: 100px;
+  height: 100px;
+}
+
+.avatar-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+}
+
+.avatar-image {
+  width: 90%;
+  height: 90%;
+  object-fit: cover;
   border-radius: 50%;
 }
 
-.gold-rank td:nth-child(2)::before {
-  content: "🥇";
-  margin-right: 5px;
+.gold {
+
+}
+
+.silver {
+}
+
+.bronze {
+
+}
+
+.medal-icon {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  border-radius: 50%;
+  padding: 3px;
+}
+
+.medal-label {
+  margin-bottom: 10px;
+}
+
+.first-place {
+  z-index: 3;
+}
+
+.second-place {
+  z-index: 2;
+}
+
+.third-place {
+  z-index: 1;
+}
+
+.first-place .avatar-circle {
+  width: 120px;
+  height: 120px;
+}
+
+.trophy-icon {
+  position: relative;
+  display: inline-block;
+}
+
+.trophy-icon:before,
+.trophy-icon:after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #999, transparent);
+  width: 100px;
+  top: 50%;
+}
+
+.trophy-icon:before {
+  right: 100%;
+  margin-right: 15px;
+}
+
+.trophy-icon:after {
+  left: 100%;
+  margin-left: 15px;
+}
+
+/* Color for ranks */
+.gold-rank {
+  background-color: rgba(255, 215, 0, 0.1);
 }
 
 .silver-rank {
-}
-
-.silver-rank td:nth-child(2) {
-  color: #000;
-  font-weight: bold;
-  border-radius: 50%;
-}
-
-.silver-rank td:nth-child(2)::before {
-  content: "🥈";
-  margin-right: 5px;
+  background-color: rgba(192, 192, 192, 0.1);
 }
 
 .bronze-rank {
-}
-
-.bronze-rank td:nth-child(2) {
-  color: #000;
-  font-weight: bold;
-  border-radius: 50%;
-}
-
-.bronze-rank td:nth-child(2)::before {
-  content: "🥉";
-  margin-right: 5px;
-}
-/* Medal rank styling */
-
-.gold-rank td:nth-child(2)::before,
-.silver-rank td:nth-child(2)::before,
-.bronze-rank td:nth-child(2)::before {
-  background: transparent !important;
-  box-shadow: none !important;
+  background-color: rgba(205, 127, 50, 0.1);
 }

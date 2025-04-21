@@ -1,26 +1,106 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="display-6 fw-bold"><%= "#{@current_month.strftime("%B %Y")} Leaderboard" %> </h2>
+    <h2 class="display-6 fw-bold text-center w-100"><%= "#{@current_month.strftime("%B %Y")} Leaderboard" %></h2>
+  </div>
+  
+  <!-- Top 3 Users Display -->
+  <div class="row mb-5">
+    <div class="col-12 text-center mb-3">
+      <div class="trophy-icon">
+        <%= image_tag "trophy-icon.png", alt: "Trophy", width: 60, class: "mb-2" %>
+      </div>
+      <h3 class="fw-bold">Top Performers</h3>
+    </div>
     
-    <div class="btn-group">
-
+    <!-- Top 3 Users with Medals -->
+    <div class="d-flex justify-content-center position-relative">
+      <!-- Second Place -->
+      <% if @top_by_score.length > 1 %>
+        <div class="text-center mx-3 top-performer second-place">
+          <div class="avatar-container">
+            <div class="avatar-circle silver">
+              <%= image_tag "character_expressions/jasper-excited.png", class: "avatar-image", alt: "Second Place" %>
+            </div>
+            <div class="medal-icon">
+              <img src="https://cdn-icons-png.flaticon.com/512/4442/4442228.png" width="40" height="40" alt="Silver Medal">
+            </div>
+          </div>
+          <div class="user-info mt-2">
+            <h5 class="fw-bold mb-0">
+              <% if !@top_by_score[1].nickname.blank? %>
+                <%= @top_by_score[1].nickname %>
+              <% else %>
+                <%= @top_by_score[1].first_name %> <%= @top_by_score[1].last_name&.first %>
+              <% end %>
+            </h5>
+            <p class="text-muted mb-1">Points: <%= @top_by_score[1].total_score_from_finished_quizzes(@start_date, @end_date) %></p>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- First Place (Center and Larger) -->
+      <% if @top_by_score.length > 0 %>
+        <div class="text-center mx-3 top-performer first-place">
+          
+          <div class="avatar-container">
+            <div class="avatar-circle gold">
+              <%= image_tag "character_expressions/jade-excited.png", class: "avatar-image", alt: "First Place" %>
+            </div>
+            <div class="medal-icon">
+              <img src="https://cdn-icons-png.flaticon.com/512/7322/7322858.png" width="45" height="45" alt="Gold Medal">
+            </div>
+          </div>
+          <div class="user-info mt-4">
+            <h5 class="fw-bold mb-0">
+              <% if !@top_by_score[0].nickname.blank? %>
+                <%= @top_by_score[0].nickname %>
+              <% else %>
+                <%= @top_by_score[0].first_name %> <%= @top_by_score[0].last_name&.first %>
+              <% end %>
+            </h5>
+            <p class="text-muted mb-1">Points: <%= @top_by_score[0].total_score_from_finished_quizzes(@start_date, @end_date) %></p>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Third Place -->
+      <% if @top_by_score.length > 2 %>
+        <div class="text-center mx-3 top-performer third-place">
+          <div class="avatar-container">
+            <div class="avatar-circle bronze">
+              <%= image_tag "character_expressions/peri-excited.png", class: "avatar-image", alt: "Third Place" %>
+            </div>
+            <div class="medal-icon">
+              <img src="https://cdn-icons-png.flaticon.com/512/625/625396.png" width="35" height="35" alt="Bronze Medal">
+            </div>
+          </div>
+          <div class="user-info mt-2">
+            <h5 class="fw-bold mb-0">
+              <% if !@top_by_score[2].nickname.blank? %>
+                <%= @top_by_score[2].nickname %>
+              <% else %>
+                <%= @top_by_score[2].first_name %> <%= @top_by_score[2].last_name&.first %>
+              <% end %>
+            </h5>
+            <p class="text-muted mb-1">Points: <%= @top_by_score[2].total_score_from_finished_quizzes(@start_date, @end_date) %></p>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
   
-  
+  <!-- Rest of Leaderboard -->
   <div class="row">
-    <!-- Total Points Leaderboard -->
     <div class="col-md-12">
       <div class="card border-0 mb-4">
         <div class="card-header bg-white border-0">
-          <h4 class="fw-bold mb-0">Total Points Leaders</h4>
+          <h4 class="fw-bold mb-0">Leaderboard Rankings</h4>
         </div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-borderless">
               <thead>
                 <tr>
-                  <th>Country</th>
                   <th>Rank</th>
                   <th>Student</th>
                   <th>Points</th>
@@ -29,41 +109,36 @@
               </thead>
               <tbody>
                 <% @top_by_score.each_with_index do |user, index| %>
-                  <tr class="<%= 
-                    if index == 0
-                      'gold-rank'
-                    elsif index == 1
-                      'silver-rank'
-                    elsif index == 2
-                      'bronze-rank'
-                    end %>">
-                    
-                    <td>
-                      <% if user.country.present? %>
-                        <% country_code = user.country.strip.upcase[0..1].downcase %>
-                        <img src="https://flagcdn.com/16x12/<%= country_code %>.png" 
-                             alt="<%= user.country %>" 
-                             title="<%= user.country %>"
-                             width="16" height="12">
-                      <% else %>
-                        -
-                      <% end %>
-                    </td>
-                    <td><%= index + 1 %></td>
-                    <td>
-                      <% if !user.nickname.blank? %>
-                        <%= user.nickname %>
-                      <% else %>
-                        <%= user.first_name %> <%= user.last_name&.first %>
-                      <% end %>
-                      
-                      <% if user_signed_in? && user == current_user %>
-                        <span class="badge bg-info">You</span>
-                      <% end %>
-                    </td>
-                    <td><%= user.total_score_from_finished_quizzes(@start_date, @end_date) %></td>
-                    <td><%= user.completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></td>
-                  </tr>
+                  <% if index >= 3 %>
+                    <tr>
+                      <td class="align-middle"><%= index + 1 %></td>
+                      <td class="align-middle">
+                        <div class="d-flex align-items-center">
+                          <% if user.country.present? %>
+                            <% country_code = user.country.strip.upcase[0..1].downcase %>
+                            <img src="https://flagcdn.com/16x12/<%= country_code %>.png" 
+                                 alt="<%= user.country %>" 
+                                 title="<%= user.country %>"
+                                 width="16" height="12"
+                                 class="me-2">
+                          <% end %>
+                          <span>
+                            <% if !user.nickname.blank? %>
+                              <%= user.nickname %>
+                            <% else %>
+                              <%= user.first_name %> <%= user.last_name&.first %>
+                            <% end %>
+                            
+                            <% if user_signed_in? && user == current_user %>
+                              <span class="badge bg-info ms-1">You</span>
+                            <% end %>
+                          </span>
+                        </div>
+                      </td>
+                      <td class="align-middle"><%= user.total_score_from_finished_quizzes(@start_date, @end_date) %></td>
+                      <td class="align-middle"><%= user.completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></td>
+                    </tr>
+                  <% end %>
                 <% end %>
               </tbody>
             </table>
@@ -72,77 +147,6 @@
           <% if user_signed_in? && @score_rank && @score_rank > 10 %>
             <div class="alert alert-info mt-3">
               Your rank: <strong>#<%= @score_rank %></strong> with <%= current_user.total_score_from_finished_quizzes(@start_date, @end_date) %> points
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="row" style="display:none;">
-    <!-- Percentage Leaders -->
-    <div class="col-md-12">
-      <div class="card mb-4">
-        <div class="card-header bg-white border-0">
-          <h4 class="fw-bold mb-0">Highest Accuracy</h4>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-borderless">
-              <thead>
-                <tr>
-                  <th>Country</th>
-                  <th>Rank</th>
-                  <th>Student</th>
-                  <th>Accuracy</th>
-                  <th>Questions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @top_by_percentage.each_with_index do |user, index| %>
-                  <tr class="<%= 
-                    if index == 0
-                      'gold-rank'
-                    elsif index == 1
-                      'silver-rank'
-                    elsif index == 2
-                      'bronze-rank'
-                    end %>">
-                    
-                    <td>
-                      <% if user.country.present? %>
-                        <% country_code = user.country.strip.upcase[0..1].downcase %>
-                        <img src="https://flagcdn.com/16x12/<%= country_code %>.png" 
-                             alt="<%= user.country %>" 
-                             title="<%= user.country %>"
-                             width="16" height="12">
-                      <% else %>
-                        -
-                      <% end %>
-                    </td>
-                    <td><%= index + 1 %></td>
-                    <td>
-                      <% if !user.nickname.blank? %>
-                        <%= user.nickname %>
-                      <% else %>
-                        <%= user.first_name %> <%= user.last_name&.first %>
-                      <% end %>
-                      
-                      <% if user_signed_in? && user == current_user %>
-                        <span class="badge bg-info">You</span>
-                      <% end %>
-                    </td>
-                    <td><%= user.score_percentage_from_finished_quizzes(@start_date, @end_date).round %>%</td>
-                    <td><%= user.completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-          
-          <% if user_signed_in? && @percentage_rank && @percentage_rank > 10 %>
-            <div class="alert alert-info mt-3">
-              Your rank: <strong>#<%= @percentage_rank %></strong> with <%= current_user.score_percentage_from_finished_quizzes(@start_date, @end_date).round %>% accuracy
             </div>
           <% end %>
         </div>

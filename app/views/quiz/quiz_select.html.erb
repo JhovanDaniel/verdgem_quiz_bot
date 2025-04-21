@@ -4,7 +4,7 @@
       <%= image_tag "quiz-hero.png", alt: "Quiz Hero Image", class: "navbar-logo", width: 700 %>
     </div>
     <div class="col-lg-8">
-      <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Let's start a quiz, <%= current_user.first_name || current_user.email %>!</h1>
+      <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Let's start a quiz, <%= !current_user.nickname.blank? ? current_user.nickname : current_user.first_name %>!</h1>
       <p class="lead">Choose your quiz settings and test your knowledge and CSEC Exam readiness!</p>
       <%= form_with url: quiz_start_path, method: :get, local: true, class: "row g-3", data: { controller: "quiz-form" } do |f| %>
         <div class="col-md-4">
