@@ -27,6 +27,14 @@
           </div>
           <div class="user-info mt-2">
             <h5 class="fw-bold mb-0">
+              <% if @top_by_score[1].country.present? %>
+                <% country_code = @top_by_score[1].country.strip.upcase[0..1].downcase %>
+                <img src="https://flagcdn.com/16x12/<%= country_code %>.png" 
+                     alt="<%= @top_by_score[1].country %>" 
+                     title="<%= @top_by_score[1].country %>"
+                     width="16" height="12"
+                     class="me-2">
+              <% end %>
               <% if !@top_by_score[1].nickname.blank? %>
                 <%= @top_by_score[1].nickname %>
               <% else %>
@@ -34,6 +42,7 @@
               <% end %>
             </h5>
             <p class="text-muted mb-1">Points: <%= @top_by_score[1].total_score_from_finished_quizzes(@start_date, @end_date) %></p>
+            <p class="text-muted mb-1">Points: <%= @top_by_score[1].completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></p>
           </div>
         </div>
       <% end %>
@@ -52,13 +61,22 @@
           </div>
           <div class="user-info mt-4">
             <h5 class="fw-bold mb-0">
+              <% if @top_by_score[0].country.present? %>
+                <% country_code = @top_by_score[0].country.strip.upcase[0..1].downcase %>
+                <img src="https://flagcdn.com/16x12/<%= country_code %>.png" 
+                     alt="<%= @top_by_score[0].country %>" 
+                     title="<%= @top_by_score[0].country %>"
+                     width="16" height="12"
+                     class="me-2">
+              <% end %>
               <% if !@top_by_score[0].nickname.blank? %>
                 <%= @top_by_score[0].nickname %>
               <% else %>
                 <%= @top_by_score[0].first_name %> <%= @top_by_score[0].last_name&.first %>
               <% end %>
             </h5>
-            <p class="text-muted mb-1">Points: <%= @top_by_score[0].total_score_from_finished_quizzes(@start_date, @end_date) %></p>
+            <p class="text-muted mb-0">Points: <%= @top_by_score[0].total_score_from_finished_quizzes(@start_date, @end_date) %></p>
+            <p class="text-muted mb-0">Questions: <%= @top_by_score[0].completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></p>
           </div>
         </div>
       <% end %>
@@ -76,6 +94,14 @@
           </div>
           <div class="user-info mt-2">
             <h5 class="fw-bold mb-0">
+              <% if @top_by_score[2].country.present? %>
+                <% country_code = @top_by_score[2].country.strip.upcase[0..1].downcase %>
+                <img src="https://flagcdn.com/16x12/<%= country_code %>.png" 
+                     alt="<%= @top_by_score[2].country %>" 
+                     title="<%= @top_by_score[2].country %>"
+                     width="16" height="12"
+                     class="me-2">
+              <% end %>
               <% if !@top_by_score[2].nickname.blank? %>
                 <%= @top_by_score[2].nickname %>
               <% else %>
@@ -83,6 +109,7 @@
               <% end %>
             </h5>
             <p class="text-muted mb-1">Points: <%= @top_by_score[2].total_score_from_finished_quizzes(@start_date, @end_date) %></p>
+            <p class="text-muted mb-1">Points: <%= @top_by_score[2].completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></p>
           </div>
         </div>
       <% end %>
