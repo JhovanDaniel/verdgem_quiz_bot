@@ -1,109 +1,141 @@
 <nav class="navbar navbar-expand-lg border-bottom">
   <div class="container-xl">
+    <!-- Logo - Always visible -->
     <%= link_to root_path do %>
-    <%= image_tag "Logo-full.png", alt: "VerdGem logo", class: "navbar-logo", width: 150 %>
+      <%= image_tag "Logo-full.png", alt: "VerdGem logo", class: "navbar-logo", width: 150 %>
     <% end %>
     
-    <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" 
+    <!-- User account section for mobile - Always visible if logged in -->
+    <% if current_user %>
+      <div class="d-lg-none ms-auto me-2">
+        <div class="nav-item dropdown">
+          <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+            <span class="avatar"><%= current_user.initials %></span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <%= link_to 'My account', user_path(current_user), class: 'dropdown-item' %>
+            <%= link_to 'Log out', destroy_user_session_path, class: 'dropdown-item', data: { turbo_method: :delete } %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+    <!-- Mobile hamburger menu -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
-            aria-expanded="false" aria-label="Toggle navigation"
-            style="z-index: 1030; margin-right: 10px;">
+            aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"><i class="bi bi-list"></i></span>
     </button>
  
+    <!-- Collapsible content -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-	    <ul class="navbar-nav text-right">
-	      <li class="nav-item mx-2">
-				  <%= link_to authenticated_root_path, class:"nav-link" do %>
-					  <i class="bi bi-house"></i>
-					  <span>Home</span>
-				  <% end %>
-				</li>
-				
-				<li class="nav-item mx-2">
-				  <%= link_to subjects_path, class:"nav-link" do %>
-					  <i class="bi bi-journal"></i>
-					  <span>Subjects</span>
-				  <% end %>
-				</li>
-				
-				<% if current_user %>
-					<li class="nav-item mx-2">
-					  <%= link_to quiz_sessions_path, class:"nav-link" do %>
-						  <i class="bi bi-pencil"></i>
-						  <span>Quiz Sessions</span>
-					  <% end %>
-					</li>
-				<% end %>
-					
-				<li class="nav-item mx-2">
-				  <%= link_to leaderboard_path, class:"nav-link" do %>
-					  <i class="bi bi-trophy"></i>
-					  <span>Leaderboard</span>
-				  <% end %>
-				</li>
-					
-				<% if current_user %>
-					<li class="nav-item mx-2">
-					  <%= link_to reports_path, class:"nav-link" do %>
-						  <i class="bi bi-file-earmark-bar-graph"></i>
-						  <span>Reports</span>
-					  <% end %>
-					</li>
-					
-		      <% if current_user.admin? %>
-			      <li class="nav-item mx-2">
-						  <%= link_to users_path, class:"nav-link" do %>
-							  <i class="bi bi-person-gear"></i>
-							  <span>Users</span>
-						  <% end %>
-						</li>
-					
-						<li class="nav-item mx-2">
-						  <%= link_to "#", class:"nav-link" do %>
-							  <i class="bi bi-gear"></i>
-							  <span>Configuration</span>
-						  <% end %>
-						</li>
-					<% end %>
-				<% end %>
-	    </ul>
-	  </div>
-    
-    <% if current_user %>
-      <div class="navbar-nav flex-row order-md-last">
-        <div class="nav-item dropdown">
-          <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu" aria-expanded="false">
-            <span class="avatar me-2"><%= current_user.initials %></span>      
-            <div class="d-none d-xl-block ps-2">
-              <div><%= current_user.name %></div>
-              <div class="mt-1 small text-muted"><%= current_user.role.titleize %></div>
+      <!-- Main navigation items -->
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <%= link_to authenticated_root_path, class:"nav-link d-flex align-items-center" do %>
+            <i class="bi bi-house me-2"></i>
+            <span>Home</span>
+          <% end %>
+        </li>
+        
+        <li class="nav-item">
+          <%= link_to subjects_path, class:"nav-link d-flex align-items-center" do %>
+            <i class="bi bi-journal me-2"></i>
+            <span>Subjects</span>
+          <% end %>
+        </li>
+        
+        <% if current_user %>
+          <li class="nav-item">
+            <%= link_to quiz_sessions_path, class:"nav-link d-flex align-items-center" do %>
+              <i class="bi bi-pencil me-2"></i>
+              <span>Quiz Sessions</span>
+            <% end %>
+          </li>
+        <% end %>
+          
+        <li class="nav-item">
+          <%= link_to leaderboard_path, class:"nav-link d-flex align-items-center" do %>
+            <i class="bi bi-trophy me-2"></i>
+            <span>Leaderboard</span>
+          <% end %>
+        </li>
+          
+        <% if current_user %>
+          <li class="nav-item">
+            <%= link_to reports_path, class:"nav-link d-flex align-items-center" do %>
+              <i class="bi bi-file-earmark-bar-graph me-2"></i>
+              <span>Reports</span>
+            <% end %>
+          </li>
+          
+          <% if current_user.admin? %>
+            <li class="nav-item">
+              <%= link_to users_path, class:"nav-link d-flex align-items-center" do %>
+                <i class="bi bi-person-gear me-2"></i>
+                <span>Users</span>
+              <% end %>
+            </li>
+          
+            <li class="nav-item">
+              <%= link_to "#", class:"nav-link d-flex align-items-center" do %>
+                <i class="bi bi-gear me-2"></i>
+                <span>Configuration</span>
+              <% end %>
+            </li>
+          <% end %>
+          
+          <!-- Mobile-only divider for logged-in users -->
+          <li class="nav-item d-lg-none border-top my-2"></li>
+        <% end %>
+      </ul>
+      
+      <!-- Login/Signup or User Account (visible on desktop) -->
+      <div class="d-none d-lg-flex navbar-nav">
+        <% if current_user %>
+          <div class="nav-item dropdown">
+            <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
+              <span class="avatar me-2"><%= current_user.initials %></span>      
+              <div class="d-none d-xl-block ps-2">
+                <div><%= current_user.name %></div>
+                <div class="mt-1 small text-muted"><%= current_user.role.titleize %></div>
+              </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+              <%= link_to 'My account', user_path(current_user), class: 'dropdown-item' %>
+              <%= link_to 'Log out', destroy_user_session_path, class: 'dropdown-item', data: { turbo_method: :delete } %>
             </div>
-          </a>
-          <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-          <%= link_to 'My account', user_path(current_user), class: 'dropdown-item' %>
-          <%= link_to 'Log out', destroy_user_session_path, class: 'dropdown-item', data: { turbo_method: :delete } %>
-        </div>
-        </div>
+          </div>
+        <% else %>
+          <!-- Login/Signup buttons -->
+          <div class="d-flex">
+            <%= link_to new_user_session_path, class: "nav-link d-flex align-items-center" do %>
+              <i class="bi bi-person me-1"></i>
+              <span>Login</span>
+            <% end %>
+            <%= link_to new_user_registration_path, class: "nav-link d-flex align-items-center ms-2" do %>
+              <span>Sign up</span>
+            <% end %>
+          </div>
+        <% end %>
       </div>
-    <% else %>
-      <div class="navbar-nav flex-row order-md-last">
-  	    <%= link_to new_user_session_path, class: "text-decoration-none" do %>
-    	    <div class="nav-link d-flex align-items-center lh-1 text-reset p-0">
-    	      <i class="bi bi-person bi-xl"></i>   
-    	      <div class="ps-2">
-    	        <span>Login</span>
-    	      </div>
-    	    </div>
-  	    <% end %>
-  	    <%= link_to new_user_registration_path, class: "text-decoration-none" do %>
-    	    <div class="nav-link d-flex align-items-center lh-1 text-reset mx-2 p-0">
-    	      <div class="ps-2">
-    	        <span>Sign up</span>
-    	      </div>
-    	    </div>
-  	    <% end %>
-  	  </div>
-	  <% end %>
+      
+      <!-- Mobile-only login/signup buttons (only shown when not logged in) -->
+      <% if !current_user %>
+        <div class="d-lg-none mt-2 border-top pt-2">
+          <div class="d-flex justify-content-around">
+            <%= link_to new_user_session_path, class: "btn btn-outline-primary w-100 me-2" do %>
+              <i class="bi bi-person me-1"></i>
+              <span>Login</span>
+            <% end %>
+            <%= link_to new_user_registration_path, class: "btn btn-primary w-100" do %>
+              <span>Sign up</span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 </nav>
+
+<!-- Add these styles to your CSS file -->
