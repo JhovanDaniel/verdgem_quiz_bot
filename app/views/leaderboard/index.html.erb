@@ -42,7 +42,7 @@
               <% end %>
             </h5>
             <p class="text-muted mb-1">Points: <%= @top_by_score[1].total_score_from_finished_quizzes(@start_date, @end_date) %></p>
-            <p class="text-muted mb-1">Points: <%= @top_by_score[1].completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></p>
+            <p class="text-muted mb-1">Questions: <%= @top_by_score[1].completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></p>
           </div>
         </div>
       <% end %>
@@ -109,7 +109,7 @@
               <% end %>
             </h5>
             <p class="text-muted mb-1">Points: <%= @top_by_score[2].total_score_from_finished_quizzes(@start_date, @end_date) %></p>
-            <p class="text-muted mb-1">Points: <%= @top_by_score[2].completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></p>
+            <p class="text-muted mb-1">Questions: <%= @top_by_score[2].completed_questions_from_finished_quizzes_count(@start_date, @end_date) %></p>
           </div>
         </div>
       <% end %>
