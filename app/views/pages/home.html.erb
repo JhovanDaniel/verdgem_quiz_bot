@@ -86,7 +86,6 @@
           <tr>
             <th>Date</th>
             <th>Subject</th>
-            <th>Topic</th>
             <th>Progress</th>
             <th>Score</th>
             <th>Actions</th>
@@ -97,7 +96,6 @@
             <tr>
               <td><%= format_date(session.created_at) %></td>
               <td><%= session.subject.name %></td>
-              <td><%= session.topic.blank? ? "All Topics" : session.topic.name %></td>
               <td><%= session.completed_questions %> / <%= session.question_count %></td>
               <td>
                 <% if session.completed? %>
