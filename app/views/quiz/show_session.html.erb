@@ -1,6 +1,6 @@
-<div class="container mt-4">
-  <h3 class="display-6 fw-bold">Quiz Results: <%= @quiz_session.subject.name %></h3>
-  <p class="text-muted m-0">
+<div class="container-fluid container-md mt-4">
+  <h3 class="h4 h1-md fw-bold">Quiz Results: <%= @quiz_session.subject.name %></h3>
+  <p class="text-muted m-0 small">
     <% if @quiz_session.topic.present? %>
       Topic: <%= @quiz_session.topic.name %> |
     <% end %>
@@ -11,55 +11,55 @@
       <%= link_to "Resume Quiz", resume_quiz_path(@quiz_session), class: "btn btn-sm btn-primary mt-2" %>
   <% end %>
   
-  <div class="row mb-4 justify-content-between align-items-center">
-    <div class="col-md-3">
+  <div class="row my-4 g-3 justify-content-between align-items-center">
+    <div class="col-6 col-md-3 mt-0">
       <div class="card p-0 border-0">
-        <div class="card-body text-center">
-          <h1 class="display-4">
+        <div class="card-body text-center p-2 p-md-3">
+          <h1 class="h2 h1-md mb-0">
             <%= @attempts.count %> / <%= @attempts.count %>
           </h1>
-          <p class="text-muted mb-0">Questions Completed</p>
+          <p class="text-muted mb-0 small">Questions Completed</p>
         </div>
       </div>
     </div>
     
-    <div class="col-md-3">
+    <div class="col-6 col-md-3 mt-0">
       <div class="card p-0 border-0">
-        <div class="card-body text-center">
+        <div class="card-body text-center p-2 p-md-3">
           <% if @quiz_session.total_score.present? %>
-            <h1 class="display-4">
+            <h3 class="h2 h1-md mb-0">
               <%= @quiz_session.total_score %> / <%= @quiz_session.max_score %>
-            </h1>
-            <p class="text-muted mb-0">Points Scored</p>
+            </h3>
+            <p class="text-muted mb-0 small">Points Scored</p>
           <% else %>
-            <h1 class="display-4">
+            <h3 class="h3 h2-md mb-0">
               Pending
-            </h1>
-            <p class="text-muted mb-0">Grading in Progress</p>
+            </h3>
+            <p class="text-muted mb-0 small">Grading in Progress</p>
           <% end %>
         </div>
       </div>
     </div>
     
-    <div class="col-md-3">
+    <div class="col-6 col-md-3 mt-0">
       <div class="card p-0 border-0">
-        <div class="card-body text-center">
-          <h1 class="display-4">
+        <div class="card-body text-center p-2 p-md-3">
+          <h1 class="h2 h1-md mb-0">
             <% if @quiz_session.total_score.present? %>
               <%= @quiz_session.score_percentage %>%
             <% else %>
               --
             <% end %>
           </h1>
-          <p class="text-muted mb-0">Overall Score</p>
+          <p class="text-muted mb-0 small">Overall Score</p>
         </div>
       </div>
     </div>
     
-    <div class="col-md-3">
+    <div class="col-6 col-md-3 mt-0">
       <div class="card p-0 border-0">
-        <div class="card-body text-center">
-          <%= image_tag "jade-expression-1.PNG", alt: "Jade Happy", class: "navbar-logo", width: 150 %>
+        <div class="card-body text-center p-0 p-md-3">
+          <%= image_tag "jade-expression-1.PNG", alt: "Jade Happy", class: "navbar-logo img-fluid", style: "max-width: 150px;" %>
         </div>
       </div>
     </div>
@@ -81,8 +81,8 @@
           <% end %>
         </div>
         <p class="mb-1 text-black"><%= truncate(attempt.question.content, length: 150) %></p>
-        <div class="d-flex justify-content-between align-items-center mt-2">
-          <small class="text-black">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mt-2">
+          <small class="text-black mb-2 mb-md-0">
             <%= attempt.question.topic.subject.name %> | 
             <%= attempt.question.topic.name %>
           </small>
@@ -110,9 +110,8 @@
       </div>
     <% end %>
   </div>
-
   
-  <div class="d-flex justify-content-between my-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between gap-2 my-4">
     <%= link_to "Back to Quiz Sessions", quiz_sessions_path, class: "btn btn-outline-primary" %>
     <%= link_to "Start New Quiz", quiz_select_path, class: "btn btn-primary" %>
   </div>
