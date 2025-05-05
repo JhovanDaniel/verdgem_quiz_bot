@@ -1,18 +1,18 @@
-<div class="container mt-4">
+<div class="container-fluid container-md mt-4">
   <div class="card border-0">
     <div class="card-header border-0 pb-0 bg-white">
       <div class="row justify-content-between align-items-center">
-        <div class="col-8">
+        <div class="col-12 col-md-8">
           <div class="d-flex justify-content-between align-items-center">
-            <h3 class="mb-0 display-6 fw-bold">Question <%= @question_number %> of <%= @total_questions %></h3>
+            <h3 class="mb-0 h2 h3-md fw-bold">Question <%= @question_number %> of <%= @total_questions %></h3>
           </div>
     
-          <div class="question-content">
-            <div class="fs-5">
+          <div class="question-content mt-3">
+            <div class="fs-4 fs-md-5">
               <%= simple_format(@question.content) %>
             </div>
           </div>
-          <div class="mb-4">
+          <div class="mb-3 mb-md-4">
             <div class="d-flex justify-content-between align-items-start">
               <div>
                 <span class="badge <%= @question.difficulty_level == 'easy' ? 'bg-success' : (@question.difficulty_level == 'medium' ? 'bg-warning' : 'bg-danger') %>">
@@ -30,15 +30,14 @@
         </div>
       </div>
     </div>
-
     <div class="card-body pt-0">
       <%= form_with url: quiz_submit_path, method: :post, local: true, class: "answer-form" do |f| %>
-        <div class="form-group mb-4">
-          <h4><%= f.label :answer, "Your Answer:" %></h4>
-          <%= f.text_area :answer, rows: 8, class: "form-control", required: true, placeholder: "Type your answer here..." %>
+        <div class="form-group mb-3 mb-md-4">
+          <h4 class="h4 h4-md"><%= f.label :answer, "Your Answer:" %></h4>
+          <%= f.text_area :answer, rows: 6, class: "form-control", required: true, placeholder: "Type your answer here..." %>
         </div>
         
-        <div class="form-group mx-4">
+        <div class="form-group mx-2 mx-md-4 mb-3">
           <span><%= f.check_box :question_has_problem, class: "form-check-input" %></span>
           <span><%= f.label :question_has_problem, "Check box if this question has a problem", class:"text-muted"%></span>
         </div>
@@ -49,7 +48,7 @@
           <% end %>
           
           <%= f.submit @question_number == @total_questions ? "Submit Final Answer" : "Submit & Continue", 
-                       class: "btn btn-primary btn-lg" %>
+                       class: "btn btn-primary" %>
         </div>
       <% end %>
     </div>
