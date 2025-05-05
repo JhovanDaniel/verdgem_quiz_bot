@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_12_165824) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_05_130840) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -126,7 +126,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_12_165824) do
   add_foreign_key "feedbacks", "quiz_sessions"
   add_foreign_key "question_attempts", "questions"
   add_foreign_key "question_attempts", "quiz_sessions"
-  add_foreign_key "question_attempts", "users"
+  add_foreign_key "question_attempts", "users", on_delete: :cascade
   add_foreign_key "questions", "topics"
   add_foreign_key "quiz_sessions", "subjects"
   add_foreign_key "quiz_sessions", "topics"
