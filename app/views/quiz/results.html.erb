@@ -1,73 +1,73 @@
-<div class="container mt-4">
-  <div class="card mb-4">
-    <div class="card-header">
-      <h3 class="mb-0">Quiz Results</h3>
+<div class="container-fluid container-lg mt-3 mt-md-4">
+  <div class="card border-0 mb-3 mb-md-4">
+    <div class="card-header bg-white">
+      <h3 class="h4 h1-md fw-bold">Quiz Results</h3>
     </div>
     <div class="card-body">
-      <div class="row mb-4">
-        <div class="col-md-4">
-          <div class="card">
+      <div class="row g-3 mb-3 mb-md-4">
+        <div class="col-12 col-md-4">
+          <div class="card border-0 h-100">
             <div class="card-body text-center">
-              <h1 class="display-4">
+              <h1 class="display-5 display-md-4">
                 <%= @attempts.count %> / <%= @total_questions %>
               </h1>
-              <p class="text-muted mb-0">Questions Completed</p>
+              <p class="text-muted mb-0 small">Questions Completed</p>
             </div>
           </div>
         </div>
         
-        <div class="col-md-4">
-          <div class="card">
+        <div class="col-12 col-md-4">
+          <div class="card border-0 h-100">
             <div class="card-body text-center">
               <% if @earned_points > 0 %>
-                <h1 class="display-4">
+                <h1 class="display-5 display-md-4">
                   <%= @earned_points %> / <%= @total_points %>
                 </h1>
-                <p class="text-muted mb-0">Points Scored</p>
+                <p class="text-muted mb-0 small">Points Scored</p>
               <% else %>
-                <h1 class="display-4">
+                <h1 class="display-5 display-md-4">
                   Pending
                 </h1>
-                <p class="text-muted mb-0">Grading in Progress</p>
+                <p class="text-muted mb-0 small">Grading in Progress</p>
               <% end %>
             </div>
           </div>
         </div>
         
-        <div class="col-md-4">
-          <div class="card">
+        <div class="col-12 col-md-4">
+          <div class="card border-0 h-100">
             <div class="card-body text-center">
-              <h1 class="display-4">
+              <h1 class="display-5 display-md-4">
                 <% if @earned_points > 0 && @total_points > 0 %>
                   <%= (@earned_points.to_f / @total_points * 100).round %>%
                 <% else %>
                   --
                 <% end %>
               </h1>
-              <p class="text-muted mb-0">Overall Score</p>
+              <p class="text-muted mb-0 small">Overall Score</p>
             </div>
           </div>
         </div>
       </div>
       
-      <h4 class="mb-3">Question Summary</h4>
+      <h4 class="mb-3 fs-5 fs-md-4">Question Summary</h4>
       
       <div class="list-group">
         <% @attempts.each_with_index do |attempt, index| %>
           <div class="list-group-item">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">Question <%= index + 1 %></h5>
+            <div class="d-flex flex-column flex-md-row w-100 justify-content-between align-items-start align-items-md-center">
+              <h5 class="mb-1 mb-md-0 fw-bold fs-6 fs-md-5">Question <%= index + 1 %></h5>
               <% if attempt.score.present? %>
-                <span class="badge <%= (attempt.score.to_f / attempt.question.max_points) >= 0.7 ? 'bg-success' : 'bg-danger' %>">
+                <span class="badge <%= (attempt.score.to_f / attempt.question.max_points) >= 0.7 ? 'bg-success' : 'bg-danger' %> mt-1 mt-md-0">
                   <%= attempt.score %> / <%= attempt.question.max_points %> points
                 </span>
               <% else %>
-                <span class="badge bg-secondary">Pending</span>
+                <span class="badge bg-secondary mt-1 mt-md-0">Pending</span>
               <% end %>
             </div>
             <p class="mb-1"><%= truncate(attempt.question.content, length: 150) %></p>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <small class="text-muted">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mt-2">
+              <small class="text-muted mb-2 mb-md-0">
                 <%= attempt.question.topic.subject.name %> | 
                 <%= attempt.question.topic.name %>
               </small>
@@ -78,18 +78,18 @@
             
             <div class="collapse mt-3" id="attempt-<%= attempt.id %>">
               <div class="card card-body bg-light">
-                <h6>Your Answer:</h6>
-                <p><%= simple_format(attempt.student_answer) %></p>
+                <h6 class="fs-6">Your Answer:</h6>
+                <p class="small"><%= simple_format(attempt.student_answer) %></p>
                 
                 <% if attempt.feedback.present? %>
-                  <h6>Feedback:</h6>
-                  <p><%= simple_format(attempt.feedback) %></p>
+                  <h6 class="fs-6">Feedback:</h6>
+                  <p class="small"><%= simple_format(attempt.feedback) %></p>
                 <% else %>
-                  <p class="text-muted"><em>Feedback will be available soon.</em></p>
+                  <p class="text-muted small"><em>Feedback will be available soon.</em></p>
                 <% end %>
                 
-                <h6>Model Answer:</h6>
-                <p><%= simple_format(attempt.question.model_answer) %></p>
+                <h6 class="fs-6">Model Answer:</h6>
+                <p class="small"><%= simple_format(attempt.question.model_answer) %></p>
               </div>
             </div>
           </div>
@@ -99,15 +99,15 @@
   </div>
   
   <!---------- Quiz Feedback ---------->
-  <div class="card mb-4">
+  <div class="card mb-3 mb-md-4">
     <div class="card-header">
-      <h3 class="mb-0">Your Feedback</h3>
+      <h3 class="mb-0 fs-4 fs-md-3">Your Feedback</h3>
     </div>
     <div class="card-body">
       <% if @quiz_session.feedback.present? %>
         <div class="alert alert-success">
-          <h5>Thank you for your feedback!</h5>
-          <p>Your rating: 
+          <h5 class="fs-6 fs-md-5">Thank you for your feedback!</h5>
+          <p class="mb-2">Your rating: 
             <% @quiz_session.feedback.rating.times do %>
               <i class="bi bi-star-fill text-warning"></i>
             <% end %>
@@ -116,18 +116,18 @@
             <% end %>
           </p>
           <% if @quiz_session.feedback.comment.present? %>
-            <p><strong>Your comment:</strong> <%= @quiz_session.feedback.comment %></p>
+            <p class="mb-0 small"><strong>Your comment:</strong> <%= @quiz_session.feedback.comment %></p>
           <% end %>
         </div>
       <% else %>
         <%= form_with model: [@quiz_session, Feedback.new], local: true, class: "feedback-form" do |f| %>
-          <p>How would you rate this quiz experience?</p>
-          <p class="text-muted">Your feedback helps us improve our platform for thousands of students, just like you! 😊 </p>
+          <p class="mb-1">How would you rate this quiz experience?</p>
+          <p class="text-muted small mb-3">Your feedback helps us improve our platform for thousands of students, just like you! 😊 </p>
           
           <div class="mb-3">
-            <div class="rating">
+            <div class="rating d-flex flex-wrap">
               <% 5.downto(1) do |i| %>
-                <div class="form-check form-check-inline">
+                <div class="form-check form-check-inline me-3 mb-2">
                   <%= f.radio_button :rating, i, class: "form-check-input", required: true %>
                   <%= f.label "rating_#{i}", "#{i} stars", class: "form-check-label" %>
                 </div>
@@ -147,7 +147,7 @@
   </div>
   <!---------- Quiz Feedback ---------->
   
-  <div class="d-flex justify-content-between my-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between gap-2 gap-md-0 my-3 my-md-4">
     <%= link_to "Back to Dashboard", authenticated_root_path, class: "btn btn-outline-secondary" %>
     <%= link_to "Start New Quiz", '#', class: "btn btn-primary" %>
   </div>
