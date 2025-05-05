@@ -58,7 +58,7 @@
       </div>
       <div class="col-auto">
         <div class="progress" style="width: 200px; height: 8px;">
-          <% percentage = current_user.quiz_attempts.to_f / current_user.max_quiz_attempts * 100 %>
+          <% percentage = current_user.monthly_quiz_attempts.to_f / current_user.max_quiz_attempts * 100 %>
           <div class="progress-bar <%= percentage > 80 ? 'bg-danger' : 'bg-primary' %>" 
                role="progressbar" 
                style="width: <%= percentage %>%" 
