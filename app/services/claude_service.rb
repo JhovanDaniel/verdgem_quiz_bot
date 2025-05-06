@@ -81,13 +81,16 @@ class ClaudeService
       
       1. Compare the student's answer against the model answer and key concepts. Examples that 
       students give in their answers do not have to be exact to model answer but should still be
-      a correct example.
-      2. Assign a fair score based on the marking criteria provided
+      a correct example. Answers do not have to be the same as model answers so never take off marks because the answer given is not the same as the model answer.
+      Once answers are correct and reasonable they can be awarded marks.
+      2. Assign a fair score based on the marking criteria provided. Do not take off marks for simple spelling mistakes
       3. Provide specific feedback on what the student did well
       4. Point out any misconceptions or areas for improvement
       5. Include relevant CSEC curriculum references where appropriate
       6. Be encouraging and educational in your feedback
       7. Start your response with the score in the format: "Score: X/Y points"
+      8. IMPORTANT: When providing a breakdown of points, always double-check that the individual points add up to the total score you assign. Count each point awarded carefully.
+      9. Always include a clear "Total: X/Y" at the end of your breakdown that accurately sums all points awarded.
       
       Remember that there may be multiple valid approaches to answering the question. 
       Evaluate the substance of the student's understanding rather than expecting exact 
@@ -112,7 +115,8 @@ class ClaudeService
       Student's Answer:
       #{student_answer}
       
-      Please evaluate this answer, assign a score out of #{question.max_points} points, and provide detailed feedback.
+      Please evaluate this answer, assign a score out of #{question.max_points} points, and provide detailed feedback. Make sure the final score
+      you give adds up with the points you have awarded for each part of a question.
     MESSAGE
   end
 end
