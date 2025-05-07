@@ -27,7 +27,7 @@ class ClaudeService
         body: {
           model: "claude-3-5-haiku-20241022",
           max_tokens: 1000,
-          system: system_prompt, # This is the correct way to provide a system prompt
+          system: system_prompt,
           messages: [
             { role: "user", content: user_message }
           ]
@@ -40,9 +40,46 @@ class ClaudeService
         # Extract the response text
         feedback = response.parsed_response["content"].first["text"]
         
-        # Extract score from the feedback text using regex
-        score_match = feedback.match(/(\d+)\/(\d+)/)
-        score = score_match ? score_match[1].to_i : nil
+        # Extract score from the beginning of the feedback
+        initial_score_match = feedback.match(/^Score:\s*(\d+\.?\d*)\/(\d+)/i)
+        
+        # Extract total from the end of the feedback
+        total_score_match = feedback.match(/Total:\s*(\d+\.?\d*)\/(\d+)/i)
+        
+        # Extract individual points from breakdown
+        point_matches = feedback.scan(/\((\d+\.?\d*)\/\d+\s*points?\)/i)
+        points = point_matches.flatten.map(&:to_f)
+        
+        # Calculate the sum of individual points
+        calculated_total = points.sum.round(1)
+        
+        # Determine the final score
+        if initial_score_match
+          reported_score = initial_score_match[1].to_f
+          max_points = initial_score_match[2].to_i
+        elsif total_score_match
+          reported_score = total_score_match[1].to_f
+          max_points = total_score_match[2].to_i
+        else
+          reported_score = nil
+          max_points = question.max_points
+        end
+        
+        # If there's a mismatch between calculated and reported scores
+        if reported_score && (calculated_total - reported_score).abs > 0.01 && points.length > 0
+          # Correct the score in the feedback text
+          feedback = feedback.gsub(/^Score:\s*\d+\.?\d*\/\d+/i, "Score: #{calculated_total}/#{max_points}")
+          feedback = feedback.gsub(/Total:\s*\d+\.?\d*\/\d+/i, "Total: #{calculated_total}/#{max_points}")
+          
+          # Log the correction
+          Rails.logger.info("Score corrected from #{reported_score} to #{calculated_total} based on breakdown")
+          
+          # Use the calculated score
+          score = calculated_total
+        else
+          # Use the reported score if it exists, otherwise use calculated
+          score = reported_score || calculated_total
+        end
         
         return {
           success: true,
@@ -79,22 +116,30 @@ class ClaudeService
       
       Follow these evaluation guidelines:
       
-      1. Compare the student's answer against the model answer and key concepts. Examples that 
-      students give in their answers do not have to be exact to model answer but should still be
-      a correct example. Answers do not have to be the same as model answers so never take off marks because the answer given is not the same as the model answer.
-      Once answers are correct and reasonable they can be awarded marks.
-      2. Assign a fair score based on the marking criteria provided. Do not take off marks for simple spelling mistakes
-      3. Provide specific feedback on what the student did well
-      4. Point out any misconceptions or areas for improvement
-      5. Include relevant CSEC curriculum references where appropriate
-      6. Be encouraging and educational in your feedback
-      7. Start your response with the score in the format: "Score: X/Y points"
-      8. IMPORTANT: When providing a breakdown of points, always double-check that the individual points add up to the total score you assign. Count each point awarded carefully.
-      9. Always include a clear "Total: X/Y" at the end of your breakdown that accurately sums all points awarded.
-      
-      Remember that there may be multiple valid approaches to answering the question. 
+      1. Compare the student's answer against the model answer and key concepts.
+      2. Assign a fair score based on the marking criteria provided. Do not take off marks for minor spelling errors
+      3.Remember that there may be multiple valid approaches to answering the question. 
       Evaluate the substance of the student's understanding rather than expecting exact 
       wording from the model answer.
+      4. Provide specific feedback on what the student did well.
+      5. Point out any misconceptions or areas for improvement.
+      6. Be encouraging and educational in your feedback
+      
+      IMPORTANT: You must format your response exactly as follows:
+      
+      SCORE: [Total points awarded]/[Maximum points]
+      
+      BREAKDOWN:
+      - Part (a): [Points awarded]/[Maximum for this part] - [Brief explanation]
+      - Part (b): [Points awarded]/[Maximum for this part] - [Brief explanation]
+      - Part (c): [Points awarded]/[Maximum for this part] - [Brief explanation]
+      
+      FEEDBACK:
+      [Your detailed feedback here]
+      
+      TOTAL: [Same exact number as SCORE above]/[Maximum points]
+      
+      Before submitting your evaluation, mathematically verify that your BREAKDOWN points sum to the exact value in SCORE and TOTAL.
     PROMPT
   end
   
@@ -115,8 +160,12 @@ class ClaudeService
       Student's Answer:
       #{student_answer}
       
-      Please evaluate this answer, assign a score out of #{question.max_points} points, and provide detailed feedback. Make sure the final score
-      you give adds up with the points you have awarded for each part of a question.
+      Please evaluate this answer carefully. First break down points for each part, then add them up for the total score.
+      
+      1. Start with "Score: X/#{question.max_points} points" where X is the sum of all awarded points
+      2. Provide a breakdown of points for each part
+      3. End with "Total: X/#{question.max_points} points" that must match your initial score
+      4. Double-check your math before submitting
     MESSAGE
   end
 end
