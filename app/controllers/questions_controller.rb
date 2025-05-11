@@ -10,12 +10,25 @@ class QuestionsController < ApplicationController
   end
   
   def create
-    @question = @topic.questions.build(question_params)
+    @topic = Topic.find(params[:topic_id])
+    @question = @topic.questions.new(question_params)
+    
+    # Add logic to ensure at least one correct answer for multiple choice
+    if @question.multiple_choice? && question_params[:answer_options_attributes].present?
+      has_correct_answer = question_params[:answer_options_attributes].values.any? { |opt| opt[:is_correct] == "1" }
+      
+      unless has_correct_answer
+        flash[:alert] = "Multiple choice questions must have at least one correct answer"
+        redirect_to new_topic_question_path(@topic)
+        return
+      end
+    end
     
     if @question.save
-      redirect_to topic_path(@topic), notice: "Question was successfully created."
+      redirect_to topic_path(@topic), notice: 'Question was successfully created.'
     else
-      render :new, status: :unprocessable_entity
+      flash[:alert] = @question.errors.full_messages.to_sentence
+      redirect_to new_topic_question_path(@topic)
     end
   end
   
@@ -26,10 +39,23 @@ class QuestionsController < ApplicationController
   def update
     @topic = @question.topic
     
+    # Similar validation for update
+    if question_params[:question_type] == "multiple_choice" && question_params[:answer_options_attributes].present?
+      has_correct_answer = question_params[:answer_options_attributes].values.any? do |opt| 
+        opt[:is_correct] == "1" && opt[:_destroy] != "1"
+      end
+      
+      unless has_correct_answer
+        @question.errors.add(:base, "Multiple choice questions must have at least one correct answer")
+        render :edit
+        return
+      end
+    end
+    
     if @question.update(question_params)
-      redirect_to question_path(@question), notice: "Question was successfully updated."
+      redirect_to topic_path(@topic), notice: 'Question was successfully updated.'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit
     end
   end
 
@@ -49,7 +75,8 @@ class QuestionsController < ApplicationController
   
   def question_params
     params.require(:question).permit(:content, :model_answer, :key_concepts, :marking_criteria, 
-      :max_points, :difficulty_level, :has_problem
+      :max_points, :difficulty_level, :has_problem, :question_type,
+      answer_options_attributes: [:id, :content, :is_correct, :position, :_destroy]
     )
   end
 end

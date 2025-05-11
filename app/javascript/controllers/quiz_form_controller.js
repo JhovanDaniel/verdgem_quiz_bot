@@ -5,6 +5,7 @@ export default class extends Controller {
 
   connect() {
     // Initialize the form
+    console.log('Eeep')
     this.updateTopics()
   }
 

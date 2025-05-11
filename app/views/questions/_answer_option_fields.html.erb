@@ -1,0 +1,23 @@
+<div class="nested-fields card mb-3">
+  <div class="card-body">
+    <%= f.input :content, 
+               label: 'Option Text',
+               as: :text, 
+               input_html: { rows: 2 },
+               placeholder: 'Enter the option text',
+               required: true %>
+               
+    <%= f.input :is_correct, 
+               as: :boolean,
+               label: 'Correct Answer',
+               hint: 'Check this if this is the correct answer' %>
+               
+    <%= f.input :position, 
+               label: 'Display Order',
+               as: :integer,
+               input_html: { min: 1 },
+               hint: 'Lower numbers will be displayed first' %>
+               
+    <%= link_to_remove_association "Remove Option", f, class: "btn btn-outline-danger btn-sm" %>
+  </div>
+</div>

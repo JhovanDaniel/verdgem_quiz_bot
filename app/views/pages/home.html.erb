@@ -29,6 +29,13 @@
                        {}, { class: "form-select" } %>
         </div>
         
+        <div class="col-md-6">
+          <%= f.label :question_type, "Question Type", class: "form-label" %>
+          <%= f.select :question_type, 
+                      options_for_select([["Multiple Choice", "multiple_choice"],["Long Answer", "long_answer"]]), 
+                      {}, { class: "form-select" } %>
+        </div>
+        
         <div class="col-md-4">
           <%= f.label :count, "Number of Questions", class: "form-label" %>
           <%= f.select :count, 

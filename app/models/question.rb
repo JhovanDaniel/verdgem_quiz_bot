@@ -8,11 +8,17 @@ class Question < ApplicationRecord
   enum question_type: [:multiple_choice, :long_answer], _default: :multiple_choice
   
   validates :content, presence: true
-  validates :model_answer, presence: true
+  validates :model_answer, presence: true, if: :long_answer?
   validates :max_points, numericality: { greater_than: 0 }
+  
+  accepts_nested_attributes_for :answer_options, allow_destroy: true, reject_if: :all_blank
   
   # Default values for new questions
   after_initialize :set_defaults, if: :new_record?
+  
+  def long_answer?
+    question_type == 'long_answer'
+  end
   
   private
   

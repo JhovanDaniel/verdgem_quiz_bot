@@ -24,6 +24,11 @@ class QuizController < ApplicationController
     # Filter by topic if provided
     questions_scope = questions_scope.where(topic_id: @topic.id) if @topic.present?
     
+    # Filter by question type if provided
+    unless params[:question_type] == "all" || params[:question_type].blank?
+      questions_scope = questions_scope.where(question_type: params[:question_type])
+    end
+    
     # Get the requested number of questions
     question_count = params[:count].present? ? params[:count].to_i : 5
 
@@ -91,7 +96,7 @@ class QuizController < ApplicationController
     
     # If there are no questions matching the criteria
     if @questions.empty?
-      redirect_to dashboard_path, alert: "No questions available for the selected criteria. Please try different options."
+      redirect_to authenticated_root_path, alert: "No questions available for the selected criteria. Please try different options."
       return
     end
     
@@ -157,35 +162,65 @@ class QuizController < ApplicationController
       quiz_session_id: quiz_session_id  # Add this line
     )
     
-    # Evaluate the answer using Claude
-    if current_user
-      begin
-        # Show loading state
-        @attempt.update(evaluation_status: "processing")
-        
-        # Call Claude API
-        claude_service = ClaudeService.new
-        evaluation = claude_service.evaluate_answer(@question, params[:answer])
-        
-        if evaluation[:success]
-          @attempt.update(
-            score: evaluation[:score],
-            feedback: evaluation[:feedback],
-            evaluation_status: "completed"
-          )
-        else
-          @attempt.update(
-            evaluation_status: "error",
-            evaluation_error: evaluation[:error]
-          )
-        end
-      rescue => e
-        Rails.logger.error("Evaluation error: #{e.message}")
-        @attempt.update(evaluation_status: "error", evaluation_error: e.message)
+    case @question.question_type
+    #Multiple choice evaluation
+    when "multiple_choice"
+      # For multiple choice, we get the selected option ID from params
+      selected_option_id = params[:answer_option_id]
+      @attempt.student_answer = selected_option_id
+      
+      # Get the selected and correct options
+      selected_option = @question.answer_options.find_by(id: selected_option_id)
+      correct_option = @question.answer_options.find_by(is_correct: true)
+      
+      if selected_option&.is_correct
+        # Correct answer
+        @attempt.score = @question.max_points
+        @attempt.feedback = "Correct answer!"
+      else
+        # Incorrect answer
+        @attempt.score = 0
+        @attempt.feedback = "Incorrect answer. The correct answer is: #{correct_option&.content}"
       end
-    else
-      # For non-premium users, mark for manual review or limited AI feedback
-      @attempt.update(evaluation_status: "pending")
+      
+      @attempt.evaluation_status = "completed"
+      @attempt.save
+      
+    #long answer evaluation
+    when "long_answer"
+      
+      @attempt.student_answer = params[:answer]
+      @attempt.save
+      # Evaluate the answer using Claude
+      if current_user
+        begin
+          # Show loading state
+          @attempt.update(evaluation_status: "processing")
+          
+          # Call Claude API
+          claude_service = ClaudeService.new
+          evaluation = claude_service.evaluate_answer(@question, params[:answer])
+          
+          if evaluation[:success]
+            @attempt.update(
+              score: evaluation[:score],
+              feedback: evaluation[:feedback],
+              evaluation_status: "completed"
+            )
+          else
+            @attempt.update(
+              evaluation_status: "error",
+              evaluation_error: evaluation[:error]
+            )
+          end
+        rescue => e
+          Rails.logger.error("Evaluation error: #{e.message}")
+          @attempt.update(evaluation_status: "error", evaluation_error: e.message)
+        end
+      else
+        # For non-premium users, mark for manual review or limited AI feedback
+        @attempt.update(evaluation_status: "pending")
+      end
     end
     
     # Move to the next question

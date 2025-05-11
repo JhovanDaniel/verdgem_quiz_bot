@@ -7,5 +7,11 @@ import { application } from "./application"
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
+import QuestionFormController from "./question_form_controller"
+application.register("question-form", QuestionFormController)
+
 import QuizFormController from "./quiz_form_controller"
 application.register("quiz-form", QuizFormController)
+
+import QuizOptionsController from "./quiz_options_controller"
+application.register("quiz-options", QuizOptionsController)
