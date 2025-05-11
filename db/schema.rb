@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_10_235836) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_11_000033) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+
+  create_table "answer_options", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "question_id", null: false
+    t.text "content", null: false
+    t.boolean "is_correct", default: false
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id"], name: "index_answer_options_on_question_id"
+  end
 
   create_table "feedbacks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "quiz_session_id", null: false
@@ -124,6 +134,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_10_235836) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "answer_options", "questions"
   add_foreign_key "feedbacks", "quiz_sessions"
   add_foreign_key "question_attempts", "questions"
   add_foreign_key "question_attempts", "quiz_sessions"
