@@ -2,8 +2,10 @@ class Question < ApplicationRecord
   
   belongs_to :topic
   has_many :question_attempts, dependent: :destroy
+  has_many :answer_options, dependent: :destroy
   
-  enum difficulty_level: [:easy, :medium, :hard, :very_hard] 
+  enum difficulty_level: [:easy, :medium, :hard, :very_hard]
+  enum question_type: [:multiple_choice, :long_answer], _default: :multiple_choice
   
   validates :content, presence: true
   validates :model_answer, presence: true
