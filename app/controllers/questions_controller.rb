@@ -39,23 +39,11 @@ class QuestionsController < ApplicationController
   def update
     @topic = @question.topic
     
-    # Similar validation for update
-    if question_params[:question_type] == "multiple_choice" && question_params[:answer_options_attributes].present?
-      has_correct_answer = question_params[:answer_options_attributes].values.any? do |opt| 
-        opt[:is_correct] == "1" && opt[:_destroy] != "1"
-      end
-      
-      unless has_correct_answer
-        @question.errors.add(:base, "Multiple choice questions must have at least one correct answer")
-        render :edit
-        return
-      end
-    end
-    
     if @question.update(question_params)
       redirect_to topic_path(@topic), notice: 'Question was successfully updated.'
     else
-      render :edit
+      flash[:alert] = @question.errors.full_messages.to_sentence
+      redirect_to edit_question_path(@question)  # ← Use redirect instead of render
     end
   end
 

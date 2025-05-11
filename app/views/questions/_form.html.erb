@@ -51,13 +51,10 @@
             </div>
             
             <div class="form-group mb-3">
-              <label class="form-label">Display Order</label>
+              <label class="form-label" style="display: none;">Display Order</label>
               <input type="number" name="question[answer_options_attributes][INDEX][position]" min="1" value="INDEX" class="form-control">
             </div>
             
-            <button type="button" class="btn btn-outline-danger btn-sm" data-action="click->question-form#removeOption">
-              Remove Option
-            </button>
           </div>
         </div>
       </template>
@@ -81,7 +78,7 @@
                                        hint: 'Check this if this is the correct answer' %>
                                        
                   <%= option_form.input :position, 
-                                       label: 'Display Order',
+                                       label: 'Display Order', hidden: true,
                                        as: :integer,
                                        input_html: { min: 1, value: index + 1 },
                                        hint: 'Lower numbers will be displayed first' %>
@@ -91,20 +88,11 @@
                     <%= option_form.input :_destroy, as: :hidden, input_html: { class: 'destroy-flag' } %>
                   <% end %>
                                        
-                  <button type="button" class="btn btn-outline-danger btn-sm" data-action="click->question-form#removeOption">
-                    Remove Option
-                  </button>
                 <% end %>
               </div>
             </div>
           <% end %>
         <% end %>
-      </div>
-      
-      <div class="my-3">
-        <button type="button" class="btn btn-outline-primary btn-sm" data-action="click->question-form#addOption">
-          Add Answer Option
-        </button>
       </div>
       
       <div class="alert alert-info">

@@ -10,9 +10,13 @@ class AnswerOption < ApplicationRecord
   private
   
   def at_least_one_correct_option
-    # This validation should ideally be at the Question level, but this is a simplified version
-    if question&.answer_options&.select(&:is_correct).blank?
-      errors.add(:is_correct, "At least one option must be correct")
+    # Count correct options
+    correct_count = question&.answer_options&.reject(&:marked_for_destruction?)&.count(&:is_correct)
+    
+    if correct_count == 0
+      errors.add(:base, "must have at least one correct answer")
+    elsif correct_count > 1
+      errors.add(:base, "can only have one correct answer")
     end
   end
 end

@@ -11,31 +11,68 @@ export default class extends Controller {
   
   connect() {
     console.log("Question form controller connected!")
+    
+    // Initialize the counter
     this.optionCounter = this.optionsContainerTarget.querySelectorAll('.answer-option').length || 0
-    this.toggleQuestionType()
+    
+    // Get the initial question type
+    const initialQuestionType = document.getElementById('question_question_type').value
+    console.log("Initial question type:", initialQuestionType)
+    
+    // Apply the appropriate display logic
+    this.toggleFieldsVisibility(initialQuestionType)
+    
+    // If multiple choice is selected AND there are no existing options, add 4 default options
+    if (initialQuestionType === 'multiple_choice' && this.optionCounter === 0) {
+      console.log("Adding 4 initial options")
+      this.addDefaultOptions(4)
+    }
   }
   
-  toggleQuestionType() {
-    console.log("Toggle question type called") // Debugging line
-    const questionType = document.getElementById('question_question_type').value
-    
+  // Separate method for toggling fields visibility
+  toggleFieldsVisibility(questionType) {
     if (questionType === 'multiple_choice') {
       this.longAnswerFieldsTarget.classList.add('d-none')
       this.multipleChoiceFieldsTarget.classList.remove('d-none')
-      
-      // Ensure we have at least 2 options for multiple choice
-      if (this.optionCounter < 2) {
-        this.addOption()
-        this.addOption()
-      }
     } else {
       this.longAnswerFieldsTarget.classList.remove('d-none')
       this.multipleChoiceFieldsTarget.classList.add('d-none')
     }
   }
   
+  // Method to handle type toggle
+  toggleQuestionType() {
+    console.log("Toggle question type called")
+    const questionType = document.getElementById('question_question_type').value
+    
+    // Toggle visibility
+    this.toggleFieldsVisibility(questionType)
+    
+    // If switching to multiple choice and there are no options, add 4
+    if (questionType === 'multiple_choice') {
+      const currentOptions = this.optionsContainerTarget.querySelectorAll('.answer-option').length
+      if (currentOptions === 0) {
+        this.addDefaultOptions(4)
+      }
+    }
+  }
+  
+  // Method to add a specific number of options
+  addDefaultOptions(count) {
+    for (let i = 0; i < count; i++) {
+      this.addOption()
+    }
+    
+    // Mark the first option as correct by default
+    const firstOptionCheckbox = this.optionsContainerTarget.querySelector('input[type="checkbox"]');
+    if (firstOptionCheckbox) {
+      firstOptionCheckbox.checked = true;
+    }
+  }
+  
   addOption(event) {
     if (event) event.preventDefault()
+    console.log("Adding option")
     
     // Clone the template
     const template = this.optionTemplateTarget.innerHTML
@@ -63,9 +100,9 @@ export default class extends Controller {
       optionElement.remove()
     }
     
-    // Check if we need to ensure at least 2 options
+    // Ensure we maintain at least 4 options for multiple choice
     const visibleOptions = this.optionsContainerTarget.querySelectorAll('.answer-option:not([style*="display: none"])')
-    if (visibleOptions.length < 2) {
+    if (visibleOptions.length < 4) {
       this.addOption()
     }
   }
