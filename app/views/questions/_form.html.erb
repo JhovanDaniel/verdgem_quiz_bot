@@ -1,6 +1,8 @@
 <%= simple_form_for(@question.new_record? ? [@topic, @question] : @question, 
                     html: { data: { controller: "question-form" } }) do |f| %>
-  <%= f.error_notification %>
+  <% f.object.errors[:base].each do |error| %>
+    <%= f.error_notification message: error %>
+  <% end %>
   
   <div class="form-inputs">
     <%= f.input :question_type, 

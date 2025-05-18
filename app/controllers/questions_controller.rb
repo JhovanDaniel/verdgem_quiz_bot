@@ -13,22 +13,10 @@ class QuestionsController < ApplicationController
     @topic = Topic.find(params[:topic_id])
     @question = @topic.questions.new(question_params)
     
-    # Add logic to ensure at least one correct answer for multiple choice
-    if @question.multiple_choice? && question_params[:answer_options_attributes].present?
-      has_correct_answer = question_params[:answer_options_attributes].values.any? { |opt| opt[:is_correct] == "1" }
-      
-      unless has_correct_answer
-        flash[:alert] = "Multiple choice questions must have at least one correct answer"
-        redirect_to new_topic_question_path(@topic)
-        return
-      end
-    end
-    
     if @question.save
       redirect_to topic_path(@topic), notice: 'Question was successfully created.'
     else
-      flash[:alert] = @question.errors.full_messages.to_sentence
-      redirect_to new_topic_question_path(@topic)
+      render :new, status: :unprocessable_entity
     end
   end
   
@@ -42,8 +30,7 @@ class QuestionsController < ApplicationController
     if @question.update(question_params)
       redirect_to topic_path(@topic), notice: 'Question was successfully updated.'
     else
-      flash[:alert] = @question.errors.full_messages.to_sentence
-      redirect_to edit_question_path(@question)  # ← Use redirect instead of render
+      render :edit, status: :unprocessable_entity
     end
   end
 
