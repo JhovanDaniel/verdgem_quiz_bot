@@ -77,20 +77,11 @@
             </div>
             
             <div class="collapse mt-3" id="attempt-<%= attempt.id %>">
-              <div class="card card-body bg-light">
-                <h6 class="fs-6">Your Answer:</h6>
-                <p class="small"><%= simple_format(attempt.student_answer) %></p>
-                
-                <% if attempt.feedback.present? %>
-                  <h6 class="fs-6">Feedback:</h6>
-                  <p class="small"><%= simple_format(attempt.feedback) %></p>
-                <% else %>
-                  <p class="text-muted small"><em>Feedback will be available soon.</em></p>
-                <% end %>
-                
-                <h6 class="fs-6">Model Answer:</h6>
-                <p class="small"><%= simple_format(attempt.question.model_answer) %></p>
-              </div>
+              <% if attempt.question.multiple_choice? %>
+                <%= render 'multiple_choice_result', attempt: attempt %>
+              <% elsif attempt.question.long_answer? %>
+                <%= render 'long_answer_result', attempt: attempt %>
+              <% end %>
             </div>
           </div>
         <% end %>

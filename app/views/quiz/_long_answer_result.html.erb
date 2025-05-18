@@ -1,0 +1,14 @@
+<div class="card card-body bg-white text-black">
+  <h5 class="fw-bold">Your Answer:</h5>
+  <p><%= simple_format(attempt.student_answer) %></p>
+  
+  <% if attempt.feedback.present? %>
+    <h5 class="fw-bold">Feedback:</h5>
+    <p><%= simple_format(attempt.feedback) %></p>
+  <% else %>
+    <p class="text-muted"><em>Feedback will be available soon.</em></p>
+  <% end %>
+  
+  <h5 class="fw-bold">Model Answer:</h5>
+  <p><%= simple_format(attempt.question.model_answer) %></p>
+</div>

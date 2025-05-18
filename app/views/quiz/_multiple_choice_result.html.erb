@@ -1,0 +1,7 @@
+<div class="card card-body bg-white text-black">
+  <h5 class="fw-bold">Your Answer:</h5>
+  <p><%= AnswerOption.find(attempt.student_answer).content %></p>
+  
+  <h5 class="fw-bold">Correct Answer:</h5>
+  <p><%= attempt.question.answer_options.where(is_correct: true).first.content %></p>
+</div>
