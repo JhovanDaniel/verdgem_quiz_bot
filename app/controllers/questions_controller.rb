@@ -4,8 +4,6 @@ class QuestionsController < ApplicationController
   
   def new
     @question = @topic.questions.build
-
-    @question.max_points = 5
     @question.difficulty_level = 'medium'
   end
   
@@ -19,13 +17,7 @@ class QuestionsController < ApplicationController
       @question.answer_options.clear
     end
     
-    if @question.difficulty_level == :easy
-      @question.max_points = 1
-    elsif @question.difficulty_level == :medium
-      @question.max_points = 3
-    elsif @question.difficulty_level == :hard
-      @question.max_points = 5
-    end
+    set_max_points_based_on_difficulty(@question)
     
     if @question.save
       redirect_to topic_path(@topic), notice: 'Question was successfully created.'
@@ -49,13 +41,7 @@ class QuestionsController < ApplicationController
       @question.answer_options.clear
     end
     
-    if @question.difficulty_level == :easy
-      @question.max_points = 1
-    elsif @question.difficulty_level == :medium
-      @question.max_points = 3
-    elsif @question.difficulty_level == :hard
-      @question.max_points = 5
-    end
+    set_max_points_based_on_difficulty(@question)
     
     if @question.save
       redirect_to topic_path(@topic), notice: 'Question was successfully updated.'
@@ -76,6 +62,23 @@ class QuestionsController < ApplicationController
   
   def set_question
     @question = Question.find(params[:id])
+  end
+  
+  def set_max_points_based_on_difficulty(question)
+    # Use string comparison since enum might be returning strings
+    difficulty = question.difficulty_level.to_s
+    
+    case difficulty
+    when 'easy'
+      question.max_points = 1
+    when 'medium'
+      question.max_points = 3
+    when 'hard'
+      question.max_points = 5
+    end
+    
+    # Debug output to see what's happening
+    Rails.logger.debug "Difficulty: #{difficulty}, Max Points: #{question.max_points}"
   end
   
   def question_params
