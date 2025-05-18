@@ -4,7 +4,7 @@ class QuestionsController < ApplicationController
   
   def new
     @question = @topic.questions.build
-    # Set some default values
+
     @question.max_points = 5
     @question.difficulty_level = 'medium'
   end
@@ -14,14 +14,16 @@ class QuestionsController < ApplicationController
     @question = @topic.questions.new(question_params)
     
     if @question.multiple_choice?
-      @question.difficulty_level == :easy
+      @question.difficulty_level = :easy
+    else
+      @question.answer_options.clear
     end
     
-    if @question.difficulty_level = :easy
+    if @question.difficulty_level == :easy
       @question.max_points = 1
-    elsif @question.difficulty_level = :medium
+    elsif @question.difficulty_level == :medium
       @question.max_points = 3
-    elsif @question.difficulty_level = :hard
+    elsif @question.difficulty_level == :hard
       @question.max_points = 5
     end
     
@@ -39,19 +41,23 @@ class QuestionsController < ApplicationController
   def update
     @topic = @question.topic
     
+    @question.assign_attributes(question_params)
+    
     if @question.multiple_choice?
       @question.difficulty_level = :easy
+    else
+      @question.answer_options.clear
     end
     
-    if @question.difficulty_level = :easy
+    if @question.difficulty_level == :easy
       @question.max_points = 1
-    elsif @question.difficulty_level = :medium
+    elsif @question.difficulty_level == :medium
       @question.max_points = 3
-    elsif @question.difficulty_level = :hard
+    elsif @question.difficulty_level == :hard
       @question.max_points = 5
     end
     
-    if @question.update(question_params)
+    if @question.save
       redirect_to topic_path(@topic), notice: 'Question was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
