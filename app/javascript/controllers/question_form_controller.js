@@ -20,7 +20,7 @@ export default class extends Controller {
     console.log("Initial question type:", initialQuestionType)
     
     // Apply the appropriate display logic
-    this.toggleFieldsVisibility(initialQuestionType)
+    this.toggleQuestionType()
     
     // If multiple choice is selected AND there are no existing options, add 4 default options
     if (initialQuestionType === 'multiple_choice' && this.optionCounter === 0) {
@@ -45,14 +45,30 @@ export default class extends Controller {
     console.log("Toggle question type called")
     const questionType = document.getElementById('question_question_type').value
     
+    // Get reference to the difficulty select
+    const difficultySelect = document.getElementById('question_difficulty_level')
+    
     // Toggle visibility
     this.toggleFieldsVisibility(questionType)
     
-    // If switching to multiple choice and there are no options, add 4
     if (questionType === 'multiple_choice') {
       const currentOptions = this.optionsContainerTarget.querySelectorAll('.answer-option').length
+      this.setDifficultyToEasy()
+      
+      // Disable the select for multiple choice
+      if (difficultySelect) {
+        difficultySelect.disabled = true
+        console.log("Disabled difficulty select")
+      }
+      
       if (currentOptions === 0) {
         this.addDefaultOptions(4)
+      }
+    } else if (questionType === 'long_answer') {
+      // Enable the select for long answer
+      if (difficultySelect) {
+        difficultySelect.disabled = false
+        console.log("Enabled difficulty select")
       }
     }
   }
@@ -104,6 +120,34 @@ export default class extends Controller {
     const visibleOptions = this.optionsContainerTarget.querySelectorAll('.answer-option:not([style*="display: none"])')
     if (visibleOptions.length < 4) {
       this.addOption()
+    }
+  }
+  
+  setDifficultyToEasy() {
+    const difficultySelect = document.getElementById('question_difficulty_level')
+    if (difficultySelect) {
+      // Find the 'easy' option
+      for (let i = 0; i < difficultySelect.options.length; i++) {
+        if (difficultySelect.options[i].value === 'easy') {
+          difficultySelect.selectedIndex = i
+          
+          // Trigger change event to ensure any dependent logic runs
+          difficultySelect.dispatchEvent(new Event('change', { bubbles: true }))
+          
+          console.log("Set difficulty level to easy")
+          
+          // Also set max_points if that field exists
+          const maxPointsField = document.getElementById('question_max_points')
+          if (maxPointsField) {
+            maxPointsField.value = 1
+          }
+          
+          break
+        }
+      }
+      
+      // Disable the difficulty select for multiple choice
+      difficultySelect.disabled = true
     }
   }
 }

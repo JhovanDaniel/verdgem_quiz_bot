@@ -52,11 +52,6 @@
               <label class="form-check-label" for="question_answer_options_attributes_INDEX_is_correct">Correct Answer</label>
             </div>
             
-            <div class="form-group mb-3">
-              <label class="form-label" style="display: none;">Display Order</label>
-              <input type="number" name="question[answer_options_attributes][INDEX][position]" min="1" value="INDEX" class="form-control">
-            </div>
-            
           </div>
         </div>
       </template>
@@ -78,12 +73,6 @@
                                        as: :boolean,
                                        label: 'Correct Answer',
                                        hint: 'Check this if this is the correct answer' %>
-                                       
-                  <%= option_form.input :position, 
-                                       label: 'Display Order', hidden: true,
-                                       as: :integer,
-                                       input_html: { min: 1, value: index + 1 },
-                                       hint: 'Lower numbers will be displayed first' %>
                   
                   <% if option.persisted? %>
                     <%= option_form.input :id, as: :hidden %>
@@ -102,11 +91,6 @@
         Make sure to mark at least one option as correct.
       </div>
     </div>
-    
-    <%= f.input :max_points, 
-                as: :integer,
-                input_html: { min: 1, max: 20 },
-                hint: 'The maximum number of points a student can earn for this question' %>
                 
     <%= f.input :difficulty_level, 
                 collection: Question.difficulty_levels.keys, 

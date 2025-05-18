@@ -4,7 +4,7 @@ class Question < ApplicationRecord
   has_many :question_attempts, dependent: :destroy
   has_many :answer_options, dependent: :destroy
   
-  enum difficulty_level: [:easy, :medium, :hard, :very_hard]
+  enum difficulty_level: [:easy, :medium, :hard]
   enum question_type: [:multiple_choice, :long_answer], _default: :multiple_choice
   
   validates :content, presence: true

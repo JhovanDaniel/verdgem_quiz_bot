@@ -12,6 +12,3 @@ application.register("question-form", QuestionFormController)
 
 import QuizFormController from "./quiz_form_controller"
 application.register("quiz-form", QuizFormController)
-
-import QuizOptionsController from "./quiz_options_controller"
-application.register("quiz-options", QuizOptionsController)

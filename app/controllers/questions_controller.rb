@@ -13,6 +13,18 @@ class QuestionsController < ApplicationController
     @topic = Topic.find(params[:topic_id])
     @question = @topic.questions.new(question_params)
     
+    if @question.multiple_choice?
+      @question.difficulty_level == :easy
+    end
+    
+    if @question.difficulty_level = :easy
+      @question.max_points = 1
+    elsif @question.difficulty_level = :medium
+      @question.max_points = 3
+    elsif @question.difficulty_level = :hard
+      @question.max_points = 5
+    end
+    
     if @question.save
       redirect_to topic_path(@topic), notice: 'Question was successfully created.'
     else
@@ -26,6 +38,18 @@ class QuestionsController < ApplicationController
   
   def update
     @topic = @question.topic
+    
+    if @question.multiple_choice?
+      @question.difficulty_level = :easy
+    end
+    
+    if @question.difficulty_level = :easy
+      @question.max_points = 1
+    elsif @question.difficulty_level = :medium
+      @question.max_points = 3
+    elsif @question.difficulty_level = :hard
+      @question.max_points = 5
+    end
     
     if @question.update(question_params)
       redirect_to topic_path(@topic), notice: 'Question was successfully updated.'
