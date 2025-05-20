@@ -14,6 +14,10 @@ class User < ApplicationRecord
   validate :check_profanity_in_nickname, if: -> { nickname.present? }
   validate :check_profanity_in_first_name, if: -> { first_name.present? }
   validate :check_profanity_in_last_name, if: -> { last_name.present? }
+  
+  # Level system constants
+  BASE_XP = 25
+  GROWTH_FACTOR = 1.5
 
   
   def name
@@ -94,22 +98,28 @@ class User < ApplicationRecord
       .count
   end
   
-  # Total score from only completed quizzes
-  def total_score_from_finished_quizzes(start_date, end_date)
-    question_attempts
-      .joins(:quiz_session)
-      .where(quiz_sessions: { completed_at: start_date..end_date })
-      .sum(:score) || 0
+  def total_score_from_finished_quizzes(start_date = nil, end_date = nil)
+    scope = question_attempts.joins(:quiz_session)
+    
+    if start_date && end_date
+      scope = scope.where(quiz_sessions: { completed_at: start_date..end_date })
+    else
+      scope = scope.where.not(quiz_sessions: { completed_at: nil })
+    end
+    
+    scope.sum(:score) || 0
   end
   
-  # Total max possible score from completed quizzes
-  def max_possible_score_from_finished_quizzes(start_date, end_date)
-    attempted_questions = question_attempts
-      .joins(:quiz_session)
-      .where(quiz_sessions: { completed_at: start_date..end_date })
-      .includes(:question)
+  def max_possible_score_from_finished_quizzes(start_date = nil, end_date = nil)
+    scope = question_attempts.joins(:quiz_session).includes(:question)
     
-    attempted_questions.sum { |attempt| attempt.question.max_points }
+    if start_date && end_date
+      scope = scope.where(quiz_sessions: { completed_at: start_date..end_date })
+    else
+      scope = scope.where.not(quiz_sessions: { completed_at: nil })
+    end
+    
+    scope.sum { |attempt| attempt.question.max_points }
   end
   
   # Percentage score from completed quizzes
@@ -133,6 +143,70 @@ class User < ApplicationRecord
     true
   end
   
+  #Level system methods
+  def total_xp
+    total_score_from_finished_quizzes
+  end
+  
+  # XP required to reach a specific level (e.g., level 3 requires 75 XP total)
+  def xp_required_for_level(level_num)
+    return 0 if level_num <= 1
+    
+    total_xp = 0
+    1.upto(level_num - 1) do |lvl|
+      total_xp += BASE_XP * lvl
+    end
+    
+    total_xp
+  end
+  
+  def level
+    lvl = 1
+    while xp_required_for_level(lvl + 1) <= total_xp
+      lvl += 1
+    end
+    lvl
+  end
+  
+  # XP threshold for the current level
+  def xp_for_current_level
+    xp_required_for_level(level)
+  end
+  
+  # XP threshold for the next level
+  def xp_for_next_level
+    xp_required_for_level(level + 1)
+  end
+  
+  # XP accumulated in the current level
+  def xp_in_current_level
+    total_xp - xp_for_current_level
+  end
+  
+  # XP needed to reach the next level
+  def xp_needed_for_next_level
+    xp_for_next_level - total_xp
+  end
+  
+  # Percentage progress to the next level (0-100)
+  def xp_percentage
+    puts "DEBUG: total_xp = #{total_xp}"
+    puts "DEBUG: level = #{level}"
+    puts "DEBUG: xp_for_current_level = #{xp_for_current_level}"
+    puts "DEBUG: xp_for_next_level = #{xp_for_next_level}"
+    puts "DEBUG: xp_in_current_level = #{xp_in_current_level}"
+    
+    return 0 if total_xp == 0
+    
+    current_level_range = xp_for_next_level - xp_for_current_level
+    puts "DEBUG: current_level_range = #{current_level_range}"
+    
+    percentage = (xp_in_current_level.to_f / current_level_range * 100).round(1)
+    puts "DEBUG: calculated percentage = #{percentage}"
+    
+    percentage
+  end
+
   private
   
   def check_profanity_in_nickname
