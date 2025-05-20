@@ -1,12 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["topicSelect"]
+  static targets = ["topicSelect", "difficultySelect", "questionTypeSelect"]
 
   connect() {
     // Initialize the form
     console.log('Eeep')
     this.updateTopics()
+    this.handleQuestionTypeChange()
   }
 
   updateTopics() {
@@ -44,5 +45,22 @@ export default class extends Controller {
         topicSelect.innerHTML = '<option value="">All Topics</option>'
         topicSelect.disabled = true
       })
+  }
+  
+  questionTypeChanged() {
+    this.handleQuestionTypeChange()
+  }
+  
+  handleQuestionTypeChange() {
+    const questionTypeValue = this.questionTypeSelectTarget.value
+    
+    if (questionTypeValue === "multiple_choice") {
+      // If multiple choice is selected, force difficulty to easy
+      this.difficultySelectTarget.value = "easy"
+      this.difficultySelectTarget.disabled = true
+    } else {
+      // For other question types, enable the difficulty selection
+      this.difficultySelectTarget.disabled = false
+    }
   }
 }
