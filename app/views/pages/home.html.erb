@@ -8,14 +8,14 @@
       <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Welcome, <%= !current_user.nickname.blank? ? current_user.nickname : current_user.first_name %>!</h1>
       <p class="lead">Ready to challenge yourself? Start a CSEC quiz and see how much you know!</p>
       <%= form_with url: quiz_start_path, method: :get, local: true, class: "row g-3", data: { controller: "quiz-form" } do |f| %>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <%= f.label :subject_id, "Subject", class: "form-label" %>
           <%= f.collection_select :subject_id, @subjects, :id, :name, 
                                  { include_blank: "Select a subject" }, 
                                  { class: "form-select", required: true, data: { action: "change->quiz-form#updateTopics" } } %>
         </div>
         
-        <div class="col-md-4">
+        <div class="col-md-6">
           <%= f.label :topic_id, "Topic", class: "form-label" %>
           <%= f.select :topic_id, [], 
                       { include_blank: "All Topics" }, 
@@ -23,17 +23,17 @@
         </div>
         
         <div class="col-md-4">
-          <%= f.label :difficulty, "Difficulty", class: "form-label" %>
-          <%= f.select :difficulty, 
-                       options_for_select([["Mixed", "mixed"], ["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"]]), 
-                       {}, { class: "form-select" } %>
-        </div>
-        
-        <div class="col-md-6">
           <%= f.label :question_type, "Question Type", class: "form-label" %>
           <%= f.select :question_type, 
                       options_for_select([["Multiple Choice", "multiple_choice"],["Long Answer", "long_answer"]]), 
-                      {}, { class: "form-select" } %>
+                      {}, { class: "form-select", data: { quiz_form_target: "questionTypeSelect", action: "change->quiz-form#questionTypeChanged" } } %>
+        </div>
+        
+        <div class="col-md-4">
+          <%= f.label :difficulty, "Difficulty", class: "form-label" %>
+          <%= f.select :difficulty, 
+                       options_for_select([["Mixed", "mixed"], ["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"]]), 
+                       {}, { class: "form-select", data: { quiz_form_target: "difficultySelect" } } %>
         </div>
         
         <div class="col-md-4">
@@ -47,14 +47,6 @@
           <%= f.submit "Start Quiz", class: "btn btn-lg btn-primary" %>
         </div>
       <% end %>
-      <div class="row mt-2">
-        <div class="col-auto">
-          <div class="col-auto position-relative badge-container">
-            <%= image_tag "sample-badge.png", alt: "Quiz Hero Badge", class: "navbar-logo", width: 30 %>
-            <span class="badge-tooltip">Quiz Hero: Completed all quizzes</span>
-          </div>
-        </div>
-      </div>
       
       <div class="col mt-4">
         <h5 class="mb-0">
