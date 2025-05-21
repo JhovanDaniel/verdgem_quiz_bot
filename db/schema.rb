@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_20_220356) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_21_183841) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -31,7 +31,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_20_220356) do
     t.text "comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "user_id"
     t.index ["quiz_session_id"], name: "index_feedbacks_on_quiz_session_id"
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
   create_table "question_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -149,6 +151,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_20_220356) do
 
   add_foreign_key "answer_options", "questions"
   add_foreign_key "feedbacks", "quiz_sessions"
+  add_foreign_key "feedbacks", "users"
   add_foreign_key "question_attempts", "questions"
   add_foreign_key "question_attempts", "quiz_sessions"
   add_foreign_key "question_attempts", "users", on_delete: :cascade

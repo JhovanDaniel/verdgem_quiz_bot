@@ -129,11 +129,11 @@
                   </div>
                 </div>
                 
-                <hr/>
+                <hr style="border-color:grey !important; border-width:1px;"/>
               
               <!-- Regular menu options -->
               <div class="py-1">
-                <%= link_to 'My achievements', '#', class: 'dropdown-item px-0' %>
+                <%= link_to 'Upgrade', '#', class: 'dropdown-item px-0' %>
                 <%= link_to 'My account', user_path(current_user), class: 'dropdown-item px-0' %>
                 <%= link_to 'Log out', destroy_user_session_path, class: 'dropdown-item px-0', data: { turbo_method: :delete } %>
               </div>

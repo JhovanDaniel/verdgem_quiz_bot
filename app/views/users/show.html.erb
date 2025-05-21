@@ -15,75 +15,71 @@
   <div class="row">
     <!-- User Information Card -->
     <div class="col-md-4">
-      <div class="card mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center border-0 bg-white">
-          <h3 class="mb-0">User Profile</h3>
-          <% if current_user.admin? || current_user == @user %>
-            <%= link_to "Edit", user_edit_user_path(@user), class: "btn btn-outline-primary" %>
-          <% end %>
-        </div>
+      <div class="card mb-4 border-0">
         <div class="card-body">
-          <div class="text-center mb-4">
-            <div class="avatar-placeholder bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 100px; height: 100px; font-size: 2.5rem;">
+          <div class="mb-4">
+            <div class="avatar-placeholder bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; font-size: 2.5rem;">
               <%= @user.first_name[0].upcase %><%= @user.last_name[0].upcase if @user.last_name.present? %>
             </div>
             <h4 class="mt-3"><%= @user.first_name %> <%= @user.last_name %></h4>
             <p class="text-muted"><%= @user.email %></p>
           </div>
           <hr style="border-color:grey !important; border-width:1px;"/>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              Joined
-              <span class="text-muted"><%= @user.created_at.strftime('%b %d, %Y') %></span>
-            </li>
-          </ul>
+          <p>Joined: <%= @user.created_at.strftime('%b %d, %Y') %></p>
+          <% if current_user.admin? || current_user == @user %>
+            <%= link_to "Edit Account", user_edit_user_path(@user), class: "btn btn-sm btn-outline-primary" %>
+          <% end %>
         </div>
       </div>
       
       <!-- User Stats Card -->
-      <div class="card mb-4">
-        <div class="card-header bg-white border-0">
-          <h3 class="mb-0">Stats</h3>
+      <div class="card border-0 mb-4">
+        <div class="card-header bg-white pb-0 border-0">
+          <h4 class="mb-0">Stats</h4>
         </div>
         <div class="card-body">
-          <div class="row">
+          <div class="text-muted small">Level <%=  current_user.level %> <%= current_user.role.titleize %></div>
+            <div class="mt-1 progress" style="height: 6px; width: 120px;" title="<%= 1 %> / <%= 50 %> XP">
+              <div class="progress-bar bg-warning" role="progressbar" 
+                   style="width: <%=  current_user.xp_percentage %>%;" 
+                   aria-valuenow="<%= 45 %>" 
+                   aria-valuemin="0" 
+                   aria-valuemax="100">
+              </div>
+            </div>
+          <div class="text-muted small"><%= current_user.xp_needed_for_next_level %> XP needed to reach Level <%= current_user.level + 1 %> </div>
+          <div class="row mt-4">
             <div class="col-6">
-              <div class="text-center mb-3">
-                <h2><%= @user.completed_questions_from_finished_quizzes_count(nil, nil) %></h2>
-                <p class="text-muted mb-0">Questions Attempted</p>
+              <div class="mb-3">
+                <h4><%= @user.completed_questions_from_finished_quizzes_count(nil, nil) %></h2>
+                <p class="mb-0">Questions Attempted</p>
               </div>
             </div>
             <div class="col-6">
-              <div class="text-center mb-3">
-                <h2>
+              <div class="mb-3">
+                <h4>
                   <%= @user.score_percentage_from_finished_quizzes(nil, nil).round(0) %>%
-                </h2>
-                <p class="text-muted mb-0">Correct Rate</p>
+                </h4>
+                <p class="mb-0">Correct Rate</p>
               </div>
             </div>
           </div>
           
-          <div class="row align-items-center px-4">
-            <div class="col">
-              <h5 class="mb-0">
-                <span class="text-primary"><%= current_user.monthly_quiz_attempts %></span> / 
-                <span><%= current_user.max_quiz_attempts %></span>
-              </h5>
-              <p class="text-muted mb-0">Attempts used this month</p>
-            </div>
-            <div class="col-auto">
-              <div class="progress" style="width: 200px; height: 8px;">
-                <% percentage = current_user.monthly_quiz_attempts.to_f / current_user.max_quiz_attempts * 100 %>
-                <div class="progress-bar <%= percentage > 80 ? 'bg-danger' : 'bg-primary' %>" 
-                     role="progressbar" 
-                     style="width: <%= percentage %>%" 
-                     aria-valuenow="<%= percentage %>" 
-                     aria-valuemin="0" 
-                     aria-valuemax="100"></div>
-              </div>
-            </div>
+          <h5 class="mb-0">
+            <span class="text-primary"><%= current_user.monthly_quiz_attempts %></span> / 
+            <span><%= current_user.max_quiz_attempts %></span>
+          </h5>
+          <p class="text-muted mb-0">Attempts used this month</p>
+          <div class="progress" style="width: 120px; height: 6px;">
+            <% percentage = current_user.monthly_quiz_attempts.to_f / current_user.max_quiz_attempts * 100 %>
+            <div class="progress-bar <%= percentage > 80 ? 'bg-danger' : 'bg-primary' %>" 
+                 role="progressbar" 
+                 style="width: <%= percentage %>%" 
+                 aria-valuenow="<%= percentage %>" 
+                 aria-valuemin="0" 
+                 aria-valuemax="100"></div>
           </div>
-          
+
           <% if current_user.quiz_limit_reached? %>
             <div class="alert alert-warning mt-3">
               You've reached your maximum number of quiz attempts. 
@@ -98,85 +94,38 @@
           
         </div>
       </div>
-      <div class="card mt-4">
-  <div class="card-header bg-white border-0">
-    <h3>Reset Progress</h3>
-  </div>
-  <div class="card-body">
-    <p class="text-danger">
-      This will reset all your quiz statistics. Your quiz history will still be available,
-      but won't be counted in your leaderboard standings or profile statistics.
-      This action cannot be undone.
-    </p>
-    
-    <%= button_to reset_progress_path(@user), 
-                  method: :post, 
-                  class: "btn btn-danger", 
-                  data: { turbo_confirm: "Are you sure you want to reset your progress? This cannot be undone!" } do %>
-      <i class="fas fa-sync-alt me-2"></i> Reset My Progress
-    <% end %>
-  </div>
-</div>
-    </div>
-    
-    <!-- Recent Activity Card -->
-    <div class="col-md-8">
-      <div class="card mb-4">
-        <div class="card-header bg-white border-0">
-          <h3 class="mb-0">Recent Activity</h3>
-        </div>
+      <div class="card border-0 mt-4">
         <div class="card-body">
-          <% if @user.question_attempts.any? %>
-            <div class="list-group">
-              <% @user.completed_questions
-                .order(created_at: :desc).limit(5).each do |attempt| %>
-                <div class="list-group-item list-group-item-action border-0">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">
-                      <%= attempt.question.topic.subject.name %> - 
-                      <%= attempt.question.topic.name %>
-                    </h5>
-                    <small>
-                      <%= time_ago_in_words(attempt.created_at) %> ago
-                    </small>
-                  </div>
-                  <p class="mb-1">
-                    <strong>Question:</strong> <%= truncate(attempt.question.content, length: 100) %>
-                  </p>
-                  <div class="d-flex justify-content-between align-items-end">
-                    <small class="text-muted">
-                      <span class="badge <%= (attempt.score.to_f / attempt.question.max_points) >= 0.7 ? 'bg-success' : 'bg-danger' %>">
-                        <%= attempt.score %> / <%= attempt.question.max_points %> points
-                      </span>
-                    </small>
-                    <div>
-                      <%= link_to "View Question", question_path(attempt.question), class: "btn btn-outline-primary btn-sm" %>
-                    </div>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-            
-            <% if @user.completed_questions.count > 10 %>
-              <div class="mt-3 text-center">
-                <%= link_to 'View All Activity', quiz_sessions_path, class:"btn btn-outline-primary btn-sm"%>
-              </div>
-            <% end %>
-          <% else %>
-            <div class="alert alert-info">
-              No activity recorded yet. This user hasn't attempted any questions.
-            </div>
+          <h4>Reset Progress</h4>
+          <p class="text-danger">
+            This will reset all your quiz statistics. Your quiz history will still be available,
+            but won't be counted in your leaderboard standings or profile statistics.
+            This action cannot be undone.
+          </p>
+          
+          <%= button_to reset_progress_path(@user), 
+                        method: :post, 
+                        class: "btn btn-sm btn-danger", 
+                        data: { turbo_confirm: "Are you sure you want to reset your progress? This cannot be undone!" } do %>
+            <i class="fas fa-sync-alt me-2"></i> Reset My Progress
           <% end %>
         </div>
       </div>
+    </div>
+    
+    <div class="col-md-8">
+      <!-- Student acheivements -->
+      <div class="card border-0">
+        <div class="card-body">
+          <h4 class="mb-0">Achievements</h4>
+        </div>
+      </div/>
       
       <!-- Performance By Subject Card (for students) -->
       <% if @user.role == 'student' && @user.question_attempts.any? %>
-        <div class="card">
-          <div class="card-header bg-white border-0">
-            <h3 class="mb-0">Performance By Subject</h3>
-          </div>
+        <div class="card border-0">
           <div class="card-body">
+            <h4 class="mb-0">Performance By Subject</h4>
             <div class="table-responsive">
               <table class="table table-borderless">
                 <thead>
@@ -218,6 +167,59 @@
           </div>
         </div>
       <% end %>
+    
+      <!-- Recent Activity Card -->
+      <div class="card border-0 mb-4">
+        <div class="card-body">
+          <h4 class="mb-0">Recent Activity</h4>
+          <% if @user.quiz_sessions.empty? %>
+            <div class="alert alert-info">
+              You haven't taken any quizzes yet. 
+              <%= link_to "Start a quiz now", authenticated_root_path, class: "alert-link" %>.
+            </div>
+          <% else %>
+            <div class="table-responsive">
+              <table class="table table-borderless">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Subject</th>
+                    <th>Progress</th>
+                    <th>Score</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @user.quiz_sessions.order(created_at: :desc).limit(5).each do |session| %>
+                    <tr>
+                      <td><%= format_date(session.created_at) %></td>
+                      <td><%= session.subject.name %></td>
+                      <td><%= session.completed_questions %> / <%= session.question_count %></td>
+                      <td>
+                        <% if session.completed? %>
+                          <span class="badge <%= session.score_percentage >= 70 ? 'bg-primary' : 'bg-danger' %>">
+                            <%= session.score_percentage %>%
+                          </span>
+                        <% else %>
+                          <span class="badge bg-white text-dark">In Progress</span>
+                        <% end %>
+                      </td>
+                      <td>
+                        <%= link_to "View", quiz_session_path(session), class: "btn btn-sm btn-outline-primary mx-1" %>
+                        <% if !session.completed? %>
+                            <%= link_to "Resume Quiz", resume_quiz_path(session), class: "btn btn-sm btn-primary mx-1" %>
+                        <% end %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+              <%= link_to "See all quiz history", quiz_sessions_path, class: "btn btn-sm btn-outline-primary mx-1" %>
+            </div>
+            <%= will_paginate @user.quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
   

@@ -11,6 +11,7 @@ class FeedbacksController < ApplicationController
     end
     
     @feedback = @quiz_session.build_feedback(feedback_params)
+    @feedback.user_id = current_user.id
     
     if @feedback.save
       redirect_to quiz_session_path(@quiz_session), notice: "Thank you for your feedback!"
@@ -22,6 +23,6 @@ class FeedbacksController < ApplicationController
   private
   
   def feedback_params
-    params.require(:feedback).permit(:rating, :comment)
+    params.require(:feedback).permit(:rating, :comment, :user_id)
   end
 end
