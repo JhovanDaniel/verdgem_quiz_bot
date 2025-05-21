@@ -83,7 +83,7 @@ class QuestionsController < ApplicationController
   
   def question_params
     params.require(:question).permit(:content, :model_answer, :key_concepts, :marking_criteria, 
-      :max_points, :difficulty_level, :has_problem, :question_type,
+      :max_points, :difficulty_level, :has_problem, :question_type, :sub_topic_id,
       answer_options_attributes: [:id, :content, :is_correct, :position, :_destroy]
     )
   end

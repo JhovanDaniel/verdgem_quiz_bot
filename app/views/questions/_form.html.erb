@@ -10,6 +10,10 @@
                 include_blank: false,
                 input_html: { data: { action: "change->question-form#toggleQuestionType" } } %>
     
+    <%= f.input :sub_topic_id,
+            collection: @topic.sub_topics.map { |st| [st.name.humanize, st.id] },
+            include_blank: "" %>
+    
     <%= f.input :content, 
                 label: 'Question',
                 as: :text, 
