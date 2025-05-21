@@ -24,6 +24,7 @@ class SubjectsController < ApplicationController
   def show
     @subject = Subject.find(params[:id])
     @topics = @subject.topics
+    @questions = @subject.questions.order(created_at: :desc)
   end
   
   def edit

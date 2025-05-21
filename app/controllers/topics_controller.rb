@@ -3,7 +3,6 @@ class TopicsController < ApplicationController
   before_action :set_topic, only: [:show, :edit, :update]
   
   def index
-    @subject = Subject.find(params[:subject_id])
     @topics = @subject.topics
     
     respond_to do |format|

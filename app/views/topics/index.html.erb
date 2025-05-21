@@ -3,14 +3,15 @@
     <div class="col">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-white">
-          <li class="breadcrumb-item"><%= link_to "Subjects", subjects_path %></li>
+          <li class="breadcrumb-item"><%= link_to 'Subjects', subjects_path %></li>
+          <li class="breadcrumb-item"><%= link_to @subject.name, subject_path(@subject) %></li>
           <li class="breadcrumb-item active" aria-current="page"><%= @subject.name %> Topics</li>
         </ol>
       </nav>
     </div>
   </div>
   
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex justify-content-between align-items-center">
     <h2 class="display-6 fw-bold"><%= @subject.name %> Topics</h2>
     
     <% if current_user && current_user.admin? %>
@@ -36,7 +37,9 @@
             <small><%= pluralize(topic.questions.count, 'question') %></small>
           </p>
           <%= link_to "View Topic", topic_path(topic), class: "btn btn-outline-primary btn-sm" %>
+          <%= link_to "View Subtopics", topic_sub_topics_path(topic), class: "btn btn-outline-primary btn-sm" %>
           <% if current_user && current_user.admin? %>
+            <%= link_to "Add Subtopics", '#', class: "btn btn-dark btn-sm" %>
             <%= link_to "View Questions", topic_questions_path(topic), class: "btn btn-outline-primary btn-sm" %>
             <%= link_to "Add Question", new_topic_question_path(topic), class: "btn btn-dark btn-sm" %>
           <% end %>

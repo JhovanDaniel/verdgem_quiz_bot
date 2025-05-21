@@ -25,32 +25,6 @@
     <p><%= @subject.description %></p>
   <% end %>
   
-  <h4>Syllabus Outline</h4>
-  <% if @subject.syllabus_outline.present? %>
-    <div class="syllabus-outline mb-4">
-      <div id="syllabus-preview">
-        <%= simple_format(@subject.syllabus_outline.truncate(300)) %>
-        
-        <% if @subject.syllabus_outline.length > 300 %>
-          <button 
-            onclick="document.getElementById('syllabus-preview').style.display='none'; document.getElementById('syllabus-full').style.display='block';" 
-            class="btn btn-sm btn-link green-link p-0">
-            Read more
-          </button>
-        <% end %>
-      </div>
-      
-      <div id="syllabus-full" style="display: none;">
-        <%= simple_format(@subject.syllabus_outline) %>
-        <button 
-          onclick="document.getElementById('syllabus-preview').style.display='block'; document.getElementById('syllabus-full').style.display='none';" 
-          class="btn btn-sm btn-link green-link p-0">
-          Show less
-        </button>
-      </div>
-    </div>
-  <% end %>
-  
   <h4>Topics</h4>
   <% if @subject.topics.empty? %>
     <div class="alert alert-info">
@@ -91,4 +65,11 @@
   <% if current_user && current_user.admin? %>
     <%= link_to "Add New Topic", new_subject_topic_path(@subject), class: "btn btn-primary" %>
   <% end %>
+  
+  <div class="my-4">
+    <% if @questions.any? %>
+      <%= link_to "Start Quiz for this Subject", quiz_start_path(subject_id: @subject.id), class: "btn btn-primary" %>
+    <% end %>
+    <%= link_to "Back to Subjects", subjects_path, class: "btn btn-outline-primary" %>
+  </div>
 </div>
