@@ -1,0 +1,18 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-white">
+          <li class="breadcrumb-item"><%= link_to 'Subjects', subjects_path %></li>
+          <li class="breadcrumb-item"><%= link_to @sub_topic.topic.subject.name, subject_path(@sub_topic.topic.subject) %></li>
+          <li class="breadcrumb-item"><%= link_to @sub_topic.topic.name , topic_path(@sub_topic.topic) %></li>
+          <li class="breadcrumb-item active" aria-current="page">New Subtopic</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+
+  <h2>Add New Subtopic for <%= @topic.name %></h2>
+  <%= render 'sub_topics/form' %>
+</div>

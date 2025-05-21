@@ -36,7 +36,7 @@
     </div>
   <% else %>
     <div class="table-responsive">
-      <table class="table table-borderless">
+      <table class="table table-borderless table-sm">
         <thead>
           <tr>
             <th>Name</th>
@@ -50,9 +50,9 @@
               <td><%= sub_topic.name %></td>
               <td><%= sub_topic.questions.count %></td>
               <td>
-                <%= link_to "View", sub_topic_path(sub_topic), class: "btn btn-outline-primary" %>
+                <%= link_to "View", sub_topic_path(sub_topic), class: "btn btn-sm btn-outline-primary" %>
                 <% if current_user && current_user.admin? %>
-                  <%= link_to "Edit", '#', class: "btn btn btn-outline-primary" %>
+                  <%= link_to "Edit", edit_sub_topic_path(sub_topic), class: "btn btn-sm btn-outline-primary" %>
                 <% end %>
               </td>
             </tr>

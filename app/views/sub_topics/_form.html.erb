@@ -1,0 +1,20 @@
+<%= simple_form_for [@topic, @sub_topic] do |f| %>
+  <%= f.error_notification %>
+  
+  <div class="form-inputs">
+    <%= f.input :name, 
+                required: true, 
+                label: 'Subtopic Name',
+                placeholder: 'E.g., Data Types, Networks, Hardware Components' %>
+    
+    <%= f.input :description, 
+                as: :text, 
+                input_html: { rows: 5 },
+                placeholder: 'Provide a detailed description of this subtopic and what students should learn' %>
+  </div>
+  
+  <div class="form-actions mt-4">
+    <%= f.button :submit, @sub_topic.new_record? ? "Create subtopic" : "Update subtopic", class: 'btn-primary' %>
+    <%= link_to "Cancel", topic_path(@sub_topic.topic), class: "btn btn-outline-secondary ms-2" %>
+  </div>
+<% end %>

@@ -29,7 +29,7 @@ class SubTopicsController < ApplicationController
     if @sub_topic.save
       redirect_to @sub_topic, notice: 'Sub-topic was successfully created.'
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
   
@@ -37,7 +37,7 @@ class SubTopicsController < ApplicationController
     if @sub_topic.update(sub_topic_params)
       redirect_to @sub_topic, notice: 'Sub-topic was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
   
