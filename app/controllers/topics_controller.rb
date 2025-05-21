@@ -43,6 +43,15 @@ class TopicsController < ApplicationController
     @questions = @topic.questions.order(created_at: :desc)
   end
   
+  def sub_topics
+    @sub_topics = @topic.sub_topics
+    
+    respond_to do |format|
+      format.html # Your existing HTML view if any
+      format.json { render json: @sub_topics.as_json(only: [:id, :name]) }
+    end
+  end
+  
    private
   
   def set_subject

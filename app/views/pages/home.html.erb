@@ -8,18 +8,25 @@
       <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Welcome, <%= !current_user.nickname.blank? ? current_user.nickname : current_user.first_name %>!</h1>
       <p class="lead">Ready to challenge yourself? Start a CSEC quiz and see how much you know!</p>
       <%= form_with url: quiz_start_path, method: :get, local: true, class: "row g-3", data: { controller: "quiz-form" } do |f| %>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <%= f.label :subject_id, "Subject", class: "form-label" %>
           <%= f.collection_select :subject_id, @subjects, :id, :name, 
                                  { include_blank: "Select a subject" }, 
                                  { class: "form-select", required: true, data: { action: "change->quiz-form#updateTopics" } } %>
         </div>
         
-        <div class="col-md-6">
+        <div class="col-md-4">
           <%= f.label :topic_id, "Topic", class: "form-label" %>
           <%= f.select :topic_id, [], 
                       { include_blank: "All Topics" }, 
-                      { class: "form-select", disabled: true, data: { quiz_form_target: "topicSelect" } } %>
+                      { class: "form-select", disabled: true, data: { quiz_form_target: "topicSelect", action: "change->quiz-form#updateSubTopics" } } %>
+        </div>
+        
+        <div class="col-md-4">
+          <%= f.label :sub_topic_id, "Sub-Topic", class: "form-label" %>
+          <%= f.select :sub_topic_id, [], 
+                      { include_blank: "All Sub-Topics" }, 
+                      { class: "form-select", disabled: true, data: { quiz_form_target: "subTopicSelect" } } %>
         </div>
         
         <div class="col-md-4">
@@ -108,7 +115,7 @@
               <td>
                 <%= link_to "View", quiz_session_path(session), class: "btn btn-sm btn-outline-primary mx-1" %>
                 <% if !session.completed? %>
-                    <%= link_to "Resume Quiz", resume_quiz_path(@unfinished_quiz), class: "btn btn-sm btn-primary mx-1" %>
+                    <%= link_to "Resume Quiz", resume_quiz_path(session), class: "btn btn-sm btn-primary mx-1" %>
                 <% end %>
               </td>
             </tr>

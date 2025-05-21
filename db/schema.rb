@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_11_000033) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_20_220356) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -62,6 +62,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_11_000033) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "question_type", default: 0
+    t.uuid "sub_topic_id"
+    t.index ["sub_topic_id"], name: "index_questions_on_sub_topic_id"
     t.index ["topic_id"], name: "index_questions_on_topic_id"
   end
 
@@ -78,9 +80,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_11_000033) do
     t.integer "question_count"
     t.text "question_ids"
     t.boolean "archived", default: false
+    t.uuid "sub_topic_id"
+    t.index ["sub_topic_id"], name: "index_quiz_sessions_on_sub_topic_id"
     t.index ["subject_id"], name: "index_quiz_sessions_on_subject_id"
     t.index ["topic_id"], name: "index_quiz_sessions_on_topic_id"
     t.index ["user_id"], name: "index_quiz_sessions_on_user_id"
+  end
+
+  create_table "sub_topics", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.uuid "topic_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_sub_topics_on_topic_id"
   end
 
   create_table "subjects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -139,10 +152,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_11_000033) do
   add_foreign_key "question_attempts", "questions"
   add_foreign_key "question_attempts", "quiz_sessions"
   add_foreign_key "question_attempts", "users", on_delete: :cascade
+  add_foreign_key "questions", "sub_topics"
   add_foreign_key "questions", "topics"
+  add_foreign_key "quiz_sessions", "sub_topics"
   add_foreign_key "quiz_sessions", "subjects"
   add_foreign_key "quiz_sessions", "topics"
   add_foreign_key "quiz_sessions", "users", on_delete: :cascade
+  add_foreign_key "sub_topics", "topics"
   add_foreign_key "subjects", "users", column: "created_by_id"
   add_foreign_key "topics", "subjects"
 end

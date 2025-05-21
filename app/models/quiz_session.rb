@@ -6,6 +6,7 @@ class QuizSession < ApplicationRecord
   belongs_to :user
   belongs_to :subject
   belongs_to :topic, optional: true
+  belongs_to :sub_topic, optional: true
   has_many :question_attempts, dependent: :destroy
   has_one :feedback, dependent: :destroy
   

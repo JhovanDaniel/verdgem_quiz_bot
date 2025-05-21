@@ -1,0 +1,29 @@
+<div class="container">
+  <h1>Sub-Topics for <%= @topic.name %></h1>
+  
+  <div class="mb-3">
+    <%= link_to "New Sub-Topic", new_topic_sub_topic_path(@topic), class: "btn btn-primary" %>
+    <%= link_to "Back to Topic", topic_path(@topic), class: "btn btn-secondary" %>
+  </div>
+  
+  <% if @sub_topics.any? %>
+    <div class="list-group">
+      <% @sub_topics.each do |sub_topic| %>
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-1"><%= sub_topic.name %></h5>
+            <div>
+              <%= link_to "Edit", edit_sub_topic_path(sub_topic), class: "btn btn-sm btn-outline-primary" %>
+              <%= link_to "Delete", sub_topic_path(sub_topic), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-sm btn-outline-danger" %>
+            </div>
+          </div>
+          <p class="mb-1"><%= sub_topic.description %></p>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      No sub-topics found for this topic. Click 'New Sub-Topic' to create one.
+    </div>
+  <% end %>
+</div>

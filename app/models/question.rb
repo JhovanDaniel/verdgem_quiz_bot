@@ -1,6 +1,7 @@
 class Question < ApplicationRecord
   
   belongs_to :topic
+  belongs_to :sub_topic, optional: true
   has_many :question_attempts, dependent: :destroy
   has_many :answer_options, dependent: :destroy
   

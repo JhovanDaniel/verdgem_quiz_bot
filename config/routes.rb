@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   end
   
   resources :topics, except: [:index] do
+    resources :sub_topics
     resources :questions, only: [:new, :create]
   end
   
