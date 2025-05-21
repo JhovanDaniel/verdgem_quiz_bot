@@ -37,7 +37,7 @@
           <p class="text-muted">
             <small><%= pluralize(sub_topic.questions.count, 'question') %></small>
           </p>
-          <%= link_to "View Subtopic", '#', class: "btn btn-outline-primary btn-sm" %>
+          <%= link_to "View Subtopic", sub_topic_path(sub_topic), class: "btn btn-outline-primary btn-sm" %>
           <% if current_user && current_user.admin? %>
             <%= link_to "View Questions", '#', class: "btn btn-outline-primary btn-sm" %>
             <%= link_to "Add Question", new_topic_question_path(sub_topic.topic), class: "btn btn-dark btn-sm" %>

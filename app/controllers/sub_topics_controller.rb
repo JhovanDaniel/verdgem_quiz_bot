@@ -13,7 +13,7 @@ class SubTopicsController < ApplicationController
   end
   
   def show
-    @topic = Topic.find(params[:id])
+    @questions = @sub_topic.questions.order(created_at: :desc)
   end
   
   def new

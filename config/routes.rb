@@ -12,9 +12,12 @@ Rails.application.routes.draw do
   end
   
   resources :topics, except: [:index] do
-    resources :sub_topics
+    resources :sub_topics, only: [:index, :new, :create]
     resources :questions, only: [:new, :create]
   end
+  
+  resources :sub_topics, except: [:index, :new, :create]
+
   
   resources :questions, except: [:index, :new, :create]
   

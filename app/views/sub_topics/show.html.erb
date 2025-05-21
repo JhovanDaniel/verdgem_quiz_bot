@@ -3,64 +3,28 @@
     <div class="col">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb bg-white">
-          <li class="breadcrumb-item"><%= link_to "Subjects", subjects_path %></li>
-          <li class="breadcrumb-item"><%= link_to @topic.subject.name, subject_path(@topic.subject) %></li>
-          <li class="breadcrumb-item active" aria-current="page"><%= @topic.name %></li>
+          <li class="breadcrumb-item"><%= link_to 'Subjects', subjects_path %></li>
+          <li class="breadcrumb-item"><%= link_to @sub_topic.topic.subject.name, subject_path(@sub_topic.topic.subject) %></li>
+          <li class="breadcrumb-item"><%= link_to @sub_topic.topic.name , topic_path(@sub_topic.topic) %></li>
+          <li class="breadcrumb-item active" aria-current="page"><%= @sub_topic.name %></li>
         </ol>
       </nav>
     </div>
   </div>
 
   <div class="card-header d-flex justify-content-between align-items-center bg-white border-0 px-0">
-    <h2 class="display-6 fw-bold mb-0"><%= @topic.name %></h2>
+    <h2 class="display-6 fw-bold mb-0"><%= @sub_topic.name %></h2>
     <div>
       <% if current_user && current_user.admin? %>
-        <%= link_to "Edit", edit_topic_path(@topic), class: "btn btn-outline-primary btn-sm" %>
-        <%= link_to "Delete", topic_path(@topic), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure? This will also delete all questions within this topic." }, class: "btn btn-outline-danger btn-sm ms-2" %>
+        <%= link_to "Edit", edit_sub_topic_path(@sub_topic), class: "btn btn-outline-primary btn-sm" %>
+        <%= link_to "Delete", sub_topic_path(@sub_topic), method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure? This will also delete all questions within this topic." }, class: "btn btn-outline-danger btn-sm ms-2" %>
       <% end %>
     </div>
   </div>
   
-  <% if @topic.description.present? %>
+  <% if @sub_topic.description.present? %>
     <h4>Description</h4>
-    <p><%= @topic.description %></p>
-  <% end %>
-  
-  <h4>Subtopics</h4>
-  <% if @topic.sub_topics.empty? %>
-    <div class="alert alert-info">
-      This subject does not have any subtopics yet yet. 
-      <% if current_user && current_user.admin? %>
-        <%= link_to "Add New Subtopic", new_topic_sub_topic_path(@topic), class: "btn btn-primary btn-sm" %>
-      <% end %>
-    </div>
-  <% else %>
-    <div class="table-responsive">
-      <table class="table table-borderless">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Questions</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @topic.sub_topics.each do |sub_topic| %>
-            <tr>
-              <td><%= sub_topic.name %></td>
-              <td><%= sub_topic.questions.count %></td>
-              <td>
-                <%= link_to "View", sub_topic_path(sub_topic), class: "btn btn-outline-primary" %>
-                <% if current_user && current_user.admin? %>
-                  <%= link_to "Edit", '#', class: "btn btn btn-outline-primary" %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-    <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
+    <p><%= @sub_topic.description %></p>
   <% end %>
 
   <% if current_user && current_user.admin? %>
@@ -68,8 +32,7 @@
       <div class="card-header d-flex justify-content-between align-items-center bg-white border-0">
         <h3 class="mb-0">Questions</h3>
         <div class="">
-          <%= link_to "Add Subtopic", new_topic_sub_topic_path(@topic), class: "btn btn-outline-primary btn-sm" %>
-          <%= link_to "Add New Question", new_topic_question_path(@topic), class: "btn btn-primary btn-sm" %>
+          <%= link_to "Add New Question", new_topic_question_path(@sub_topic.topic), class: "btn btn-primary btn-sm" %>
         </div>
         
       </div>
@@ -114,8 +77,8 @@
 
   <div class="my-4">
     <% if @questions.any? %>
-      <%= link_to "Start Quiz for this Topic", quiz_start_path(subject_id: @topic.subject.id, topic_id: @topic.id), class: "btn btn-primary" %>
+      <%= link_to "Start Quiz for this Topic", quiz_start_path(subject_id: @sub_topic.topic.subject.id, topic_id: @sub_topic.topic.id), class: "btn btn-primary" %>
     <% end %>
-    <%= link_to "Back to #{@topic.subject.name}", subject_path(@topic.subject), class: "btn btn-outline-primary" %>
+    <%= link_to "Back to #{@sub_topic.topic.name}", topic_path(@sub_topic.topic), class: "btn btn-outline-primary" %>
   </div>
 </div>
