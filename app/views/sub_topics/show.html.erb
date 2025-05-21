@@ -77,7 +77,7 @@
 
   <div class="my-4">
     <% if @questions.any? %>
-      <%= link_to "Start Quiz for this Topic", quiz_start_path(subject_id: @sub_topic.topic.subject.id, topic_id: @sub_topic.topic.id), class: "btn btn-primary" %>
+      <%= link_to "Start Quiz for this Subtopic", quiz_select_path, class: "btn btn-primary" %>
     <% end %>
     <%= link_to "Back to #{@sub_topic.topic.name}", topic_path(@sub_topic.topic), class: "btn btn-outline-primary" %>
   </div>

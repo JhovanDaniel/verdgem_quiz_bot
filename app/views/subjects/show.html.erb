@@ -35,10 +35,10 @@
     </div>
   <% else %>
     <div class="table-responsive">
-      <table class="table table-borderless">
+      <table class="table table-sm table-borderless">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Topic Name</th>
             <th>Questions</th>
             <th>Actions</th>
           </tr>
@@ -68,7 +68,7 @@
   
   <div class="my-4">
     <% if @questions.any? %>
-      <%= link_to "Start Quiz for this Subject", quiz_start_path(subject_id: @subject.id), class: "btn btn-primary" %>
+      <%= link_to "Start Quiz for this Subject", quiz_select_path, class: "btn btn-primary" %>
     <% end %>
     <%= link_to "Back to Subjects", subjects_path, class: "btn btn-outline-primary" %>
   </div>

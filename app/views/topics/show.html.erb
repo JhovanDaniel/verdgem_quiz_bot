@@ -39,7 +39,7 @@
       <table class="table table-borderless table-sm">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Subtopic Name</th>
             <th>Questions</th>
             <th>Actions</th>
           </tr>
@@ -114,7 +114,7 @@
 
   <div class="my-4">
     <% if @questions.any? %>
-      <%= link_to "Start Quiz for this Topic", quiz_start_path(subject_id: @topic.subject.id, topic_id: @topic.id), class: "btn btn-primary" %>
+      <%= link_to "Start Quiz for this Topic", quiz_select_path, class: "btn btn-primary" %>
     <% end %>
     <%= link_to "Back to #{@topic.subject.name}", subject_path(@topic.subject), class: "btn btn-outline-primary" %>
   </div>
