@@ -36,6 +36,10 @@ gem 'httparty'
 gem 'country_select'
 gem 'obscenity'
 
+gem 'active_storage_validations'
+gem 'image_processing', '~> 1.2'
+gem 'mini_magick'
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 

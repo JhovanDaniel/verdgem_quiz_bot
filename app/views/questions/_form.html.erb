@@ -4,7 +4,7 @@
     <%= f.error_notification message: error %>
   <% end %>
   
-  <div class="form-inputs">
+  <div class="form-inputs" data-controller="direct-upload">
     <%= f.input :question_type, 
                 collection: Question.question_types.keys.map { |k| [k.humanize, k] },
                 include_blank: false,
@@ -20,6 +20,25 @@
                 input_html: { rows: 8 },
                 placeholder: 'Enter the full question text here...',
                 required: true %>
+    
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div>
+          <% if !f.object.question_image.blank? %>
+            <%= f.hidden_field :question_image, value: f.object.question_image.blob.signed_id %>
+          <% end %>
+          
+          <%= f.input :question_image, :as => :file, label: 'Optional Question Image', placeholder: "Choose a file...",
+          input_html: { class: "form-control", direct_upload: true, data: { action: 'direct-uploadad#submit' }}%>
+          
+          <% if !f.object.question_image.blank? %>
+            <span class="text-success">Chosen file: <%= f.object.question_image.filename %></span>
+          <% else %>
+            <span>Chosen file: </span>
+          <% end %>
+        </div>
+      </div>
+    </div>
     
     <div data-question-form-target="longAnswerFields">
       <%= f.input :model_answer, 
