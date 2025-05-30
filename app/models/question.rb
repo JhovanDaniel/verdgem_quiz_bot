@@ -6,6 +6,8 @@ class Question < ApplicationRecord
   has_many :answer_options, dependent: :destroy
   
   has_one_attached :question_image, dependent: :destroy
+  validates :question_image, content_type: { in: ['image/jpeg', 'image/png'], message: 'is not a JPG, or PNG file' }
+  validates :question_image, size: { less_than: 1.megabytes }
   
   enum difficulty_level: [:easy, :medium, :hard]
   enum question_type: [:multiple_choice, :long_answer], _default: :multiple_choice

@@ -1,22 +1,95 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Connects to data-controller="direct-upload"
 export default class extends Controller {
+  static targets = ["preview", "container"]
+  
   connect() {
     console.log('Active storage is a go')
-    addEventListener('direct-upload:initialize', this.directUploadInitializeListener)
-    addEventListener('direct-upload:start', this.directUploadStartListener)
-    addEventListener('direct-upload:progress', this.directUploadProgressListener)
-    addEventListener('direct-upload:error', this.directUploadErrorListener)
-    addEventListener('direct-upload:end', this.directUploadEndListener)
+    this.addEventListeners()
+    this.checkExistingImage()
   }
 
   disconnect() {
-    removeEventListener('direct-upload:initialize', this.directUploadInitializeListener)
-    removeEventListener('direct-upload:start', this.directUploadStartListener)
-    removeEventListener('direct-upload:progress', this.directUploadProgressListener)
-    removeEventListener('direct-upload:error', this.directUploadErrorListener)
-    removeEventListener('direct-upload:end', this.directUploadEndListener)
+    this.removeEventListeners()
+  }
+
+  addEventListeners() {
+    this.boundInitialize = this.directUploadInitializeListener.bind(this)
+    this.boundStart = this.directUploadStartListener.bind(this)
+    this.boundProgress = this.directUploadProgressListener.bind(this)
+    this.boundError = this.directUploadErrorListener.bind(this)
+    this.boundEnd = this.directUploadEndListener.bind(this)
+
+    addEventListener('direct-upload:initialize', this.boundInitialize)
+    addEventListener('direct-upload:start', this.boundStart)
+    addEventListener('direct-upload:progress', this.boundProgress)
+    addEventListener('direct-upload:error', this.boundError)
+    addEventListener('direct-upload:end', this.boundEnd)
+  }
+
+  removeEventListeners() {
+    removeEventListener('direct-upload:initialize', this.boundInitialize)
+    removeEventListener('direct-upload:start', this.boundStart)
+    removeEventListener('direct-upload:progress', this.boundProgress)
+    removeEventListener('direct-upload:error', this.boundError)
+    removeEventListener('direct-upload:end', this.boundEnd)
+  }
+
+  checkExistingImage() {
+    // Check if there's an existing image to show
+    const statusDiv = document.getElementById('file-status')
+    if (statusDiv && statusDiv.textContent.includes('Current file:')) {
+      // You could add logic here to show existing image if you have a URL
+    }
+  }
+
+  previewImage(event) {
+    const file = event.target.files[0]
+    const previewContainer = document.getElementById('image-preview-container')
+    const previewImg = document.getElementById('image-preview')
+    
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader()
+      
+      reader.onload = (e) => {
+        previewImg.src = e.target.result
+        previewContainer.style.display = 'block'
+        this.updateStatus('Image selected, uploading...')
+      }
+      
+      reader.readAsDataURL(file)
+    } else if (file) {
+      this.updateStatus('Please select an image file')
+      previewContainer.style.display = 'none'
+    }
+  }
+
+  removePreview(event) {
+    event.preventDefault()
+    const fileInput = this.element.querySelector('input[type="file"]')
+    const previewContainer = document.getElementById('image-preview-container')
+    const previewImg = document.getElementById('image-preview')
+    
+    // Clear the file input
+    fileInput.value = ''
+    
+    // Hide preview
+    previewContainer.style.display = 'none'
+    previewImg.src = ''
+    
+    // Update status
+    this.updateStatus('No file chosen')
+  }
+
+  uploadComplete(event) {
+    this.updateStatus('Image uploaded successfully!')
+  }
+
+  updateStatus(message) {
+    const statusDiv = document.getElementById('file-status')
+    if (statusDiv) {
+      statusDiv.innerHTML = `<span class="text-success">${message}</span>`
+    }
   }
 
   directUploadInitializeListener(event) {    
@@ -35,6 +108,7 @@ export default class extends Controller {
     const { id } = event.detail
     const element = document.getElementById(`direct-upload-${id}`)
     element.classList.remove("direct-upload--pending")
+    this.updateStatus('Uploading...')
   }
 
   directUploadProgressListener(event) {
@@ -49,6 +123,7 @@ export default class extends Controller {
     const element = document.getElementById(`direct-upload-${id}`)
     element.classList.add('direct-upload--error')
     element.setAttribute('title', error)
+    this.updateStatus('Upload failed. Please try again.')
   }
 
   directUploadEndListener(event) {
