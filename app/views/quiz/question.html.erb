@@ -12,6 +12,20 @@
               <%= simple_format(@question.content) %>
             </div>
           </div>
+          
+          <div class="question-image mb-4">
+            <% if @question.question_image.attached? %>
+              <div class="card border-0">
+                <div class="card-body">
+                  <%= image_tag @question.question_image, 
+                      alt: "Question image", 
+                      class: "img-fluid",
+                      style: "max-height: 300px; height: auto;" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
           <div class="mb-3 mb-md-4">
             <div class="d-flex justify-content-between align-items-start">
               <div>
@@ -25,8 +39,10 @@
         </div>
         
         <div class="col-auto d-none d-md-block">
-          <% random_image, alt_text = QuestionAttempt.question_character_image %>
-          <%= image_tag random_image, alt: alt_text, class: "navbar-logo", width: 200 %>
+          <% if !@question.question_image.attached? %>
+            <% random_image, alt_text = QuestionAttempt.question_character_image %>
+            <%= image_tag random_image, alt: alt_text, class: "navbar-logo", width: 200 %>
+          <% end %>
         </div>
       </div>
     </div>

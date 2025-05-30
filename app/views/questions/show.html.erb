@@ -39,8 +39,8 @@
     </div>
     <div class="question-image mb-4">
       <% if @question.question_image.attached? %>
-        <div class="card">
-          <div class="card-body text-center">
+        <div class="card border-0">
+          <div class="card-body">
             <%= image_tag @question.question_image, 
                 alt: "Question image", 
                 class: "img-fluid",
