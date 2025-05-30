@@ -26,6 +26,7 @@
         <div>
           <% if f.object.persisted? && f.object.question_image.attached? %>
             <%= f.hidden_field :question_image, value: f.object.question_image.blob.signed_id %>
+            <%= f.hidden_field :remove_question_image, value: "0" %>
           <% end %>
           
           <%= f.input :question_image, :as => :file, label: 'Optional Question Image', placeholder: "Choose a file...",
@@ -34,7 +35,9 @@
             direct_upload: true, 
             accept: "image/*",
             data: { 
-              action: 'change->direct-upload#previewImage direct-upload:end->direct-upload#uploadComplete'
+              action: 'change->direct-upload#previewImage direct-upload:end->direct-upload#uploadComplete',
+              existing_image: f.object.persisted? && f.object.question_image.attached? ? url_for(f.object.question_image) : '',
+              existing_filename: f.object.persisted? && f.object.question_image.attached? ? f.object.question_image.filename : ''
             }
           }%>
           
@@ -42,8 +45,8 @@
           <div id="image-preview-container" class="mt-3" style="display: none;">
             <img id="image-preview" src="" alt="Preview" class="img-thumbnail" style="max-width: 300px; max-height: 200px;">
             <div class="mt-2">
-              <button type="button" class="btn btn-sm btn-outline-danger" data-action="click->direct-upload#removePreview">
-                Remove Image
+              <button type="button" class="btn btn-sm btn-outline-danger" data-action="click->direct-upload#removeImage">
+                <i class="bi bi-trash"></i> Remove Image
               </button>
             </div>
           </div>

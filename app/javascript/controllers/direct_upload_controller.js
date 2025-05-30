@@ -36,62 +36,95 @@ export default class extends Controller {
   }
 
   checkExistingImage() {
-    // Check if there's an existing image to show
-    const statusDiv = document.getElementById('file-status')
-    if (statusDiv && statusDiv.textContent.includes('Current file:')) {
-      // You could add logic here to show existing image if you have a URL
+    const fileInput = this.element.querySelector('input[type="file"]')
+    const existingImageUrl = fileInput.dataset.existingImage
+    const existingFilename = fileInput.dataset.existingFilename
+    
+    if (existingImageUrl && existingImageUrl.trim() !== '') {
+      this.showPreview(existingImageUrl, existingFilename)
+    }
+  }
+
+  showPreview(imageSrc, filename = null) {
+    const previewContainer = document.getElementById('image-preview-container')
+    const previewImg = document.getElementById('image-preview')
+    
+    previewImg.src = imageSrc
+    previewContainer.style.display = 'block'
+    
+    if (filename) {
+      this.updateStatus(`Current file: ${filename}`)
     }
   }
 
   previewImage(event) {
     const file = event.target.files[0]
-    const previewContainer = document.getElementById('image-preview-container')
-    const previewImg = document.getElementById('image-preview')
+    
+    // Reset the remove flag when a new file is selected
+    this.setRemoveFlag(false)
     
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader()
       
       reader.onload = (e) => {
-        previewImg.src = e.target.result
-        previewContainer.style.display = 'block'
-        this.updateStatus('Image selected, uploading...')
+        this.showPreview(e.target.result)
+        this.updateStatus('New image selected, uploading...')
       }
       
       reader.readAsDataURL(file)
     } else if (file) {
       this.updateStatus('Please select an image file')
-      previewContainer.style.display = 'none'
+      this.hidePreview()
     }
   }
 
-  removePreview(event) {
-    event.preventDefault()
-    const fileInput = this.element.querySelector('input[type="file"]')
+  hidePreview() {
     const previewContainer = document.getElementById('image-preview-container')
     const previewImg = document.getElementById('image-preview')
+    
+    previewContainer.style.display = 'none'
+    previewImg.src = ''
+  }
+
+  removeImage(event) {
+    event.preventDefault()
+    
+    const fileInput = this.element.querySelector('input[type="file"]')
     
     // Clear the file input
     fileInput.value = ''
     
+    // Set the remove flag
+    this.setRemoveFlag(true)
+    
     // Hide preview
-    previewContainer.style.display = 'none'
-    previewImg.src = ''
+    this.hidePreview()
     
     // Update status
-    this.updateStatus('No file chosen')
+    this.updateStatus('Image will be removed when you save')
+  }
+
+  setRemoveFlag(shouldRemove) {
+    const removeInput = this.element.querySelector('input[name*="remove_question_image"]')
+    if (removeInput) {
+      removeInput.value = shouldRemove ? "1" : "0"
+    }
   }
 
   uploadComplete(event) {
     this.updateStatus('Image uploaded successfully!')
+    // Reset remove flag since we have a new image
+    this.setRemoveFlag(false)
   }
 
   updateStatus(message) {
     const statusDiv = document.getElementById('file-status')
     if (statusDiv) {
-      statusDiv.innerHTML = `<span class="text-success">${message}</span>`
+      statusDiv.innerHTML = `<span class="text-info">${message}</span>`
     }
   }
 
+  // ... rest of the direct upload event listeners remain the same ...
   directUploadInitializeListener(event) {    
     const { target, detail } = event
     const { id, file } = detail

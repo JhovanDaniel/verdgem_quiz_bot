@@ -33,6 +33,10 @@ class QuestionsController < ApplicationController
   def update
     @topic = @question.topic
     
+    if params[:question][:remove_question_image] == "1"
+      @question.question_image.purge if @question.question_image.attached?
+    end
+    
     @question.assign_attributes(question_params)
     
     if @question.multiple_choice?
