@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_27_022550) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_02_191358) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -51,6 +51,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_27_022550) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["question_id"], name: "index_answer_options_on_question_id"
+  end
+
+  create_table "badges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.json "conditions", null: false
+    t.boolean "active", default: true
+    t.string "category", default: "general"
+    t.integer "rarity", default: 1
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_badges_on_active"
+    t.index ["category"], name: "index_badges_on_category"
+    t.index ["rarity"], name: "index_badges_on_rarity"
   end
 
   create_table "feedbacks", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -154,6 +168,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_27_022550) do
     t.index ["subject_id"], name: "index_topics_on_subject_id"
   end
 
+  create_table "user_badges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "badge_id", null: false
+    t.datetime "earned_at", null: false
+    t.boolean "featured", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["badge_id"], name: "index_user_badges_on_badge_id"
+    t.index ["earned_at"], name: "index_user_badges_on_earned_at"
+    t.index ["featured"], name: "index_user_badges_on_featured"
+    t.index ["user_id", "badge_id"], name: "index_user_badges_on_user_id_and_badge_id", unique: true
+    t.index ["user_id"], name: "index_user_badges_on_user_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -194,4 +222,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_27_022550) do
   add_foreign_key "sub_topics", "topics"
   add_foreign_key "subjects", "users", column: "created_by_id"
   add_foreign_key "topics", "subjects"
+  add_foreign_key "user_badges", "badges"
+  add_foreign_key "user_badges", "users"
 end

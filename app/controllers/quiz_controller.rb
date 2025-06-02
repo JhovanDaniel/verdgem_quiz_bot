@@ -296,8 +296,7 @@ class QuizController < ApplicationController
       )
     end
     
-    # We'll keep the session data for now, but you might want to clear it
-    # when the user starts a new quiz or after some time
+    @newly_earned_badges = BadgeService.check_and_award(current_user, @quiz_session)
   end
   
   def previous_question

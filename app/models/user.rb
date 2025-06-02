@@ -7,6 +7,8 @@ class User < ApplicationRecord
   has_many :question_attempts, dependent: :destroy
   has_many :quiz_sessions, dependent: :destroy
   has_many :created_subjects, class_name: 'Subject', foreign_key: 'created_by_id'
+  has_many :user_badges, dependent: :destroy
+  has_many :badges, through: :user_badges
          
   enum role: [:student, :teacher, :admin]
          
@@ -205,6 +207,19 @@ class User < ApplicationRecord
     puts "DEBUG: calculated percentage = #{percentage}"
     
     percentage
+  end
+  
+  # Badge-related methods
+  def has_badge?(badge)
+    badges.include?(badge)
+  end
+  
+  def featured_badges
+    user_badges.featured.includes(:badge).limit(3)
+  end
+  
+  def recent_badges(limit = 5)
+    user_badges.recent.includes(:badge).limit(limit)
   end
 
   private

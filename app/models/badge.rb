@@ -1,0 +1,64 @@
+class Badge < ApplicationRecord
+  has_many :user_badges, dependent: :destroy
+  has_many :users, through: :user_badges
+  
+  validates :name, presence: true, uniqueness: true
+  validates :conditions, presence: true
+  validates :rarity, inclusion: { in: 1..5 }
+  validates :category, presence: true
+  
+  scope :active, -> { where(active: true) }
+  scope :by_category, ->(category) { where(category: category) }
+  scope :by_rarity, ->(rarity) { where(rarity: rarity) }
+  
+  # Categories for organization
+  CATEGORIES = %w[
+    general
+    achievement
+    skill
+    streak
+    social
+    special
+  ].freeze
+  
+  # Rarity levels
+  RARITIES = {
+    1 => 'Common',
+    2 => 'Uncommon', 
+    3 => 'Rare',
+    4 => 'Epic',
+    5 => 'Legendary'
+  }.freeze
+  
+  def rarity_name
+    RARITIES[rarity]
+  end
+  
+  def rarity_color
+    case rarity
+    when 1 then '#6B7280' # Gray
+    when 2 then '#10B981' # Green  
+    when 3 then '#3B82F6' # Blue
+    when 4 then '#8B5CF6' # Purple
+    when 5 then '#F59E0B' # Gold
+    end
+  end
+  
+  def earned_count
+    user_badges.count
+  end
+  
+  def earned_percentage
+    return 0 if User.count == 0
+    (earned_count.to_f / User.count * 100).round(2)
+  end
+  
+  # Check if badge is rare (less than 10% of users have it)
+  def rare?
+    earned_percentage < 10
+  end
+  
+  def to_s
+    name
+  end
+end

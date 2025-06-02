@@ -47,7 +47,7 @@
                 <td>
                   <%= link_to "View", quiz_session_path(session), class: "btn btn-sm btn-outline-primary mx-1" %>
                   <% if !session.completed? %>
-                      <%= link_to "Resume Quiz", resume_quiz_path(@unfinished_quiz), class: "btn btn-sm btn-primary mx-1" %>
+                      <%= link_to "Resume Quiz", resume_quiz_path(session), class: "btn btn-sm btn-primary mx-1" %>
                   <% end %>
                 </td>
               </tr>
