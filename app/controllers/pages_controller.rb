@@ -33,7 +33,11 @@ class PagesController < ApplicationController
                                  .first
   end
   
-  def teacher_dashboar
+  def configuration
+    
+  end
+  
+  def teacher_dashboard
   end
   
   def landing_page

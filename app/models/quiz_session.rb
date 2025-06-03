@@ -2,6 +2,7 @@ class QuizSession < ApplicationRecord
   serialize :question_ids, coder: YAML
   
   default_scope { where(archived: false) }
+  scope :completed, -> { where.not(completed_at: nil) }
   
   belongs_to :user
   belongs_to :subject

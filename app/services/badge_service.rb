@@ -8,8 +8,7 @@ class BadgeService
       if meets_conditions?(user, badge.conditions, quiz_session)
         user.user_badges.create!(
           badge: badge, 
-          earned_at: Time.current,
-          quiz_session: quiz_session
+          earned_at: Time.current
         )
         newly_earned << badge
       end

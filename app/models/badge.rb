@@ -2,6 +2,10 @@ class Badge < ApplicationRecord
   has_many :user_badges, dependent: :destroy
   has_many :users, through: :user_badges
   
+  has_one_attached :badge_image, dependent: :destroy
+  validates :badge_image, content_type: { in: ['image/jpeg', 'image/png'], message: 'is not a JPG, or PNG file' }
+  validates :badge_image, size: { less_than: 1.megabytes }
+  
   validates :name, presence: true, uniqueness: true
   validates :conditions, presence: true
   validates :rarity, inclusion: { in: 1..5 }

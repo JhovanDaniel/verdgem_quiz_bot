@@ -143,3 +143,285 @@
     <%= link_to "Start New Quiz", '#', class: "btn btn-primary" %>
   </div>
 </div>
+
+<!-- Badge Award Modal -->
+<% if @newly_earned_badges&.any? %>
+  <div id="badgeModal" class="badge-modal-overlay">
+    <div class="badge-modal">
+      <div class="badge-modal-header">
+        <h2>🎉 Congratulations!</h2>
+        <p>You've earned <%= pluralize(@newly_earned_badges.count, 'new badge') %>!</p>
+      </div>
+      
+      <div class="badge-modal-content">
+        <% @newly_earned_badges.each_with_index do |badge, index| %>
+          <div class="badge-card" style="animation-delay: <%= index * 0.2 %>s;">
+            <div class="badge-icon">
+            </div>
+            <div class="badge-info">
+              <h3><%= badge.name %></h3>
+              <p><%= badge.description %></p>
+            </div>
+            <div class="badge-sparkles">
+              <span class="sparkle">✨</span>
+              <span class="sparkle">⭐</span>
+              <span class="sparkle">✨</span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <div class="badge-modal-footer">
+        <button id="closeBadgeModal" class="btn btn-primary">
+          Awesome! Continue
+        </button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<style>
+/* Badge Modal Styles */
+.badge-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.badge-modal {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease-out;
+  color: white;
+  text-align: center;
+}
+
+.badge-modal-header h2 {
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.badge-modal-header p {
+  margin: 0 0 20px 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.badge-modal-content {
+  margin: 20px 0;
+}
+
+.badge-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 15px 0;
+  position: relative;
+  overflow: hidden;
+  animation: badgeSlideIn 0.6s ease-out both;
+  backdrop-filter: blur(10px);
+}
+
+.badge-card:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+}
+
+.badge-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  animation: bounceIn 0.8s ease-out;
+}
+
+.badge-info h3 {
+  margin: 10px 0 5px 0;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.badge-info p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+.badge-sparkles {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.sparkle {
+  display: inline-block;
+  animation: sparkle 2s infinite;
+  margin: 0 2px;
+}
+
+.sparkle:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.sparkle:nth-child(3) {
+  animation-delay: 1s;
+}
+
+.badge-modal-footer {
+  margin-top: 25px;
+}
+
+.badge-modal-footer .btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.badge-modal-footer .btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes badgeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .badge-modal {
+    padding: 20px;
+    margin: 20px;
+  }
+  
+  .badge-modal-header h2 {
+    font-size: 1.5rem;
+  }
+  
+  .badge-icon {
+    font-size: 2.5rem;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById('badgeModal');
+  const closeBtn = document.getElementById('closeBadgeModal');
+  
+  if (modal) {
+    // Show modal with a slight delay for dramatic effect
+    setTimeout(() => {
+      modal.style.display = 'flex';
+    }, 500);
+    
+    // Close modal functionality
+    function closeModal() {
+      modal.style.animation = 'fadeOut 0.3s ease-out';
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300);
+    }
+    
+    // Close on button click
+    closeBtn.addEventListener('click', closeModal);
+    
+    // Close on overlay click
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+    
+    // Close on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.style.display === 'flex') {
+        closeModal();
+      }
+    });
+    
+    // Auto-close after 10 seconds if user doesn't interact
+    setTimeout(() => {
+      if (modal && modal.style.display === 'flex') {
+        closeModal();
+      }
+    }, 10000);
+  }
+});
+
+// Add fadeOut animation
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+`;
+document.head.appendChild(style);
+</script>

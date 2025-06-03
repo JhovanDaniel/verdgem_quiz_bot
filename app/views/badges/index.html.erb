@@ -1,0 +1,51 @@
+<div class="admin-badges-index">
+  <div class="admin-header">
+    <h1>🛠️ Manage Badges</h1>
+    <%= link_to "Create New Badge", new_badge_path, class: "btn btn-primary" %>
+  </div>
+
+  <!-- Badges Table -->
+  <div class="table-responsive">
+    <table class="table table-sm table-borderless">
+      <thead>
+        <tr>
+          <th>Badge</th>
+          <th>Category</th>
+          <th>Rarity</th>
+          <th>Earned By</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @badges.each do |badge| %>
+          <tr>
+            <td>
+              <%= badge.name %>
+            </td>
+            <td><%= badge.category.humanize %></td>
+            <td>
+              <span class="rarity-tag" style="background-color: <%= badge.rarity_color %>">
+                <%= badge.rarity_name %>
+              </span>
+            </td>
+            <td><%= badge.earned_count %> users</td>
+            <td>
+              <span class="status-tag <%= badge.active? ? 'active' : 'inactive' %>">
+                <%= badge.active? ? 'Active' : 'Inactive' %>
+              </span>
+            </td>
+            <td class="actions-cell">
+              <%= link_to "View", badge_path(badge), class: "btn btn-sm btn-outline" %>
+              <%= link_to "Edit", edit_badge_path(badge), class: "btn btn-sm btn-secondary" %>
+              <%= link_to "Test", '#', class: "btn btn-sm btn-info" %>
+              <%= link_to "Delete", badge_path(badge), method: :delete, 
+                          confirm: "Are you sure?", class: "btn btn-sm btn-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+</div>

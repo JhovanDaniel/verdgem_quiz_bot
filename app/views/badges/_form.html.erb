@@ -1,0 +1,318 @@
+<!-- app/views/admin/badges/_form.html.erb -->
+<div class="badge-form">
+  <%= simple_form_for [@badge], html: { class: "badge-form-wrapper" } do |f| %>
+    <div class="form-inputs" data-controller="direct-upload">
+      <!-- Basic Information Section -->
+      <div class="form-section">
+        <h3 class="section-title">Basic Information</h3>
+        
+        <div class="form-row">
+          <%= f.input :name, 
+                      label: "Badge Name",
+                      placeholder: "Enter badge name...",
+                      wrapper_html: { class: "form-group" },
+                      input_html: { class: "form-control" } %>
+        </div>
+  
+        <%= f.input :description,
+                    as: :text,
+                    label: "Description",
+                    placeholder: "Describe what this badge represents...",
+                    input_html: { rows: 3, class: "form-control" } %>
+      </div>
+      
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div>
+            <% if f.object.persisted? && f.object.badge_image.attached? %>
+              <%= f.hidden_field :badge_image, value: f.object.badge_image.blob.signed_id %>
+              <%= f.hidden_field :remove_badge_image, value: "0" %>
+            <% end %>
+            
+            <%= f.input :badge_image, :as => :file, label: 'Badge Image', placeholder: "Choose a file...",
+            input_html: { 
+              class: "form-control", 
+              direct_upload: true, 
+              accept: "image/*",
+              data: { 
+                action: 'change->direct-upload#previewImage direct-upload:end->direct-upload#uploadComplete',
+                existing_image: f.object.persisted? && f.object.badge_image.attached? ? url_for(f.object.badge_image) : '',
+                existing_filename: f.object.persisted? && f.object.badge_image.attached? ? f.object.badge_image.filename : ''
+              }
+            }%>
+            
+            <!-- Preview container -->
+            <div id="image-preview-container" class="mt-3" style="display: none;">
+              <img id="image-preview" src="" alt="Preview" class="img-thumbnail" style="max-width: 300px; max-height: 200px;">
+              <div class="mt-2">
+                <button type="button" class="btn btn-sm btn-outline-danger" data-action="click->direct-upload#removeImage">
+                  <i class="bi bi-trash"></i> Remove Image
+                </button>
+              </div>
+            </div>
+            
+            <!-- File status -->
+            <div id="file-status" class="mt-2">
+              <% if f.object.persisted? && f.object.badge_image.attached? %>
+                <span class="text-success">Current file: <%= f.object.badge_image.filename %></span>
+              <% else %>
+                <span class="text-muted">No file chosen</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Badge Properties Section -->
+      <div class="form-section">
+        <h3 class="section-title">Badge Properties</h3>
+        
+        <div class="form-row">
+          <%= f.input :category,
+                      as: :select,
+                      collection: Badge::CATEGORIES.map { |c| [c.humanize, c] },
+                      prompt: "Select category...",
+                      label: "Category",
+                      wrapper_html: { class: "form-group" },
+                      input_html: { class: "form-control" } %>
+          
+          <%= f.input :rarity,
+                      as: :select,
+                      collection: Badge::RARITIES.map { |k, v| [v, k] },
+                      prompt: "Select rarity...",
+                      label: "Rarity Level",
+                      wrapper_html: { class: "form-group" },
+                      input_html: { class: "form-control rarity-select" } %>
+        </div>
+      </div>
+  
+      <!-- Status Section -->
+      <div class="form-section">
+        <h3 class="section-title">Status</h3>
+        
+        <%= f.input :active,
+                    as: :boolean,
+                    label: "Active Badge",
+                    hint: "Only active badges can be earned by users",
+                    wrapper_html: { class: "form-group checkbox-group" },
+                    input_html: { class: "form-check-input" },
+                    label_html: { class: "form-check-label" } %>
+      </div>
+  
+      <!-- Conditions Section -->
+      <div class="form-section">
+        <h3 class="section-title">Badge Conditions</h3>
+        
+        <%= f.input :conditions,
+                    as: :text,
+                    label: "Conditions (JSON)",
+                    input_html: { 
+                      rows: 12,
+                      class: "form-control conditions-textarea",
+                      value: JSON.pretty_generate(@badge.conditions || {}),
+                      placeholder: '{"quiz_count": 10}'
+                    },
+                    hint: "Define the conditions required to earn this badge in JSON format" %>
+        
+        <!-- Condition Templates -->
+        <div class="condition-templates">
+          <h4>Quick Templates:</h4>
+          <p class="template-hint">Click a template to insert it into the conditions field</p>
+          
+          <div class="template-grid">
+            <button type="button" class="template-btn" 
+                    data-template='{"quiz_count": 10}'>
+              <span class="template-icon">📊</span>
+              <span class="template-name">Quiz Count</span>
+              <span class="template-desc">Complete X quizzes</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"perfect_scores": 5}'>
+              <span class="template-icon">💯</span>
+              <span class="template-name">Perfect Scores</span>
+              <span class="template-desc">Get X perfect scores</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"streak_days": 7}'>
+              <span class="template-icon">🔥</span>
+              <span class="template-name">Daily Streak</span>
+              <span class="template-desc">Quiz X days in a row</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"total_points": 1000}'>
+              <span class="template-icon">⭐</span>
+              <span class="template-name">Total Points</span>
+              <span class="template-desc">Earn X total points</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"subject_id": 1, "quiz_count": 20}'>
+              <span class="template-icon">📚</span>
+              <span class="template-name">Subject Master</span>
+              <span class="template-desc">X quizzes in subject</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"quiz_count": 50, "score_percentage": 85}'>
+              <span class="template-icon">🎯</span>
+              <span class="template-name">High Achiever</span>
+              <span class="template-desc">Count + Score %</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"difficulty": "hard", "quiz_count": 10}'>
+              <span class="template-icon">💪</span>
+              <span class="template-name">Difficulty Master</span>
+              <span class="template-desc">X hard quizzes</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"within_days": 30, "quiz_count": 20, "score_percentage": 80}'>
+              <span class="template-icon">⚡</span>
+              <span class="template-name">Speed Demon</span>
+              <span class="template-desc">Time + Count + Score</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"or": [{"quiz_count": 100}, {"total_points": 5000}]}'>
+              <span class="template-icon">🔀</span>
+              <span class="template-name">OR Logic</span>
+              <span class="template-desc">Either condition</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"and": [{"quiz_count": 50}, {"perfect_scores": 10}]}'>
+              <span class="template-icon">🔗</span>
+              <span class="template-name">AND Logic</span>
+              <span class="template-desc">All conditions</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"all_subjects": {"min_quizzes_each": 15, "min_average_score": 85}}'>
+              <span class="template-icon">🎓</span>
+              <span class="template-name">All Subjects</span>
+              <span class="template-desc">Master everything</span>
+            </button>
+            
+            <button type="button" class="template-btn" 
+                    data-template='{"improvement": {"metric": "average_score", "increase_by": 20, "compare_periods": "last_10_vs_previous_10"}}'>
+              <span class="template-icon">📈</span>
+              <span class="template-name">Improvement</span>
+              <span class="template-desc">Score improvement</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- JSON Validation -->
+        <div class="json-validation">
+          <div class="validation-status" id="jsonValidation">
+            <span class="validation-icon">✓</span>
+            <span class="validation-text">Valid JSON</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <%= f.submit "Save Badge", class: "btn btn-primary" %>
+      <%= link_to "Cancel", badges_path, class: "btn btn-secondary" %>
+      
+      <% if @badge.persisted? %>
+        <%= link_to "View Badge", badge_path(@badge), class: "btn btn-outline" %>
+        <%= link_to "Test Conditions", '#', class: "btn btn-info" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const conditionsTextarea = document.querySelector('.conditions-textarea');
+  const validationStatus = document.getElementById('jsonValidation');
+  
+  if (!conditionsTextarea) return;
+  
+  // JSON validation
+  function validateJSON() {
+    const value = conditionsTextarea.value.trim();
+    
+    if (!value) {
+      validationStatus.className = 'validation-status valid';
+      validationStatus.querySelector('.validation-text').textContent = 'Empty (valid)';
+      return;
+    }
+    
+    try {
+      JSON.parse(value);
+      validationStatus.className = 'validation-status valid';
+      validationStatus.querySelector('.validation-text').textContent = 'Valid JSON';
+    } catch (e) {
+      validationStatus.className = 'validation-status invalid';
+      validationStatus.querySelector('.validation-text').textContent = `Invalid JSON: ${e.message}`;
+    }
+  }
+  
+  // Auto-format and validate on input
+  let formatTimeout;
+  conditionsTextarea.addEventListener('input', function() {
+    clearTimeout(formatTimeout);
+    validateJSON();
+    
+    formatTimeout = setTimeout(() => {
+      try {
+        const value = this.value.trim();
+        if (value) {
+          const parsed = JSON.parse(value);
+          this.value = JSON.stringify(parsed, null, 2);
+          validateJSON();
+        }
+      } catch (e) {
+        // Invalid JSON, don't format
+      }
+    }, 1500);
+  });
+  
+  // Template button handlers
+  document.querySelectorAll('.template-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const template = this.getAttribute('data-template');
+      const formatted = JSON.stringify(JSON.parse(template), null, 2);
+      conditionsTextarea.value = formatted;
+      validateJSON();
+      
+      // Visual feedback
+      this.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 150);
+    });
+  });
+  
+  // Initial validation
+  validateJSON();
+  
+  // Rarity select styling
+  const raritySelect = document.querySelector('.rarity-select');
+  if (raritySelect) {
+    raritySelect.addEventListener('change', function() {
+      const colors = {
+        '1': '#6B7280', // Common - Gray
+        '2': '#10B981', // Uncommon - Green
+        '3': '#3B82F6', // Rare - Blue
+        '4': '#8B5CF6', // Epic - Purple
+        '5': '#F59E0B'  // Legendary - Gold
+      };
+      
+      const color = colors[this.value];
+      if (color) {
+        this.style.borderColor = color;
+        this.style.boxShadow = `0 0 0 3px ${color}22`;
+      }
+    });
+  }
+});
+</script>

@@ -17,9 +17,10 @@ Rails.application.routes.draw do
   end
   
   resources :sub_topics, except: [:index, :new, :create]
-
   
   resources :questions, except: [:index, :new, :create]
+  
+  resources :badges
   
   
   
@@ -61,6 +62,7 @@ Rails.application.routes.draw do
   get 'pages/home', to: 'pages#home'
   get 'pages/teacher_dashboard', to: 'pages#teacher_dashboard'
   get 'pages/reports', to: 'pages#reports', as: 'reports'
+  get 'pages/configuration', to: 'pages#configuration', as: 'configuration'
   
   # Unauthenticated user routes
   unauthenticated do
