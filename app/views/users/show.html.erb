@@ -106,9 +106,9 @@
         <div class="card-body">
           <h4 class="mb-0">Achievements</h4>
           
-          <% if current_user.badges.any? %>
+          <% if @user.badges.any? %>
             <div class="badges-row">
-              <% current_user.user_badges.each do |user_badge| %>
+              <% @user.user_badges.each do |user_badge| %>
                 <div class="badge-container">
                   <%= image_tag user_badge.badge.badge_image, 
                     alt: user_badge.badge.name, style:"width:100px;",
