@@ -5322,33 +5322,45 @@ a.badge-dark:focus, a.badge-dark.focus {
   background-color: #fff;
 }
 
+.badge-thumb-image{
+  width: 100px;
+}
+
 .badge-container {
   position: relative;
   display: inline-block;
+  margin: 5px; /* Add some spacing between badges */
 }
 
 .badge-tooltip {
   visibility: hidden;
-  width: 120px;
+  width: 200px; /* Increased width for better readability */
   background-color: #333;
   color: #fff;
   text-align: center;
   border-radius: 6px;
-  padding: 5px;
+  padding: 8px;
   position: absolute;
-  z-index: 1;
-  bottom: 125%;
-  left: 50%;
-  margin-left: -60px;
+  z-index: 1000;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s ease;
   font-size: 12px;
+  
+  /* Position tooltip above the badge */
+  bottom: 120%; /* Adjust this value based on your badge size */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+  
+  /* Ensure tooltip doesn't get cut off */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .badge-tooltip::after {
   content: "";
   position: absolute;
-  top: 100%;
+  top: 100%; /* Arrow points down from tooltip */
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
@@ -5359,6 +5371,18 @@ a.badge-dark:focus, a.badge-dark.focus {
 .badge-container:hover .badge-tooltip {
   visibility: visible;
   opacity: 1;
+}
+
+/* Alternative: Tooltip below the badge */
+.badge-tooltip.below {
+  top: 120%; /* Position below badge */
+  bottom: auto;
+}
+
+.badge-tooltip.below::after {
+  top: -10px; /* Arrow points up to badge */
+  bottom: auto;
+  border-color: transparent transparent #333 transparent;
 }
 
 

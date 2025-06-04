@@ -109,34 +109,29 @@
           <% if current_user.badges.any? %>
             <div class="badges-row">
               <% current_user.user_badges.each do |user_badge| %>
-                <div class="badge-thumbnail" title="<%= user_badge.badge.name %> - <%= user_badge.badge.description %>">
+                <div class="badge-container">
                   <%= image_tag user_badge.badge.badge_image, 
-                              alt: user_badge.badge.name, 
+                              alt: user_badge.badge.name, style:"width:100px;",
                               class: "badge-thumb-image" if user_badge.badge.badge_image.attached? %>
-                  
-                  <!-- Rarity indicator -->
-                  <div class="rarity-dot" style="background-color: <%= user_badge.badge.rarity_color %>;"></div>
-                  
-                  <!-- Featured star if applicable -->
-                  <% if user_badge.featured? %>
-                    <div class="featured-indicator">⭐</div>
-                  <% end %>
+                  <span class="badge-tooltip">
+                    <%= user_badge.badge.name %>: <%= user_badge.badge.description %>
+                  </span>
                 </div>
               <% end %>
             </div>
-            
-            <div class="badges-footer">
-              <%= link_to "View All Badges", badges_path, class: "view-all-link" %>
-            </div>
-          <% else %>
-            <div class="no-badges">
-              <p>No badges earned yet. Start taking quizzes to earn your first badge!</p>
-              <%= link_to "Browse Available Badges", badges_path, class: "browse-badges-btn" %>
-            </div>
-          <% end %>
         </div>
-      </div/>
-      
+            
+        <div class="badges-footer">
+          <%= link_to "View All Badges", badges_path, class: "view-all-link" %>
+        </div>
+        <% else %>
+          <div class="no-badges">
+            <p>No badges earned yet. Start taking quizzes to earn your first badge!</p>
+            <%= link_to "Browse Available Badges", badges_path, class: "browse-badges-btn" %>
+          </div>
+        <% end %>
+      </div>
+
       <!-- Performance By Subject Card (for students) -->
       <% if @user.question_attempts.any? %>
         <div class="card border-0">
