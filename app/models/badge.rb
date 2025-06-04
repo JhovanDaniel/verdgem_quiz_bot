@@ -17,7 +17,6 @@ class Badge < ApplicationRecord
   
   # Categories for organization
   CATEGORIES = %w[
-    general
     quiz_count
   ].freeze
   
