@@ -26,7 +26,6 @@ class Badge < ApplicationRecord
     2 => 'Uncommon', 
     3 => 'Rare',
     4 => 'Epic',
-    5 => 'Legendary'
   }.freeze
   
   def rarity_name
@@ -35,11 +34,10 @@ class Badge < ApplicationRecord
   
   def rarity_color
     case rarity
-    when 1 then '#6B7280' # Gray
+    when 1 then '#F59E0B' # Gray
     when 2 then '#10B981' # Green  
     when 3 then '#3B82F6' # Blue
     when 4 then '#8B5CF6' # Purple
-    when 5 then '#F59E0B' # Gold
     end
   end
   
