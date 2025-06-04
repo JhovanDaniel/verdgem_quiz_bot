@@ -111,8 +111,8 @@
               <% current_user.user_badges.each do |user_badge| %>
                 <div class="badge-container">
                   <%= image_tag user_badge.badge.badge_image, 
-                              alt: user_badge.badge.name, style:"width:100px;",
-                              class: "badge-thumb-image" if user_badge.badge.badge_image.attached? %>
+                    alt: user_badge.badge.name, style:"width:100px;",
+                    class: "badge-thumb-image" if user_badge.badge.badge_image.attached? %>
                   <span class="badge-tooltip">
                     <%= user_badge.badge.name %>: <%= user_badge.badge.description %>
                   </span>

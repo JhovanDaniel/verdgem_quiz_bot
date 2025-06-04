@@ -157,8 +157,11 @@
         <% @newly_earned_badges.each_with_index do |badge, index| %>
           <div class="badge-card" style="animation-delay: <%= index * 0.2 %>s;">
             <div class="badge-icon">
+              <%= image_tag badge.badge_image, 
+                alt: badge.name, style:"width:100px;",
+                class: "badge-thumb-image" if badge.badge_image.attached? %>
             </div>
-            <div class="badge-info">
+            <div class="">
               <h3><%= badge.name %></h3>
               <p><%= badge.description %></p>
             </div>
@@ -173,7 +176,7 @@
       
       <div class="badge-modal-footer">
         <button id="closeBadgeModal" class="btn btn-primary">
-          Awesome! Continue
+          Continue
         </button>
       </div>
     </div>
@@ -197,7 +200,7 @@
 }
 
 .badge-modal {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
   border-radius: 20px;
   padding: 30px;
   max-width: 500px;
@@ -227,8 +230,8 @@
 }
 
 .badge-card {
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0);
+  border: 2px solid rgba(255, 255, 255, 0);
   border-radius: 15px;
   padding: 20px;
   margin: 15px 0;
