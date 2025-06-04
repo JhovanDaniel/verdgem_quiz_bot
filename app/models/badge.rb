@@ -18,11 +18,7 @@ class Badge < ApplicationRecord
   # Categories for organization
   CATEGORIES = %w[
     general
-    achievement
-    skill
-    streak
-    social
-    special
+    quiz_count
   ].freeze
   
   # Rarity levels

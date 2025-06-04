@@ -1,17 +1,4 @@
 <div class="container mt-4">
-  <% if current_user.admin? %>
-    <div class="row mb-4">
-      <div class="col">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-white">
-            <li class="breadcrumb-item"><%= link_to "Users", users_path %></li>
-            <li class="breadcrumb-item active" aria-current="page"><%= @user.first_name %> <%= @user.last_name %></li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-  <% end %>
-
   <div class="row">
     <!-- User Information Card -->
     <div class="col-md-4">
@@ -121,7 +108,7 @@
           
           <% if current_user.badges.any? %>
             <div class="badges-row">
-              <% current_user.user_badges.recent.includes(:badge).each do |user_badge| %>
+              <% current_user.user_badges.each do |user_badge| %>
                 <div class="badge-thumbnail" title="<%= user_badge.badge.name %> - <%= user_badge.badge.description %>">
                   <%= image_tag user_badge.badge.badge_image, 
                               alt: user_badge.badge.name, 
@@ -151,7 +138,7 @@
       </div/>
       
       <!-- Performance By Subject Card (for students) -->
-      <% if @user.role == 'student' && @user.question_attempts.any? %>
+      <% if @user.question_attempts.any? %>
         <div class="card border-0">
           <div class="card-body">
             <h4 class="mb-0">Performance By Subject</h4>
