@@ -199,6 +199,10 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+.badge-modal-overlay.fade-out {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
 .badge-modal {
   background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
   border-radius: 20px;
@@ -311,6 +315,11 @@
   to { opacity: 1; }
 }
 
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -374,7 +383,8 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+// Function to initialize the modal
+function initializeBadgeModal() {
   const modal = document.getElementById('badgeModal');
   const closeBtn = document.getElementById('closeBadgeModal');
   
@@ -386,14 +396,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Close modal functionality
     function closeModal() {
-      modal.style.animation = 'fadeOut 0.3s ease-out';
+      modal.classList.add('fade-out');
       setTimeout(() => {
         modal.style.display = 'none';
+        modal.classList.remove('fade-out');
       }, 300);
     }
     
     // Close on button click
-    closeBtn.addEventListener('click', closeModal);
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        closeModal();
+      });
+    }
     
     // Close on overlay click
     modal.addEventListener('click', function(e) {
@@ -416,15 +433,17 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }, 10000);
   }
-});
+}
 
-// Add fadeOut animation
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-  }
-`;
-document.head.appendChild(style);
+// Listen for both DOMContentLoaded and Turbo events
+document.addEventListener('DOMContentLoaded', initializeBadgeModal);
+document.addEventListener('turbo:load', initializeBadgeModal);
+
+// Also try immediate execution in case the DOM is already loaded
+if (document.readyState === 'loading') {
+  // DOM hasn't finished loading yet
+} else {
+  // DOM has already loaded
+  initializeBadgeModal();
+}
 </script>

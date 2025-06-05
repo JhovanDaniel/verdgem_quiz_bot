@@ -85,8 +85,8 @@
         <div class="card-body">
           <h4>Reset Progress</h4>
           <p class="text-danger">
-            This will reset all your quiz statistics. Your quiz history will still be available,
-            but won't be counted in your leaderboard standings or profile statistics.
+            This will reset all your quiz sessions and achievements. The progress you have made so far will not
+            be counted in your leaderboard standings or profile statistics.
             This action cannot be undone.
           </p>
           
@@ -234,7 +234,7 @@
     </div>
   </div>
   
-  <div class="mt-4">
+  <div class="my-4">
     <%= link_to "Back to dashboard", authenticated_root_path, class: "btn btn-outline-primary" %>
     
     <% if current_user.admin? && @user != current_user %>

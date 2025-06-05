@@ -138,7 +138,7 @@ class User < ApplicationRecord
     
     # Reset quiz attempts count
     #update(quiz_attempts: 0)
-    
+    user_badges.destroy_all
     quiz_sessions.update_all(archived: true)
     
     # You could also add more reset actions here if needed

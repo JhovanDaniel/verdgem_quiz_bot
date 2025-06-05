@@ -33,14 +33,14 @@
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <%= link_to authenticated_root_path, class:"nav-link d-flex align-items-center" do %>
-            <i class="bi bi-house me-2"></i>
+            <i class="bi bi-house me-1"></i>
             <span>Home</span>
           <% end %>
         </li>
         
         <li class="nav-item">
           <%= link_to subjects_path, class:"nav-link d-flex align-items-center" do %>
-            <i class="bi bi-journal me-2"></i>
+            <i class="bi bi-journal me-1"></i>
             <span>Subjects</span>
           <% end %>
         </li>
@@ -48,15 +48,24 @@
         <% if current_user %>
           <li class="nav-item">
             <%= link_to quiz_sessions_path, class:"nav-link d-flex align-items-center" do %>
-              <i class="bi bi-pencil me-2"></i>
+              <i class="bi bi-pencil me-1"></i>
               <span>Quiz Sessions</span>
+            <% end %>
+          </li>
+        <% end %>
+        
+        <% if current_user %>
+          <li class="nav-item">
+            <%= link_to '#', class:"nav-link d-flex align-items-center" do %>
+              <i class="bi bi-people me-1"></i>
+              <span>Social</span>
             <% end %>
           </li>
         <% end %>
           
         <li class="nav-item">
           <%= link_to leaderboard_path, class:"nav-link d-flex align-items-center" do %>
-            <i class="bi bi-trophy me-2"></i>
+            <i class="bi bi-trophy me-1"></i>
             <span>Leaderboard</span>
           <% end %>
         </li>
@@ -64,7 +73,7 @@
         <% if current_user %>
           <li class="nav-item">
             <%= link_to reports_path, class:"nav-link d-flex align-items-center" do %>
-              <i class="bi bi-file-earmark-bar-graph me-2"></i>
+              <i class="bi bi-file-earmark-bar-graph me-1"></i>
               <span>Reports</span>
             <% end %>
           </li>
@@ -72,7 +81,7 @@
           <% if current_user.admin? %>
             <li class="nav-item">
               <%= link_to configuration_path, class:"nav-link d-flex align-items-center" do %>
-                <i class="bi bi-gear me-2"></i>
+                <i class="bi bi-gear me-1"></i>
                 <span>Configuration</span>
               <% end %>
             </li>
