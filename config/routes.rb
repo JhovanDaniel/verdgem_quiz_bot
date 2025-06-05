@@ -57,13 +57,6 @@ Rails.application.routes.draw do
   authenticated :user, -> (user) { !user.teacher? && !user.admin? } do
     root to: "pages#home", as: :authenticated_root
   end
-
-  # Create the actual routes for these dashboards
-  get 'pages/home', to: 'pages#home'
-  get 'pages/teacher_dashboard', to: 'pages#teacher_dashboard'
-  get 'pages/reports', to: 'pages#reports', as: 'reports'
-  get 'pages/configuration', to: 'pages#configuration', as: 'configuration'
-  get 'pages/social', to: 'pages#social', as: 'social'
   
   # Unauthenticated user routes
   unauthenticated do
@@ -72,7 +65,12 @@ Rails.application.routes.draw do
   
   resources :subscribers, only: [:create]
   
-  get 'pages/home'
+  get 'pages/home', to: 'pages#home'
+  get 'pages/teacher_dashboard', to: 'pages#teacher_dashboard'
+  get 'reports', to: 'pages#reports', as: 'reports'
+  get 'configuration', to: 'pages#configuration', as: 'configuration'
+  get 'social', to: 'pages#social', as: 'social'
+  
   get 'pages/about'
   get 'pages/our_team'
   get 'pages/our_blog'
