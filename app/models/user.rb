@@ -9,6 +9,8 @@ class User < ApplicationRecord
   has_many :created_subjects, class_name: 'Subject', foreign_key: 'created_by_id'
   has_many :user_badges, dependent: :destroy
   has_many :badges, through: :user_badges
+  
+  belongs_to :institution, optional: true
          
   enum role: [:student, :teacher, :admin, :institution_admin]
          

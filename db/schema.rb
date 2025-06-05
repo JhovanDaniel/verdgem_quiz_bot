@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_02_191358) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_05_203318) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -76,6 +76,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_02_191358) do
     t.uuid "user_id"
     t.index ["quiz_session_id"], name: "index_feedbacks_on_quiz_session_id"
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
+  end
+
+  create_table "institutions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.boolean "active", default: true
+    t.string "contact_email"
+    t.string "phone"
+    t.text "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_institutions_on_active"
+    t.index ["name"], name: "index_institutions_on_name", unique: true
   end
 
   create_table "question_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -201,7 +214,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_02_191358) do
     t.integer "max_quiz_attempts", default: 30
     t.string "country"
     t.string "nickname"
+    t.uuid "institution_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["institution_id"], name: "index_users_on_institution_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
@@ -224,4 +239,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_02_191358) do
   add_foreign_key "topics", "subjects"
   add_foreign_key "user_badges", "badges"
   add_foreign_key "user_badges", "users"
+  add_foreign_key "users", "institutions"
 end
