@@ -63,6 +63,7 @@ Rails.application.routes.draw do
   get 'pages/teacher_dashboard', to: 'pages#teacher_dashboard'
   get 'pages/reports', to: 'pages#reports', as: 'reports'
   get 'pages/configuration', to: 'pages#configuration', as: 'configuration'
+  get 'pages/social', to: 'pages#social', as: 'social'
   
   # Unauthenticated user routes
   unauthenticated do

@@ -57,4 +57,8 @@ class PagesController < ApplicationController
   
   def reports
   end
+  
+  def social
+    @user = current_user
+  end
 end
