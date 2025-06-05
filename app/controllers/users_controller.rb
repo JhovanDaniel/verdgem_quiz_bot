@@ -34,6 +34,11 @@ class UsersController < ApplicationController
     @user.password = SecureRandom.hex(8) if @user.password.blank?
     
     if @user.save
+      if @user.institution_admin?
+        UserMailer.institution_welcome_email(@user).deliver_later
+      elsif @user.student?
+        UserMailer.welcome_email(@user).deliver_later
+      end
       redirect_to users_path, notice: "User was successfully created."
     else
       render :user_new, status: :unprocessable_entity

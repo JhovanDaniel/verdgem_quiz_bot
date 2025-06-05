@@ -45,7 +45,16 @@
           <% end %>
         </li>
         
-        <% if current_user %>
+        <% if current_user && current_user.institution_admin? %>
+          <li class="nav-item">
+            <%= link_to quiz_sessions_path, class:"nav-link d-flex align-items-center" do %>
+              <i class="bi bi-building me-1"></i>
+              <span>Institution</span>
+            <% end %>
+          </li>
+        <% end %>
+        
+        <% if current_user && current_user.student? %>
           <li class="nav-item">
             <%= link_to quiz_sessions_path, class:"nav-link d-flex align-items-center" do %>
               <i class="bi bi-pencil me-1"></i>
@@ -54,7 +63,7 @@
           </li>
         <% end %>
         
-        <% if current_user %>
+        <% if current_user && current_user.student? %>
           <li class="nav-item">
             <%= link_to social_path, class:"nav-link d-flex align-items-center" do %>
               <i class="bi bi-people me-1"></i>
@@ -70,7 +79,7 @@
           <% end %>
         </li>
           
-        <% if current_user %>
+        <% if current_user && current_user.student? %>
           <li class="nav-item">
             <%= link_to reports_path, class:"nav-link d-flex align-items-center" do %>
               <i class="bi bi-file-earmark-bar-graph me-1"></i>
