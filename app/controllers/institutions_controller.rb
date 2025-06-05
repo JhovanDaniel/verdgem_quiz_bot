@@ -2,6 +2,7 @@ class InstitutionsController < ApplicationController
   before_action :authenticate_user!
 
   def index
+    @institutions = Institution.all
   end
   
   def show

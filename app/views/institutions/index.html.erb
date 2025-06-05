@@ -1,0 +1,49 @@
+<div class="container px-4" id="featured-3">
+  <div class="row d-flex justify-content-between mb-4">
+    <div class="col-6">
+      <h2 class="mb-0 display-6 fw-bold">Institutions</h2>
+    </div>
+    <div class="col-6">
+      <div class="text-right">
+        <%= link_to "Create Institution", new_institution_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container col-xxl-8 px-0">
+    <% if @institutions.empty? %>
+      <div class="alert alert-info">
+        There aren't any institutions yet. Add one here:
+        <%= link_to "Create Institution", new_institution_path, class: "alert-link" %>.
+      </div>
+    <% else %>
+      <div class="table-responsive">
+        <table class="table table-borderless">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Email</th>
+              <th>Admin</th>
+              <th>Date Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @institutions.each do |institution| %>
+              <tr>
+                <td><%= institution.name %></td>
+                <td><%= institution.status %></td>
+                <td><%= institution.user.where(role: :institution_admin).name %></td>
+                <td><%= format_date(institution.created_at) %></td>
+                <td>
+                  <%= link_to "View", institution_path(institution), class: "btn btn-sm btn-outline-primary mx-1" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</div>
