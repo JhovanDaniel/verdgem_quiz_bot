@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :user_badges, dependent: :destroy
   has_many :badges, through: :user_badges
          
-  enum role: [:student, :teacher, :admin]
+  enum role: [:student, :teacher, :admin, :institution_admin]
          
   validates_presence_of :first_name, :last_name, :email, :role
   validate :check_profanity_in_nickname, if: -> { nickname.present? }
