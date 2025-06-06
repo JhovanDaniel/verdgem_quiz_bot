@@ -7,6 +7,27 @@ class InstitutionsController < ApplicationController
   end
   
   def show
+    @last_quiz_activity = QuizSession.joins(:user)
+      .where(users: { institution_id: @institution.id })
+      .where.not(completed_at: nil)
+      .order(completed_at: :desc)
+      .first
+      
+    
+    @recent_quiz_sessions = QuizSession.joins(:user)
+      .where(users: { institution_id: @institution.id })
+      .where.not(completed_at: nil)
+      .order(completed_at: :desc).limit(5)
+      
+    total_quiz_sessions = QuizSession.joins(:user)
+      .where(users: { 
+        institution_id: @institution.id, 
+        role: User.roles[:student] 
+      }).count
+  
+    total_students = @institution.users.where(role: :student).count
+  
+    @average_quiz_sessions = total_students > 0 ? (total_quiz_sessions.to_f / total_students).round(0) : 0
   end
   
   def new
