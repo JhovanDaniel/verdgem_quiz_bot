@@ -15,3 +15,6 @@ application.register("question-form", QuestionFormController)
 
 import QuizFormController from "./quiz_form_controller"
 application.register("quiz-form", QuizFormController)
+
+import SlimSelectController from "./slim_select_controller"
+application.register("slim-select", SlimSelectController)

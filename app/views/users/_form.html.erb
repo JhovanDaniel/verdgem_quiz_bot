@@ -45,6 +45,13 @@
       
       <div class="row">
         <div class="col-md-6">
+          <%= f.input :institution_id, collection: Institution.all, placeholder: 'Type to find business category',
+          input_html: {data: {controller: 'slim-select'}} %>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-6">
           <%= f.input :quiz_attempts %>
         </div> 
         
