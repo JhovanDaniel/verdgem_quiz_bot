@@ -1,6 +1,8 @@
 class Institution < ApplicationRecord
   has_many :users, dependent: :nullify
   
+  has_one_attached :institution_logo, dependent: :destroy
+  
   validates :name, presence: true, uniqueness: true
   validates :contact_email, presence: true
   validates :phone, presence: true

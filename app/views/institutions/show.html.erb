@@ -1,82 +1,190 @@
-<div class="container mt-4" id="featured-3">
-  <div class="card-header d-flex justify-content-between align-items-center bg-white border-0 px-0">
-    <h2 class="display-6 fw-bold"><%= @institution.name %></h2>
-    <div>
-      <% if current_user && current_user.admin? %>
-        <%= link_to "Edit", edit_institution_path(@institution), class: "btn btn-outline-primary btn-sm" %>
-        <%= link_to "Delete", institution_path(@institution), method: :delete, data: { confirm: "Are you sure? This will also delete all topics and questions within this subject." }, class: "btn btn-outline-danger btn-sm ms-2" %>
-      <% end %>
-    </div>
-  </div>
-  
-  <h4>Description</h4>
-  <% if @institution.description.present? %>
-    <p><%= @institution.description %></p>
-  <% end %>
-  
-  <h4>Contact email</h4>
-  <p><%= @institution.contact_email %></p>
-  
-  <h4>Phone</h4>
-  <p><%= @institution.phone %></p>
-  
-  <h4>Address</h4>
-  <p><%= @institution.address %></p>
-  
-  <h4>Students</h4>
-  <div class="row align-items-center">
-    <div class="col-12 col-md-8">
-      <div class="d-flex flex-wrap gap-3">
-        <!-- Friend Avatar 1 -->
-        <div class="text-center">
-          <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
-            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+<div class="container py-4">
+  <!-- Hero Section -->
+  <div class="institution-hero-section p-4 p-md-5">
+      <div class="row align-items-center">
+          <div class="col-md-8">
+              <div class="d-flex align-items-center mb-3">
+                  <%= image_tag @institution.institution_logo, 
+                    alt: @institution.name,
+                    class: "institution-logo p-2 mx-2" if @institution.institution_logo.attached? %>
+                  <div>
+                      <h1 class="display-5 fw-bold mb-2"><%= @institution.name %></h1>
+                  </div>
+              </div>
+              <p class="lead mb-0 opacity-90">
+                  <%= @institution.description %>
+              </p>
           </div>
-          <small class="text-muted">Sarah J.</small>
-        </div>
-        <!-- Friend Avatar 2 -->
-        <div class="text-center">
-          <div class="avatar-circle bg-success text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
-            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
-          </div>
-          <small class="text-muted">Mike R.</small>
-        </div>
-        <!-- Friend Avatar 3 -->
-        <div class="text-center">
-          <div class="avatar-circle bg-info text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
-            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
-          </div>
-          <small class="text-muted">Alex K.</small>
-        </div>
-        <!-- Friend Avatar 4 -->
-        <div class="text-center">
-          <div class="avatar-circle bg-warning text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
-            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
-          </div>
-          <small class="text-muted">Emma L.</small>
-        </div>
-        <!-- Friend Avatar 5 -->
-        <div class="text-center">
-          <div class="avatar-circle bg-danger text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
-            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
-          </div>
-          <small class="text-muted">David S.</small>
-        </div>
-        <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center" 
-               style="width: 60px; height: 60px; border-radius: 50%; border: 2px dashed #dee2e6;">
-            <span style="font-size: 0.8rem;">+247</span>
+          <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <%= link_to edit_institution_path, class:"btn btn-light" do %>
+              <i class="bi bi-pencil"></i> Edit
+            <% end %>
           </div>
       </div>
-    </div>
-    <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
-      <p class="text-muted mb-1">
-        <strong>24</strong> total friends
-      </p>
-      <small class="text-muted">Last active: 2 hours ago</small>
-    </div>
   </div>
-  
-  <div class="my-4">
-    <%= link_to "Back to Institutions", institutions_path, class: "btn btn-outline-primary" %>
+
+  <!-- Stats Section -->
+  <div class="row mb-4">
+      <div class="col-md-3 col-6 mb-3">
+          <div class="stats-card text-center">
+              <div class="display-6 fw-bold">247</div>
+              <div class="text-muted fw-medium">Total Students</div>
+          </div>
+      </div>
+      <div class="col-md-3 col-6 mb-3">
+          <div class="stats-card text-center">
+              <div class="display-6 fw-bold">12</div>
+              <div class="text-muted fw-medium">Administrators</div>
+          </div>
+      </div>
+      <div class="col-md-3 col-6 mb-3">
+          <div class="stats-card text-center">
+              <div class="display-6 fw-bold">89%</div>
+              <div class="text-muted fw-medium">Active Rate</div>
+          </div>
+      </div>
+      <div class="col-md-3 col-6 mb-3">
+          <div class="stats-card text-center">
+              <div class="display-6 fw-bold">4.8</div>
+              <div class="text-muted fw-medium">Avg. Rating</div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="row">
+      <!-- Left Column -->
+      <div class="col-lg-8 mb-4">
+          <!-- Students Section -->
+          <div class="info-card mb-4">
+              <h5><i class="bi bi-people-fill"></i>Students</h5>
+              <div class="d-flex flex-wrap gap-3 mb-3">
+                <% @institution.users.where(role: :student).each do |student| %>
+                  <%= link_to user_path(student) do %>
+                    <div class="text-center text-white">
+                      <div class="avatar-circle" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">
+                          <%= student.initials %>
+                      </div>
+                      <small class="d-block mt-2 text-muted"><%= student.name %></small>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted">
+                      <i class="bi bi-clock me-1"></i>Last activity: 2 hours ago
+                  </small>
+                  <button class="btn btn-outline-primary btn-sm">
+                      <i class="bi bi-eye me-1"></i>View All Students
+                  </button>
+              </div>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="info-card">
+              <h5><i class="bi bi-activity"></i>Recent Activity</h5>
+              <div class="activity-item d-flex align-items-start mb-3">
+                  <div class="avatar-circle me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 0.8rem;">
+                      SJ
+                  </div>
+                  <div class="flex-grow-1">
+                      <div class="fw-medium">Sarah Johnson completed Quiz: Advanced Mathematics</div>
+                      <small class="text-muted">2 hours ago</small>
+                  </div>
+              </div>
+              <div class="activity-item d-flex align-items-start mb-3">
+                  <div class="avatar-circle me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); font-size: 0.8rem;">
+                      MR
+                  </div>
+                  <div class="flex-grow-1">
+                      <div class="fw-medium">Mike Rodriguez joined the institution</div>
+                      <small class="text-muted">1 day ago</small>
+                  </div>
+              </div>
+              <div class="activity-item d-flex align-items-start">
+                  <div class="avatar-circle me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); font-size: 0.8rem;">
+                      AK
+                  </div>
+                  <div class="flex-grow-1">
+                      <div class="fw-medium">Alex Kim achieved a new badge: Top Performer</div>
+                      <small class="text-muted">3 days ago</small>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-lg-4">
+          <!-- Contact Information -->
+          <div class="info-card mb-4">
+              <h5><i class="bi bi-info-circle-fill"></i>Contact Information</h5>
+              
+              <div class="mb-2">
+                  <div class="d-flex">
+                      <i class="bi bi-envelope-fill me-3"></i>
+                      <div>
+                          <div class="fw-medium">Email</div>
+                          <a href="mailto:#{@institution.contact_email}" class="text-decoration-none"><%= @institution.contact_email %></a>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="mb-2">
+                  <div class="d-flex">
+                      <i class="bi bi-telephone-fill me-3"></i>
+                      <div>
+                          <div class="fw-medium">Phone</div>
+                          <a href="tel:+1234567890" class="text-decoration-none"><%= @institution.phone %></a>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="mb-2">
+                  <div class="d-flex">
+                      <i class="bi bi-geo-alt-fill me-3 mt-1"></i>
+                      <div>
+                          <div class="fw-medium">Address</div>
+                          <div class="text-muted">
+                              <%= @institution.address %>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="info-card">
+              <h5><i class="bi bi-lightning-fill"></i>Quick Actions</h5>
+              <div class="d-grid gap-2">
+                  <button class="btn btn-primary-custom">
+                      <i class="bi bi-person-plus me-2"></i>Add New Student
+                  </button>
+                  <button class="btn btn-outline-primary">
+                      <i class="bi bi-file-earmark-text me-2"></i>Generate Report
+                  </button>
+                  <button class="btn btn-outline-secondary">
+                      <i class="bi bi-gear me-2"></i>Institution Settings
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Navigation -->
+  <div class="d-flex justify-content-between align-items-center">
+      <button class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left me-2"></i>Back to Institutions
+      </button>
+      <div class="d-flex gap-2">
+          <button class="btn btn-outline-primary">
+              <i class="bi bi-download me-2"></i>Export Data
+          </button>
+          <button class="btn btn-primary-custom">
+              <i class="bi bi-plus-lg me-2"></i>New Quiz Session
+          </button>
+      </div>
   </div>
 </div>
+

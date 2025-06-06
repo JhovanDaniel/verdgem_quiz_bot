@@ -42,7 +42,8 @@ class InstitutionsController < ApplicationController
   end
   
   def institution_params
-    params.require(:institution).permit(:name, :description, :active, :contact_email, :phone, :address)
+    params.require(:institution).permit(:name, :description, :active, :contact_email, :phone, :address,
+    :institution_logo)
   end
   
 
