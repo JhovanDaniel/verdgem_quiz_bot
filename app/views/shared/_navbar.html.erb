@@ -88,7 +88,7 @@
           </li>
         <% end %>
           
-        <% if current_user.admin? %>
+        <% if current_user && current_user.admin? %>
           <li class="nav-item">
             <%= link_to configuration_path, class:"nav-link d-flex align-items-center" do %>
               <i class="bi bi-gear me-1"></i>

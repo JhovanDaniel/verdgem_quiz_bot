@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_admin, except: [:show, :user_edit, :user_update, :reset_progress]
+  before_action :require_admin, except: [:show, :user_edit, :user_update, :reset_progress, :social]
   
   def index
     @users = User.all
@@ -77,6 +77,10 @@ class UsersController < ApplicationController
     else
       redirect_to user_path(current_user), alert: "There was an error resetting your progress."
     end
+  end
+  
+  def social
+    
   end
   
   private

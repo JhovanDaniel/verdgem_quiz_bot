@@ -49,6 +49,7 @@ Rails.application.routes.draw do
   get 'users/:id/user_edit', to: 'users#user_edit', as: 'user_edit_user'
   patch 'users/:id/user_update', to: 'users#user_update', as: 'user_update_user'
   post 'reset_progress', to: 'users#reset_progress'
+  get 'social', to: 'users#social', as: 'social'
   
   resources :users
   
@@ -71,7 +72,6 @@ Rails.application.routes.draw do
   get 'pages/teacher_dashboard', to: 'pages#teacher_dashboard'
   get 'reports', to: 'pages#reports', as: 'reports'
   get 'configuration', to: 'pages#configuration', as: 'configuration'
-  get 'social', to: 'pages#social', as: 'social'
   
   get 'pages/about'
   get 'pages/our_team'
