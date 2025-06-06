@@ -23,6 +23,59 @@
   <h4>Address</h4>
   <p><%= @institution.address %></p>
   
+  <h4>Students</h4>
+  <div class="row align-items-center">
+    <div class="col-12 col-md-8">
+      <div class="d-flex flex-wrap gap-3">
+        <!-- Friend Avatar 1 -->
+        <div class="text-center">
+          <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
+            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+          </div>
+          <small class="text-muted">Sarah J.</small>
+        </div>
+        <!-- Friend Avatar 2 -->
+        <div class="text-center">
+          <div class="avatar-circle bg-success text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
+            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+          </div>
+          <small class="text-muted">Mike R.</small>
+        </div>
+        <!-- Friend Avatar 3 -->
+        <div class="text-center">
+          <div class="avatar-circle bg-info text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
+            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+          </div>
+          <small class="text-muted">Alex K.</small>
+        </div>
+        <!-- Friend Avatar 4 -->
+        <div class="text-center">
+          <div class="avatar-circle bg-warning text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
+            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+          </div>
+          <small class="text-muted">Emma L.</small>
+        </div>
+        <!-- Friend Avatar 5 -->
+        <div class="text-center">
+          <div class="avatar-circle bg-danger text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
+            <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+          </div>
+          <small class="text-muted">David S.</small>
+        </div>
+        <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center" 
+               style="width: 60px; height: 60px; border-radius: 50%; border: 2px dashed #dee2e6;">
+            <span style="font-size: 0.8rem;">+247</span>
+          </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+      <p class="text-muted mb-1">
+        <strong>24</strong> total friends
+      </p>
+      <small class="text-muted">Last active: 2 hours ago</small>
+    </div>
+  </div>
+  
   <div class="my-4">
     <%= link_to "Back to Institutions", institutions_path, class: "btn btn-outline-primary" %>
   </div>
