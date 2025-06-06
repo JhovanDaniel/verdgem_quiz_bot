@@ -15,11 +15,13 @@
                   <%= @institution.description %>
               </p>
           </div>
-          <div class="col-md-4 text-md-end mt-3 mt-md-0">
-            <%= link_to edit_institution_path, class:"btn btn-light" do %>
-              <i class="bi bi-pencil"></i> Edit
-            <% end %>
-          </div>
+          <% if current_user.admin? %>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+              <%= link_to edit_institution_path, class:"btn btn-outline-primary bg-white" do %>
+                <i class="bi bi-pencil"></i> Edit
+              <% end %>
+            </div>
+          <% end %>
       </div>
   </div>
 
@@ -33,20 +35,20 @@
       </div>
       <div class="col-md-3 col-6 mb-3">
           <div class="stats-card text-center">
-              <div class="display-6 fw-bold"><%= @institution.users.where(role: :institution_admin).count %></div>
-              <div class="text-muted fw-medium">Administrators</div>
+              <div class="display-6 fw-bold"><%= @institution.quiz_completion_rate %>%</div>
+              <div class="text-muted fw-medium">Completion Rate</div>
           </div>
       </div>
       <div class="col-md-3 col-6 mb-3">
           <div class="stats-card text-center">
-              <div class="display-6 fw-bold">89%</div>
-              <div class="text-muted fw-medium">Active Rate</div>
+              <div class="display-6 fw-bold"><%= @institution.total_quizzes_completed %></div>
+              <div class="text-muted fw-medium">Quizzes Completed</div>
           </div>
       </div>
       <div class="col-md-3 col-6 mb-3">
           <div class="stats-card text-center">
-              <div class="display-6 fw-bold"><%= @average_quiz_sessions %></div>
-              <div class="text-muted fw-medium">Avg. Quiz Count</div>
+              <div class="display-6 fw-bold"><%= @average_score %>%</div>
+              <div class="text-muted fw-medium">Avg. Score</div>
           </div>
       </div>
   </div>
@@ -61,11 +63,11 @@
               <div class="d-flex flex-wrap gap-3 mb-3">
                 <% @institution.users.where(role: :student).each do |student| %>
                   <%= link_to user_path(student) do %>
-                    <div class="text-center text-white">
-                      <div class="avatar-circle" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">
+                    <div class="text-center mx-auto text-white">
+                      <div class="avatar-circle mx-auto" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">
                           <%= student.initials %>
                       </div>
-                      <small class="d-block mt-2 text-muted"><%= student.name %></small>
+                      <small class="d-block mt-2 text-black"><%= student.name %></small>
                     </div>
                   <% end %>
                 <% end %>
@@ -87,7 +89,7 @@
             <h5><i class="bi bi-activity"></i>Recent Activity</h5>
             <% @recent_quiz_sessions.each do |activity| %>
               <div class="activity-item d-flex align-items-start mb-3">
-                <div class="avatar-circle me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 0.8rem;">
+                <div class="avatar-circle text-white me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); font-size: 0.8rem;">
                     <%= activity.user.initials %>
                 </div>
                 <div class="flex-grow-1">
@@ -142,9 +144,6 @@
           <div class="info-card">
               <h5><i class="bi bi-lightning-fill"></i>Quick Actions</h5>
               <div class="d-grid gap-2">
-                  <button class="btn btn-primary">
-                      <i class="bi bi-person-plus me-2"></i>Add New Student
-                  </button>
                   <button class="btn btn-outline-primary">
                       <i class="bi bi-file-earmark-text me-2"></i>Generate Report
                   </button>
@@ -160,17 +159,15 @@
 
   <!-- Navigation -->
   <div class="d-flex justify-content-between align-items-center">
-      <button class="btn btn-outline-secondary">
-          <i class="bi bi-arrow-left me-2"></i>Back to Institutions
-      </button>
-      <div class="d-flex gap-2">
-          <button class="btn btn-outline-primary">
-              <i class="bi bi-download me-2"></i>Export Data
-          </button>
-          <button class="btn btn-primary-custom">
-              <i class="bi bi-plus-lg me-2"></i>New Quiz Session
-          </button>
-      </div>
+    <% if current_user.admin? %>
+      <%= link_to "Back to institutions", institutions_path,  class:"btn btn-outline-primary"%>
+    <% else %>
+      <%= link_to "Back to home", authenticated_root_path, class:"btn btn-outline-primary" %>
+    <% end %>
+    
+    <button class="btn btn-outline-primary">
+        <i class="bi bi-download me-2"></i>Export Data
+    </button>
   </div>
 </div>
 

@@ -19,4 +19,25 @@ class Institution < ApplicationRecord
       institution_status.html_safe
     end
   end
+  
+  def quiz_completion_rate
+    total_started = QuizSession.joins(:user)
+                              .where(users: { institution_id: id, role: User.roles[:student] })
+                              .count
+
+    total_completed = QuizSession.joins(:user)
+                                .where(users: { institution_id: id, role: User.roles[:student] })
+                                .where.not(completed_at: nil)
+                                .count
+
+    return 0 if total_started == 0
+    ((total_completed.to_f / total_started) * 100).round(1)
+  end
+  
+  def total_quizzes_completed
+    QuizSession.joins(:user)
+               .where(users: { institution_id: self.id, role: User.roles[:student] })
+               .where.not(completed_at: nil)
+               .count
+  end
 end

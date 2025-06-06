@@ -28,6 +28,16 @@ class InstitutionsController < ApplicationController
     total_students = @institution.users.where(role: :student).count
   
     @average_quiz_sessions = total_students > 0 ? (total_quiz_sessions.to_f / total_students).round(0) : 0
+    
+    @average_score = QuizSession.joins(:user)
+      .where(users: { 
+       institution_id: @institution.id, 
+       role: User.roles[:student] 
+      })
+      .where.not(completed_at: nil, total_score: nil, max_score: nil)
+      .where('max_score > 0')
+      .average('(total_score::float / max_score::float) * 100')
+      &.round(1) || 0
   end
   
   def new
