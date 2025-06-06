@@ -34,10 +34,12 @@
               <tr>
                 <td><%= institution.name %></td>
                 <td><%= institution.status %></td>
-                <td><%= institution.user.where(role: :institution_admin).name %></td>
+                <td><%= institution.contact_email %></td>
+                <td><%= institution.users.where(role: :institution_admin).name %></td>
                 <td><%= format_date(institution.created_at) %></td>
                 <td>
                   <%= link_to "View", institution_path(institution), class: "btn btn-sm btn-outline-primary mx-1" %>
+                  <%= link_to "Edit", edit_institution_path(institution), class: "btn btn-sm btn-outline-primary mx-1" %>
                 </td>
               </tr>
             <% end %>

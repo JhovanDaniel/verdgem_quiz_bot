@@ -1,0 +1,22 @@
+<%= simple_form_for @institution do |f| %>
+  <%= f.error_notification %>
+  
+  <div class="form-inputs">
+    <%= f.input :name, required: true, label: 'Institution name' %>
+    
+    <%= f.input :description, 
+                as: :text, 
+                input_html: { rows: 4 } %>
+                
+    <%= f.input :address, required: true, label: 'Address' %>
+    
+    <%= f.input :contact_email, required: true, label: 'Contact email' %>
+    
+    <%= f.input :phone, required: true, label: 'Contact phone' %>
+  </div>
+  
+  <div class="form-actions mt-4">
+    <%= f.button :submit, @institution.new_record? ? "Create institution" : "Update institution", class: 'btn-primary' %>
+    <%= link_to "Cancel", institutions_path, class: "btn btn-outline-secondary ms-2" %>
+  </div>
+<% end %>
