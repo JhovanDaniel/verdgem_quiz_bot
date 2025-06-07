@@ -56,6 +56,10 @@ Rails.application.routes.draw do
   authenticated :user, -> (user) { user.teacher? || user.admin? } do
     root to: "pages#teacher_dashboard", as: :teacher_root
   end
+    
+  authenticated :user, -> (user) { user.institution_admin? } do
+    root to: "institutions#redirect_to_institution", as: :institution_root
+  end
   
   authenticated :user, -> (user) { !user.teacher? && !user.admin? } do
     root to: "pages#home", as: :authenticated_root

@@ -18,26 +18,10 @@ class InstitutionsController < ApplicationController
       .where(users: { institution_id: @institution.id })
       .where.not(completed_at: nil)
       .order(completed_at: :desc).limit(5)
-      
-    total_quiz_sessions = QuizSession.joins(:user)
-      .where(users: { 
-        institution_id: @institution.id, 
-        role: User.roles[:student] 
-      }).count
+  end
   
-    total_students = @institution.users.where(role: :student).count
-  
-    @average_quiz_sessions = total_students > 0 ? (total_quiz_sessions.to_f / total_students).round(0) : 0
-    
-    @average_score = QuizSession.joins(:user)
-      .where(users: { 
-       institution_id: @institution.id, 
-       role: User.roles[:student] 
-      })
-      .where.not(completed_at: nil, total_score: nil, max_score: nil)
-      .where('max_score > 0')
-      .average('(total_score::float / max_score::float) * 100')
-      &.round(1) || 0
+  def redirect_to_institution
+    redirect_to institution_path(current_user.institution_id)
   end
   
   def new
@@ -74,7 +58,7 @@ class InstitutionsController < ApplicationController
   
   def institution_params
     params.require(:institution).permit(:name, :description, :active, :contact_email, :phone, :address,
-    :institution_logo)
+    :institution_logo, :country)
   end
   
 

@@ -215,68 +215,44 @@
   </div>
 
   <!-- Institution Section -->
+  <% if !current_user.institution.nil? %>
   <div class="card border-0 shadow-sm mb-4">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0 text-body-emphasis">
-        <i class="bi bi-building text-info me-2"></i>
+        <i class="bi bi-building me-2"></i>
         My Institution
       </h4>
-      <a href="#" class="btn btn-outline-info btn-sm">School Leaderboard</a>
+      <%= link_to "View Institution", institution_path(@user.institution), class:"btn btn-outline-primary btn-sm" %>
     </div>
     <div class="card-body">
       <div class="row align-items-center">
         <div class="col-12 col-md-3">
-          <h5 class="text-info mb-2">Kingston College</h5>
+          <div class="d-flex align-items-center mb-3">
+            <%= image_tag @user.institution.institution_logo, 
+              alt: @user.institution.name,
+              class: "institution-logo-thumb  p-2 mx-2" if @user.institution.institution_logo.attached? %>
+            <div>
+                <h5 class="mb-2"><%= @user.institution.name %></h5>
+            </div>
+          </div>
           <small class="text-muted">Rank #3 nationally</small>
         </div>
         <div class="col-12 col-md-5 mt-3 mt-md-0">
           <div class="d-flex flex-wrap gap-2">
-            <!-- Institution Member 1 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-info text-white d-flex align-items-center justify-content-center" 
-                   style="width: 40px; height: 40px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1rem;"></i>
-              </div>
-            </div>
-            <!-- Institution Member 2 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center" 
-                   style="width: 40px; height: 40px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1rem;"></i>
-              </div>
-            </div>
-            <!-- Institution Member 3 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-success text-white d-flex align-items-center justify-content-center" 
-                   style="width: 40px; height: 40px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1rem;"></i>
-              </div>
-            </div>
-            <!-- Institution Member 4 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-warning text-white d-flex align-items-center justify-content-center" 
-                   style="width: 40px; height: 40px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1rem;"></i>
-              </div>
-            </div>
-            <!-- Institution Member 5 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-danger text-white d-flex align-items-center justify-content-center" 
-                   style="width: 40px; height: 40px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1rem;"></i>
-              </div>
-            </div>
-            <!-- Institution Member 6 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-secondary text-white d-flex align-items-center justify-content-center" 
-                   style="width: 40px; height: 40px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1rem;"></i>
-              </div>
-            </div>
+            <% @user.institution.users.where(role: :student).limit(5).each do |student| %>
+              <%= link_to user_path(student) do %>
+                <div class="text-center text-white">
+                  <div class="avatar-circle mx-auto" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">
+                      <%= student.initials %>
+                  </div>
+                  <small class="d-block mt-2 text-black"><%= student.name %></small>
+                </div>
+              <% end %>
+            <% end %>
             <!-- More indicator -->
             <div class="text-center">
               <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center" 
-                   style="width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #dee2e6;">
+                   style="width: 60px; height: 60px; border-radius: 50%; border: 2px dashed #dee2e6;">
                 <span style="font-size: 0.8rem;">+247</span>
               </div>
             </div>
@@ -284,13 +260,14 @@
         </div>
         <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
           <p class="text-muted mb-1">
-            <strong>253</strong> total students
+            <strong><%= @user.institution.total_students %></strong> total students
           </p>
           <small class="text-muted">Your rank: #12</small>
         </div>
       </div>
     </div>
   </div>
+  <% end %>
 
   <!-- Quick Actions -->
   <div class="d-flex flex-column flex-md-row justify-content-between gap-2 gap-md-0 my-4">

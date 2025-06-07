@@ -20,6 +20,10 @@ class Institution < ApplicationRecord
     end
   end
   
+  def total_students
+    users.where(role: :student).count
+  end
+  
   def quiz_completion_rate
     total_started = QuizSession.joins(:user)
                               .where(users: { institution_id: id, role: User.roles[:student] })
@@ -39,5 +43,14 @@ class Institution < ApplicationRecord
                .where(users: { institution_id: self.id, role: User.roles[:student] })
                .where.not(completed_at: nil)
                .count
+  end
+  
+  def average_quiz_score
+    QuizSession.joins(:user)
+               .where(users: { institution_id: self.id, role: User.roles[:student] })
+               .where.not(completed_at: nil, total_score: nil, max_score: nil)
+               .where('max_score > 0')
+               .average('(total_score::float / max_score::float) * 100')
+               &.round(1) || 0
   end
 end

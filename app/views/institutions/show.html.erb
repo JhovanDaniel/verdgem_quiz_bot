@@ -47,7 +47,7 @@
       </div>
       <div class="col-md-3 col-6 mb-3">
           <div class="stats-card text-center">
-              <div class="display-6 fw-bold"><%= @average_score %>%</div>
+              <div class="display-6 fw-bold"><%= @institution.average_quiz_score %>%</div>
               <div class="text-muted fw-medium">Avg. Score</div>
           </div>
       </div>
@@ -141,17 +141,19 @@
           </div>
 
           <!-- Quick Actions -->
-          <div class="info-card">
+          <% if current_user.admin? or current_user.institution_admin? %>
+            <div class="info-card">
               <h5><i class="bi bi-lightning-fill"></i>Quick Actions</h5>
               <div class="d-grid gap-2">
-                  <button class="btn btn-outline-primary">
-                      <i class="bi bi-file-earmark-text me-2"></i>Generate Report
-                  </button>
-                  <button class="btn btn-outline-primary">
-                      <i class="bi bi-gear me-2"></i>Institution Settings
-                  </button>
+                <button class="btn btn-outline-primary">
+                    <i class="bi bi-file-earmark-text me-2"></i>Generate Reports
+                </button>
+                <button class="btn btn-outline-primary">
+                    <i class="bi bi-gear me-2"></i>Institution Settings
+                </button>
               </div>
-          </div>
+            </div>
+          <% end %>
       </div>
   </div>
 
@@ -164,10 +166,6 @@
     <% else %>
       <%= link_to "Back to home", authenticated_root_path, class:"btn btn-outline-primary" %>
     <% end %>
-    
-    <button class="btn btn-outline-primary">
-        <i class="bi bi-download me-2"></i>Export Data
-    </button>
   </div>
 </div>
 
