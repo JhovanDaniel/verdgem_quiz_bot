@@ -202,7 +202,7 @@ class Institution < ApplicationRecord
             .distinct
             .count
   end
-
+  
   def overall_quiz_completion_rate(period)
     sessions = quiz_sessions_in_period(period)
     return 0 if sessions.empty?
@@ -211,15 +211,7 @@ class Institution < ApplicationRecord
     (completed_count.to_f / sessions.count * 100).round(1)
   end
 
-  def institution_average_score(period)
-    completed_sessions = quiz_sessions_in_period(period)
-                        .where.not(completed_at: nil, total_score: nil, max_score: nil)
-                        .where('max_score > 0')
-    
-    return 0 if completed_sessions.empty?
-    
-    completed_sessions.average('total_score::float / max_score * 100')&.round(1) || 0
-  end
+  
 
   def total_learning_hours(period)
     # Calculate based on session duration
@@ -408,26 +400,13 @@ class Institution < ApplicationRecord
   # UTILITY METHODS
   # ============================================================================
 
-  def period_range(period)
-    case period
-    when Range
-      period
-    when ActiveSupport::Duration
-      period.ago..Time.current
-    else
-      30.days.ago..Time.current
-    end
-  end
+
 
   def quiz_sessions_in_period(period)
     QuizSession.joins(:user)
            .where(users: { institution_id: id }).where(started_at: period_range(period))
   end
 
-  def calculate_previous_period(period)
-    range = period_range(period)
-    duration = range.end - range.begin
-    (range.begin - duration)..range.begin
-  end
+  
   
 end

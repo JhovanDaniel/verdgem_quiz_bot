@@ -68,7 +68,7 @@
         <div class="executive-summary">
             <div class="kpi-card">
                 <div class="kpi-title">Total Active Students</div>
-                <div class="kpi-value"><%= @institution.executive_summary[:total_active_students] %></div>
+                <div class="kpi-value"><%= @institution.executive_summary[:active_students] %></div>
                 <div class="kpi-change positive">
                     <i class="fas fa-arrow-up"></i>
                     +12.3% vs last month
@@ -76,7 +76,7 @@
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">Quiz Completion Rate</div>
-                <div class="kpi-value"><%= @institution.executive_summary[:overall_completion_rate].round(1) %>%</div>
+                <div class="kpi-value"><%= @institution.executive_summary[:completion_rate].round(1) %>%</div>
                 <div class="kpi-change positive">
                     <i class="fas fa-arrow-up"></i>
                     +3.1% vs last month
@@ -84,7 +84,7 @@
             </div>
             <div class="kpi-card">
                 <div class="kpi-title">Total Quizzes Completed</div>
-                <div class="kpi-value"> <%= @institution.total_quizzes_completed %> </div>
+                <div class="kpi-value"> <%= @institution.executive_summary[:total_quizzes_completed] %> </div>
                 <div class="kpi-change positive">
                     <i class="fas fa-arrow-up"></i>
                     +18.7% vs last month
