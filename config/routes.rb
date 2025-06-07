@@ -22,8 +22,11 @@ Rails.application.routes.draw do
   
   resources :badges
   
-  resources :institutions
-  
+  resources :institutions do
+    member do
+      get 'report'
+    end
+  end
   
   
   # Quiz routes

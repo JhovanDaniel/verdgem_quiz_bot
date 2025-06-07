@@ -1,0 +1,296 @@
+<div class="institution-hero-section p-4 p-md-5">
+    <h5 class="display-6 fw-bold">Institution Analytics Dashboard</h5>
+    <p class="dashboard-subtitle">Comprehensive performance insights and analytics</p>
+</div>
+
+<div class="nav-tabs mb-4">
+    <button class="tab-button active" onclick="showTab('executive')">
+        <i class="fas fa-chart-line"></i> Executive Summary
+    </button>
+    <button class="tab-button" onclick="showTab('engagement')">
+        <i class="fas fa-users"></i> Student Engagement
+    </button>
+    <button class="tab-button" onclick="showTab('quiz-performance')">
+        <i class="fas fa-clipboard-check"></i> Quiz Performance
+    </button>
+    <button class="tab-button" onclick="showTab('subject-breakdown')">
+        <i class="fas fa-book"></i> Subject Analysis
+    </button>
+    <button class="tab-button" onclick="showTab('student-distribution')">
+        <i class="fas fa-chart-pie"></i> Student Performance
+    </button>
+    <button class="tab-button" onclick="showTab('temporal-analysis')">
+        <i class="fas fa-calendar-alt"></i> Time Analysis
+    </button>
+    <button class="tab-button" onclick="showTab('comparative')">
+        <i class="fas fa-balance-scale"></i> Benchmarking
+    </button>
+</div>
+
+<div class="dashboard-content">
+    <!-- Controls Section (appears on all tabs) -->
+    <div class="controls-section">
+        <div class="filter-group">
+            <label class="filter-label">Time Period</label>
+            <select class="filter-select" id="time-period">
+                <option value="7">Last 7 days</option>
+                <option value="30" selected>Last 30 days</option>
+                <option value="90">Last 3 months</option>
+                <option value="365">Last year</option>
+                <option value="custom">Custom range</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label class="filter-label">Subject Filter</label>
+            <select class="filter-select" id="subject-filter">
+                <option value="all">All Subjects</option>
+                <option value="math">Mathematics</option>
+                <option value="science">Science</option>
+                <option value="english">English</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label class="filter-label">Student Group</label>
+            <select class="filter-select" id="student-group">
+                <option value="all">All Students</option>
+                <option value="active">Active Only</option>
+                <option value="new">New Students</option>
+            </select>
+        </div>
+        <button class="export-button" onclick="exportReport()">
+            <i class="fas fa-download"></i>
+            Export Report
+        </button>
+    </div>
+
+    <!-- Executive Summary Tab -->
+    <div id="executive" class="tab-content active">
+        <div class="executive-summary">
+            <div class="kpi-card">
+                <div class="kpi-title">Total Active Students</div>
+                <div class="kpi-value">1,247</div>
+                <div class="kpi-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    +12.3% vs last month
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Quiz Completion Rate</div>
+                <div class="kpi-value">87.2%</div>
+                <div class="kpi-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    +3.1% vs last month
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Average Score</div>
+                <div class="kpi-value">78.5%</div>
+                <div class="kpi-change negative">
+                    <i class="fas fa-arrow-down"></i>
+                    -1.2% vs last month
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Learning Hours</div>
+                <div class="kpi-value">3,421</div>
+                <div class="kpi-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    +18.7% vs last month
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Performance Trends (Last 30 Days)</h3>
+                <div class="chart-placeholder">Line chart showing daily performance metrics</div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Activity Distribution</h3>
+                <div class="chart-placeholder">Pie chart showing activity breakdown</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Engagement Tab -->
+    <div id="engagement" class="tab-content">
+        <div class="chart-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Daily Active Users</h3>
+                <div class="chart-placeholder">Bar chart showing daily active users over time</div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Peak Usage Hours</h3>
+                <div class="chart-placeholder">Heatmap showing usage patterns by hour/day</div>
+            </div>
+        </div>
+
+        <div class="data-table">
+            <div class="table-header">Student Engagement Metrics</div>
+            <div class="table-content">
+                <div class="table-row">
+                    <div><strong>Daily Active Users</strong></div>
+                    <div>342</div>
+                    <div>+5.2%</div>
+                    <div><span style="color: #059669;">↗</span></div>
+                </div>
+                <div class="table-row">
+                    <div><strong>Weekly Active Users</strong></div>
+                    <div>1,089</div>
+                    <div>+12.1%</div>
+                    <div><span style="color: #059669;">↗</span></div>
+                </div>
+                <div class="table-row">
+                    <div><strong>Avg. Session Duration</strong></div>
+                    <div>24.5 min</div>
+                    <div>-2.3%</div>
+                    <div><span style="color: #dc2626;">↘</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Performance Tab -->
+    <div id="quiz-performance" class="tab-content">
+        <div class="chart-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Quiz Completion Funnel</h3>
+                <div class="chart-placeholder">Funnel chart showing quiz completion stages</div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Difficulty vs Success Rate</h3>
+                <div class="chart-placeholder">Scatter plot showing quiz difficulty analysis</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Subject Breakdown Tab -->
+    <div id="subject-breakdown" class="tab-content">
+        <div class="chart-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Subject Performance Comparison</h3>
+                <div class="chart-placeholder">Horizontal bar chart comparing subject performance</div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Subject Popularity</h3>
+                <div class="chart-placeholder">Donut chart showing subject engagement levels</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Distribution Tab -->
+    <div id="student-distribution" class="tab-content">
+        <div class="chart-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Grade Distribution</h3>
+                <div class="chart-placeholder">Histogram showing grade distribution</div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Performance Categories</h3>
+                <div class="chart-placeholder">Pie chart showing performance tiers</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Temporal Analysis Tab -->
+    <div id="temporal-analysis" class="tab-content">
+        <div class="chart-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Monthly Trends</h3>
+                <div class="chart-placeholder">Multi-line chart showing trends over time</div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Seasonal Patterns</h3>
+                <div class="chart-placeholder">Calendar heatmap showing seasonal activity</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparative Analysis Tab -->
+    <div id="comparative" class="tab-content">
+        <div class="chart-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Institution vs Platform Average</h3>
+                <div class="chart-placeholder">Radar chart comparing performance metrics</div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Ranking Position</h3>
+                <div class="chart-placeholder">Gauge chart showing current ranking</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  function showTab(tabId) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+      });
+      
+      // Remove active class from all buttons
+      document.querySelectorAll('.tab-button').forEach(button => {
+          button.classList.remove('active');
+      });
+      
+      // Show selected tab content
+      document.getElementById(tabId).classList.add('active');
+      
+      // Add active class to clicked button
+      event.target.classList.add('active');
+      
+      // Load tab-specific data (AJAX call would go here)
+      loadTabData(tabId);
+  }
+
+  function loadTabData(tabId) {
+      // This would make an AJAX call to load specific tab data
+      console.log(`Loading data for tab: ${tabId}`);
+      
+      // Example AJAX structure:
+      /*
+      fetch(`/institutions/${institutionId}/analytics/${tabId}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+          updateCharts(tabId, data);
+      });
+      */
+  }
+
+  function exportReport() {
+      // Export functionality
+      console.log('Exporting report...');
+      // This would trigger a download of the current report
+  }
+
+  // Initialize dashboard
+  document.addEventListener('DOMContentLoaded', function() {
+      // Load initial data
+      loadTabData('executive');
+      
+      // Set up real-time updates if needed
+      // setInterval(() => refreshData(), 30000); // Refresh every 30 seconds
+  });
+
+  // Filter change handlers
+  document.getElementById('time-period').addEventListener('change', function() {
+      const currentTab = document.querySelector('.tab-content.active').id;
+      loadTabData(currentTab);
+  });
+
+  document.getElementById('subject-filter').addEventListener('change', function() {
+      const currentTab = document.querySelector('.tab-content.active').id;
+      loadTabData(currentTab);
+  });
+
+  document.getElementById('student-group').addEventListener('change', function() {
+      const currentTab = document.querySelector('.tab-content.active').id;
+      loadTabData(currentTab);
+  });
+</script>

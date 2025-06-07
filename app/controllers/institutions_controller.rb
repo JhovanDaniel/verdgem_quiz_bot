@@ -50,6 +50,10 @@ class InstitutionsController < ApplicationController
     end
   end
   
+  def report
+    
+  end
+  
   private
   
   def set_institution
