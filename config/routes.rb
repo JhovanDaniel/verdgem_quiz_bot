@@ -24,7 +24,15 @@ Rails.application.routes.draw do
   
   resources :institutions do
     member do
-      get 'report'
+      get :analytics_dashboard
+      get :executive_summary
+      get :engagement_analytics
+      get :quiz_performance
+      get :subject_breakdown
+      get :student_distribution
+      get :temporal_analysis
+      get :comparative_analysis
+      get :export_report
     end
   end
   
