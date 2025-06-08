@@ -10897,6 +10897,13 @@ a.text-dark:hover, a.text-dark:focus {
     margin-bottom: 2rem;
 }
 
+.student-engagement {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
 /* Executive Summary Section */
 .kpi-card {
     background: white;

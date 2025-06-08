@@ -19,11 +19,8 @@
     <button class="tab-button" onclick="showTab('student-distribution')">
         <i class="fas fa-chart-pie"></i> Student Performance
     </button>
-    <button class="tab-button" onclick="showTab('temporal-analysis')">
-        <i class="fas fa-calendar-alt"></i> Time Analysis
-    </button>
     <button class="tab-button" onclick="showTab('comparative')">
-        <i class="fas fa-balance-scale"></i> Benchmarking
+        <i class="fas fa-balance-scale"></i> Benchmarks
     </button>
 </div>
 
@@ -67,23 +64,15 @@
     <div id="executive" class="tab-content active">
         <div class="executive-summary">
             <div class="kpi-card">
-                <div class="kpi-title">Total Active Students</div>
-                <div class="kpi-value"><%= @institution.executive_summary[:active_students] %></div>
+                <div class="kpi-title">Total Students</div>
+                <div class="kpi-value"><%= @institution.executive_summary[:total_students] %></div>
                 <div class="kpi-change positive">
                     <i class="fas fa-arrow-up"></i>
                     +12.3% vs last month
                 </div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Quiz Completion Rate</div>
-                <div class="kpi-value"><%= @institution.executive_summary[:completion_rate].round(1) %>%</div>
-                <div class="kpi-change positive">
-                    <i class="fas fa-arrow-up"></i>
-                    +3.1% vs last month
-                </div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-title">Total Quizzes Completed</div>
+                <div class="kpi-title">Quizzes Completed</div>
                 <div class="kpi-value"> <%= @institution.executive_summary[:total_quizzes_completed] %> </div>
                 <div class="kpi-change positive">
                     <i class="fas fa-arrow-up"></i>
@@ -91,8 +80,16 @@
                 </div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-title">Average Score</div>
-                <div class="kpi-value"><%= @institution.executive_summary[:institution_average_score].round(1) %> %</div>
+                <div class="kpi-title">Questions Completed</div>
+                <div class="kpi-value"> <%= @institution.executive_summary[:total_questions_completed] %> </div>
+                <div class="kpi-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    +18.7% vs last month
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-title">Avg Quiz Score</div>
+                <div class="kpi-value"><%= @institution.executive_summary[:institution_average_score].round(0) %> %</div>
                 <div class="kpi-change negative">
                     <i class="fas fa-arrow-down"></i>
                     -1.2% vs last month
@@ -114,7 +111,67 @@
 
     <!-- Student Engagement Tab -->
     <div id="engagement" class="tab-content">
-        <div class="chart-section">
+        <div class="executive-summary">
+          <div class="kpi-card">
+              <div class="kpi-title">Total Students</div>
+              <div class="kpi-value"><%= @institution.executive_summary[:total_students] %></div>
+              <div class="kpi-change positive">
+                  <i class="fas fa-arrow-up"></i>
+                  +12.3% vs last month
+              </div>
+          </div>
+          <div class="kpi-card">
+              <div class="kpi-title">Active Students</div>
+              <div class="kpi-value"><%= @institution.student_engagement_analytics[:active_students] %></div>
+              <div class="kpi-change positive">
+                  <i class="fas fa-arrow-up"></i>
+                  +12.3% vs last month
+              </div>
+          </div>
+          <div class="kpi-card">
+              <div class="kpi-title">Total Quizzes</div>
+              <div class="kpi-value"><%= @institution.executive_summary[:total_quizzes] %></div>
+              <div class="kpi-change positive">
+                  <i class="fas fa-arrow-up"></i>
+                  +12.3% vs last month
+              </div>
+          </div>
+          <div class="kpi-card">
+              <div class="kpi-title">Quizzes Completed</div>
+              <div class="kpi-value"><%= @institution.executive_summary[:total_quizzes_completed] %></div>
+              <div class="kpi-change positive">
+                  <i class="fas fa-arrow-up"></i>
+                  +12.3% vs last month
+              </div>
+          </div>
+          <div class="kpi-card">
+              <div class="kpi-title">Quiz Per Student </div>
+              <div class="kpi-value"> <%= @institution.student_engagement_analytics[:avg_quiz_completion] %> </div>
+              <div class="kpi-change positive">
+                  <i class="fas fa-arrow-up"></i>
+                  +18.7% vs last month
+              </div>
+          </div>
+          <div class="kpi-card">
+              <div class="kpi-title">Quiz Completion</div>
+              <div class="kpi-value"><%= @institution.student_engagement_analytics[:completion_rate] %>%</div>
+              <div class="kpi-change positive">
+                  <i class="fas fa-arrow-up"></i>
+                  +12.3% vs last month
+              </div>
+          </div>
+          <div class="kpi-card">
+              <div class="kpi-title">Questions Completed</div>
+              <div class="kpi-value"> <%= @institution.executive_summary[:total_questions_completed] %> </div>
+              <div class="kpi-change positive">
+                  <i class="fas fa-arrow-up"></i>
+                  +18.7% vs last month
+              </div>
+          </div>
+        </div>
+        
+        
+        <div class="chart-section mt-4">
             <div class="chart-container">
                 <h3 class="chart-title">Daily Active Users</h3>
                 <div class="chart-placeholder">Bar chart showing daily active users over time</div>
@@ -152,6 +209,35 @@
 
     <!-- Quiz Performance Tab -->
     <div id="quiz-performance" class="tab-content">
+        <div class="executive-summary">
+          <div class="kpi-card">
+              <div class="kpi-title">Avg Quiz Score</div>
+              <div class="kpi-value"><%= @institution.executive_summary[:institution_average_score].round(0) %> %</div>
+              <div class="kpi-change negative">
+                  <i class="fas fa-arrow-down"></i>
+                  -1.2% vs last month
+              </div>
+          </div>
+          <div class="kpi-card">
+              <div class="kpi-title">Easy Questions</div>
+              <span class="kpi-value"><%= @institution.quiz_performance_analytics[:total_easy_questions] %></span>
+              <span class="mx-2 text-muted"> (<%= @institution.quiz_performance_analytics[:easy_questions_rate] %>) %</span>
+              <div class="kpi-change negative">
+                  <i class="fas fa-arrow-down"></i>
+                  -1.2% vs last month
+              </div>
+          </div>
+          <div class="kpi-card">
+              <div class="kpi-title">Medium Questions</div>
+              <span class="kpi-value"><%= @institution.quiz_performance_analytics[:total_medium_questions] %></span>
+              <span class="mx-2 text-muted"> (<%= @institution.quiz_performance_analytics[:medium_questions_rate] %>) %</span>
+              <div class="kpi-change negative">
+                  <i class="fas fa-arrow-down"></i>
+                  -1.2% vs last month
+              </div>
+          </div>
+        </div>
+        
         <div class="chart-section">
             <div class="chart-container">
                 <h3 class="chart-title">Quiz Completion Funnel</h3>
@@ -188,20 +274,6 @@
             <div class="chart-container">
                 <h3 class="chart-title">Performance Categories</h3>
                 <div class="chart-placeholder">Pie chart showing performance tiers</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Temporal Analysis Tab -->
-    <div id="temporal-analysis" class="tab-content">
-        <div class="chart-section">
-            <div class="chart-container">
-                <h3 class="chart-title">Monthly Trends</h3>
-                <div class="chart-placeholder">Multi-line chart showing trends over time</div>
-            </div>
-            <div class="chart-container">
-                <h3 class="chart-title">Seasonal Patterns</h3>
-                <div class="chart-placeholder">Calendar heatmap showing seasonal activity</div>
             </div>
         </div>
     </div>

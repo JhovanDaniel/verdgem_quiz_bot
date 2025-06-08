@@ -123,18 +123,7 @@ class Institution < ApplicationRecord
   
   
 
-  def student_engagement_analytics(period = 30.days)
-    {
-      login_frequency: student_login_frequency(period),
-      daily_active_users: daily_active_users(period),
-      weekly_active_users: weekly_active_users(period),
-      peak_usage_patterns: peak_usage_patterns(period),
-      retention_rate: student_retention_rate(period),
-      inactive_students: inactive_students_count(period),
-      new_vs_returning: new_vs_returning_students(period),
-      engagement_distribution: engagement_score_distribution(period)
-    }
-  end
+  
 
   def quiz_performance_metrics(period = 30.days)
     {
