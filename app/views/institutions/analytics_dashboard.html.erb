@@ -291,7 +291,7 @@
                                   <%= participation_rate %>%
                               </span>
                           </td>
-                          <td><%= @institution.institution_subject_average_quiz_completion_time(subject, @time_period) %> min</td>
+                          <td><%= @institution.institution_subject_average_quiz_completion_time(subject, @time_period).round(1) %> minutes</td>
                           <td>
                               <% avg_score = @institution.institution_subject_average_score(subject, @time_period) %>
                               <span style="color: <%= avg_score >= 75 ? '#059669' : avg_score >= 60 ? '#f59e0b' : '#dc2626' %>;">
