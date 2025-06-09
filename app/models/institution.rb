@@ -117,6 +117,37 @@ class Institution < ApplicationRecord
     query
   end
   
+  #Get student rank in institution
+  def self.institution_rank_for_student(student, start_date = nil, end_date = nil)
+    return nil unless student.present? && student.institution.present?
+    
+    # Build the base query for question attempts with quiz sessions
+    base_query = QuestionAttempt
+      .joins(:quiz_session, quiz_session: :user)
+      .where(users: { institution: student.institution })
+    
+    # Add date filtering if provided
+    if start_date && end_date
+      base_query = base_query.where(quiz_sessions: { completed_at: start_date..end_date })
+    else
+      base_query = base_query.where.not(quiz_sessions: { completed_at: nil })
+    end
+    
+    # Get total scores for all users in the institution
+    user_scores = base_query
+      .group('users.id')
+      .sum(:score)
+    
+    # Get the student's score
+    student_score = user_scores[student.id] || 0
+    
+    # Count how many users have a higher score
+    users_with_higher_scores = user_scores.count { |user_id, score| score > student_score }
+    
+    # Rank is the number of users with higher scores + 1
+    users_with_higher_scores + 1
+  end
+  
    # ============================================================================
   # ANALYTICS CORE METHODS (can also be in the concern)
   # ============================================================================

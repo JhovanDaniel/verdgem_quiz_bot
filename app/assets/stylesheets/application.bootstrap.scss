@@ -5421,9 +5421,11 @@ a.badge-dark:focus, a.badge-dark.focus {
   transform: translateX(-50%); /* Center horizontally */
   
   /* Ensure tooltip doesn't get cut off */
-  white-space: nowrap;
+  white-space: normal; /* Changed from nowrap */
+  word-wrap: break-word;
+  line-height: 1.3; /* Better line spacing */
+  max-height: 200px; 
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .badge-tooltip::after {

@@ -122,7 +122,7 @@
     </div>
     <div class="card-body">
       <div class="row align-items-center">
-        <div class="col-12 col-md-2">
+        <div class="col-12 col-md-3">
           <h5 class="text-primary mb-2">Mathematics Masters</h5>
           <small class="text-muted">Created 3 weeks ago</small>
         </div>
@@ -176,7 +176,7 @@
               </div>
           </div>
         </div>
-        <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+        <div class="col-12 col-md-3 text-md-end mt-3 mt-md-0">
           <p class="text-muted mb-1">
             <strong>6</strong> members
           </p>
@@ -207,9 +207,9 @@
                 <h5 class="mb-2"><%= @user.institution.name %></h5>
             </div>
           </div>
-          <small class="text-muted">Rank #3 nationally</small>
+          <small class="text-muted">Rank #3 on VerdGem Quiz</small>
         </div>
-        <div class="col-12 col-md-5 mt-3 mt-md-0">
+        <div class="col-12 col-md-6 mt-3 mt-md-0">
           <div class="d-flex flex-wrap gap-2">
             <% @user.institution.users.where(role: :student).limit(5).each do |student| %>
               <%= link_to user_path(student) do %>
@@ -225,16 +225,16 @@
             <div class="text-center">
               <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center" 
                    style="width: 60px; height: 60px; border-radius: 50%; border: 2px dashed #dee2e6;">
-                <span style="font-size: 0.8rem;">+247</span>
+                <span style="font-size: 0.8rem;">+<%= @user.institution.users.where(role: :student).count - 5 %></span>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
+        <div class="col-12 col-md-3 text-md-end mt-3 mt-md-0">
           <p class="text-muted mb-1">
             <strong><%= @user.institution.total_students %></strong> total students
           </p>
-          <small class="text-muted">Your rank: #12</small>
+          <small class="text-muted">Your rank: #<%= Institution.institution_rank_for_student(@user) %></small>
         </div>
       </div>
     </div>
