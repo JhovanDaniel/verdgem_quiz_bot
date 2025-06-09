@@ -236,6 +236,23 @@
                   -1.2% vs last month
               </div>
           </div>
+          <div class="kpi-card">
+              <div class="kpi-title">Hard Questions</div>
+              <span class="kpi-value"><%= @institution.quiz_performance_analytics[:total_hard_questions] %></span>
+              <span class="mx-2 text-muted"> (<%= @institution.quiz_performance_analytics[:hard_questions_rate] %>) %</span>
+              <div class="kpi-change negative">
+                  <i class="fas fa-arrow-down"></i>
+                  -1.2% vs last month
+              </div>
+          </div>
+          <div class="kpi-card">
+              <div class="kpi-title">Avg Quiz Time</div>
+              <div class="kpi-value"><%= @institution.quiz_performance_analytics[:avg_completion_time].round(1) %> minutes</div>
+              <div class="kpi-change negative">
+                  <i class="fas fa-arrow-down"></i>
+                  -1.2% vs last month
+              </div>
+          </div>
         </div>
         
         <div class="chart-section">
@@ -252,7 +269,41 @@
 
     <!-- Subject Breakdown Tab -->
     <div id="subject-breakdown" class="tab-content">
-        <div class="chart-section">
+      <div class="table-responsive">
+          <table class="table table-primary table-hover">
+              <thead>
+                  <tr>
+                      <th>Subject</th>
+                      <th>No. Quizzes</th>
+                      <th>Participation Rate</th>
+                      <th>Avg Quiz Time</th>
+                      <th>Avg Score</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <% Subject.all.each do |subject| %>
+                      <tr>
+                          <td><strong><%= subject.name %></strong></td>
+                          <td><%= @institution.institution_subject_quiz_count(subject, @time_period) %></td>
+                          <td>
+                              <% participation_rate = @institution.institution_subject_participation_rate(subject, @time_period) %>
+                              <span style="color: <%= participation_rate >= 70 ? '#059669' : '#dc2626' %>;">
+                                  <%= participation_rate %>%
+                              </span>
+                          </td>
+                          <td><%= @institution.institution_subject_average_quiz_completion_time(subject, @time_period) %> min</td>
+                          <td>
+                              <% avg_score = @institution.institution_subject_average_score(subject, @time_period) %>
+                              <span style="color: <%= avg_score >= 75 ? '#059669' : avg_score >= 60 ? '#f59e0b' : '#dc2626' %>;">
+                                  <%= avg_score %>%
+                              </span>
+                          </td>
+                      </tr>
+                  <% end %>
+              </tbody>
+          </table>
+      </div>
+        <div class="chart-section mt-4">
             <div class="chart-container">
                 <h3 class="chart-title">Subject Performance Comparison</h3>
                 <div class="chart-placeholder">Horizontal bar chart comparing subject performance</div>

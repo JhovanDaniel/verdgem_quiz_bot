@@ -30,7 +30,17 @@ module InstitutionAnalytics
       total_easy_questions: institution_easy_questions_count(period),
       easy_questions_rate: institution_easy_questions_rate(period),
       total_medium_questions: institution_medium_questions_count(period),
-      medium_questions_rate: institution_medium_questions_rate(period)
+      medium_questions_rate: institution_medium_questions_rate(period),
+      total_hard_questions: institution_hard_questions_count(period),
+      hard_questions_rate: institution_hard_questions_rate(period),
+      avg_completion_time: institution_average_quiz_completion_time(period)
+    }
+  end
+  
+  def subjects_analysis(period)
+    
+    {
+      total_subject_quizzes: institution_subject_quiz_count(subject, period)
     }
   end
   
@@ -131,6 +141,92 @@ module InstitutionAnalytics
   def institution_medium_questions_rate(period)
     medium_rate = institution_medium_questions_count(period)/institution_completed_questions_count(period)
     medium_rate = (medium_rate * 100).round(1)
+  end
+  
+  def institution_hard_questions_count(period)
+    institution_quiz_sessions_in_period(period).where.not(completed_at: nil)
+    .joins(question_attempts: :question)
+    .where(questions: { difficulty_level: 'hard' })
+    .count('question_attempts.id')
+  end
+  
+  def institution_hard_questions_rate(period)
+    hard_rate = institution_hard_questions_count(period)/institution_completed_questions_count(period)
+    hard_rate = (hard_rate * 100).round(1)
+  end
+  
+  def institution_average_quiz_completion_time(period)
+    completed_sessions = institution_quiz_sessions_in_period(period).where.not(completed_at: nil)
+    
+    return 0 if completed_sessions.empty?
+    
+    total_duration_seconds = completed_sessions.sum do |session|
+      duration = session.completed_at - session.created_at
+      # Filter out unrealistic durations (negative or more than 4 hours)
+      duration.between?(0, 4.hours) ? duration : 0
+    end
+    
+    # Return average in minutes
+    (total_duration_seconds / completed_sessions.count / 1.minute).round(2)
+  end
+
+  #===========================================================================
+  # SUBJECT ANALYSIS HELPER METHODS
+  # ==========================================================================
+  
+  def institution_subject_quiz_count(subject, period)
+    QuizSession.joins(:user)
+             .where(users: { institution_id: id, role: :student })
+             .where(subject: subject)
+             .where(started_at: period_range(period))
+             .count
+  end
+  
+  def institution_subject_average_score(subject, period)
+    completed_sessions = QuizSession.joins(:user)
+                                   .where(users: { institution_id: id, role: :student })
+                                   .where(subject: subject)
+                                   .where(started_at: period_range(period))
+                                   .where.not(completed_at: nil, total_score: nil, max_score: nil)
+                                   .where('max_score > 0')
+    
+    return 0 if completed_sessions.empty?
+    
+    completed_sessions.average('total_score::float / max_score * 100')&.round(1) || 0
+  end
+  
+  def institution_subject_participation_rate(subject, period)
+    # Get total active students in the institution for this period
+    total_active_students = active_students_count(period)
+    
+    return 0 if total_active_students == 0
+    
+    # Get unique students who attempted quizzes in this subject
+    students_in_subject = QuizSession.joins(:user)
+                                    .where(users: { institution_id: id, role: :student  })
+                                    .where(subject: subject)
+                                    .where(started_at: period_range(period))
+                                    .distinct
+                                    .count('users.id')
+    
+    # Calculate participation rate as percentage
+    (students_in_subject.to_f / total_active_students * 100).round(1)
+  end
+  
+  def institution_subject_average_quiz_completion_time(subject, period)
+    completed_sessions = institution_quiz_sessions_in_period(period).where.not(completed_at: nil)
+    completed_sessions = completed_sessions.where(subject_id: subject)
+    
+    return 0 if completed_sessions.empty?
+    
+    total_duration_seconds = completed_sessions.sum do |session|
+      duration = session.completed_at - session.created_at
+      # Filter out unrealistic durations (negative or more than 4 hours)
+      duration.between?(0, 4.hours) ? duration : 0
+    end
+    
+    # Return average in minutes
+    (total_duration_seconds / completed_sessions.count / 1.minute).round(2)
   end
   
   
