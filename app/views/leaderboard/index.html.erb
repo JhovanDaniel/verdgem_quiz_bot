@@ -1,14 +1,12 @@
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="display-6 fw-bold text-center w-100"><%= "#{@current_month.strftime("%B %Y")} Leaderboard" %></h2>
+  <div class="mb-4 institution-hero-section p-4">
+    <h2 class="display-6 fw-bold w-100"><%= "#{@current_month.strftime("%B %Y")} Leaderboard" %></h2>
+    <p>Celebrating our top performers and their achievements</p>
   </div>
   
   <!-- Top 3 Users Display -->
   <div class="row mb-4 mb-md-5">
-    <div class="col-12 text-center mb-3">
-      <div class="trophy-icon">
-        <%= image_tag "trophy-icon.png", alt: "Trophy", width: 60, class: "mb-2" %>
-      </div>
+    <div class="col-12 text-center my-4">
       <h3 class="fw-bold">Top Performers</h3>
     </div>
     
@@ -50,7 +48,7 @@
       
       <!-- Second Place -->
       <% if @top_by_score.length > 1 %>
-        <div class="text-center mx-md-3 mb-4 mb-md-0 top-performer second-place order-2 order-md-1">
+        <div class="text-center mx-md-3 mb-4 mb-md-0 top-performer first-place order-2 order-md-1">
           <div class="avatar-container">
             <div class="avatar-circle silver">
               <%= image_tag "character_expressions/jasper-excited.png", class: "avatar-image", alt: "Second Place" %>
@@ -83,7 +81,7 @@
       
       <!-- Third Place -->
       <% if @top_by_score.length > 2 %>
-        <div class="text-center mx-md-3 mb-4 mb-md-0 top-performer third-place order-3 order-md-3">
+        <div class="text-center mx-md-3 mb-4 mb-md-0 top-performer first-place order-3 order-md-3">
           <div class="avatar-container">
             <div class="avatar-circle bronze">
               <%= image_tag "character_expressions/peri-excited.png", class: "avatar-image", alt: "Third Place" %>
@@ -125,7 +123,7 @@
         </div>
         <div class="card-body px-0">
           <div class="table-responsive">
-            <table class="table table-borderless">
+            <table class="table table-primary table-hover">
               <thead>
                 <tr>
                   <th>Rank</th>
@@ -182,7 +180,7 @@
   </div>
   
   <% if user_signed_in? %>
-    <div class="card mb-4">
+    <div class=" kpi-card mb-4">
       <div class="card-header bg-white border-0">
         <h4 class="fw-bold mb-0">Your Statistics for <%= @current_month.strftime("%B %Y") %></h4>
       </div>
