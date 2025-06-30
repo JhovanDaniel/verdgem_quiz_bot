@@ -230,7 +230,38 @@ class User < ApplicationRecord
   end
   
   #----- Teacher methods -----#
+  def assigned_subject_ids=(subject_ids)
+    return unless teacher? || admin?
+    
+    # Remove blank values
+    subject_ids = subject_ids.reject(&:blank?).map(&:to_i)
+    
+    # Get current assignments
+    current_subject_ids = subject_teachers.active.pluck(:subject_id)
+    
+    # Subjects to add
+    subjects_to_add = subject_ids - current_subject_ids
+    
+    # Subjects to remove
+    subjects_to_remove = current_subject_ids - subject_ids
+    
+    # Add new assignments
+    subjects_to_add.each do |subject_id|
+      subject = Subject.find(subject_id)
+      assign_to_subject!(subject)
+    end
+    
+    # Remove old assignments
+    subjects_to_remove.each do |subject_id|
+      subject = Subject.find(subject_id)
+      remove_from_subject!(subject)
+    end
+  end
   
+  def assigned_subject_ids
+    assigned_subjects.pluck(:id)
+  end
+
   def teaching_subjects
     return Subject.none unless teacher? || admin?
     assigned_subjects.where(subject_teachers: { active: true })

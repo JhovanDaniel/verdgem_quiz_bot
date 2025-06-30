@@ -50,6 +50,10 @@
         </div>
       </div>
       
+      <%= f.association :assigned_subjects,
+        collection: Subject.all, placeholder: 'Type to find business category',
+          input_html: {data: {controller: 'slim-select'}} %>
+      
       <div class="row">
         <div class="col-md-6">
           <%= f.input :quiz_attempts %>
