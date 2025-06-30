@@ -50,7 +50,7 @@
               <td><%= topic.questions.count %></td>
               <td>
                 <%= link_to "View", topic_path(topic), class: "btn btn-outline-primary" %>
-                <% if current_user && current_user.admin? %>
+                <% if current_user && current_user.can_teach?(@subject) %>
                   <%= link_to "Add Question", new_topic_question_path(topic), class: "btn btn-outline-primary" %>
                   <%= link_to "Edit", edit_topic_path(topic), class: "btn btn btn-outline-primary" %>
                 <% end %>
@@ -62,7 +62,7 @@
     </div>
     <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
   <% end %>
-  <% if current_user && current_user.admin? %>
+  <% if current_user && current_user.can_teach?(@subject) %>
     <%= link_to "Add New Topic", new_subject_topic_path(@subject), class: "btn btn-primary" %>
   <% end %>
   

@@ -84,7 +84,7 @@ Rails.application.routes.draw do
   resources :subscribers, only: [:create]
   
   get 'pages/home', to: 'pages#home'
-  get 'pages/teacher_dashboard', to: 'pages#teacher_dashboard'
+  get 'teacher_dashboard', to: 'pages#teacher_dashboard'
   get 'reports', to: 'pages#reports', as: 'reports'
   get 'configuration', to: 'pages#configuration', as: 'configuration'
   

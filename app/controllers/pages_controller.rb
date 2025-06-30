@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
   before_action :authenticate_user!, only: [:home]
+  before_action :require_teacher, only: [:teacher_dashboard]
   
   def home
     @subjects = Subject.all
@@ -60,5 +61,13 @@ class PagesController < ApplicationController
   
   def social
     @user = current_user
+  end
+  
+  private
+  
+  def require_teacher
+    if !(current_user && (current_user.teacher? or current_user.admin?))
+      redirect_to authenticated_root_path, alert: "You are not authorized to access this page."
+    end
   end
 end

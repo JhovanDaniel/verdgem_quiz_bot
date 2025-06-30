@@ -29,8 +29,8 @@
   <h4>Subtopics</h4>
   <% if @topic.sub_topics.empty? %>
     <div class="alert alert-info">
-      This subject does not have any subtopics yet yet. 
-      <% if current_user && current_user.admin? %>
+      This subject does not have any subtopics yet. 
+      <% if current_user && current_user.can_teach?(@topic.subject) %>
         <%= link_to "Add New Subtopic", new_topic_sub_topic_path(@topic), class: "btn btn-primary btn-sm" %>
       <% end %>
     </div>
@@ -63,7 +63,7 @@
     <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
   <% end %>
 
-  <% if current_user && current_user.admin? %>
+  <% if current_user && current_user.can_teach?(@topic.subject) %>
     <div class="card border-0 p-0">
       <div class="card-header d-flex justify-content-between align-items-center bg-white border-0">
         <h3 class="mb-0">Questions</h3>
