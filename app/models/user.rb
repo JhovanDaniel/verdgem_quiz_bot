@@ -10,6 +10,11 @@ class User < ApplicationRecord
   has_many :user_badges, dependent: :destroy
   has_many :badges, through: :user_badges
   
+  has_many :subject_teachers, dependent: :destroy
+  has_many :assigned_subjects, through: :subject_teachers, source: :subject
+  has_many :active_subject_assignments, -> { where(subject_teachers: { active: true }) }, 
+           through: :subject_teachers, source: :subject
+  
   belongs_to :institution, optional: true
          
   enum role: [:student, :teacher, :admin, :institution_admin]
@@ -222,6 +227,40 @@ class User < ApplicationRecord
   
   def recent_badges(limit = 5)
     user_badges.recent.includes(:badge).limit(limit)
+  end
+  
+  #----- Teacher methods -----#
+  
+  def teaching_subjects
+    return Subject.none unless teacher? || admin?
+    assigned_subjects.where(subject_teachers: { active: true })
+  end
+  
+  def can_teach?(subject)
+    return false unless teacher? || admin?
+    return true if admin? # Admins can teach any subject
+    
+    assigned_subjects.where(subject_teachers: { active: true }).include?(subject)
+  end
+  
+  def assign_to_subject!(subject, notes: nil)
+    return false unless teacher? || admin?
+    
+    assignment = subject_teachers.find_or_initialize_by(subject: subject)
+    assignment.active = true
+    assignment.assigned_at = Time.current
+    assignment.notes = notes if notes.present?
+    assignment.save!
+  end
+  
+  def remove_from_subject!(subject)
+    assignment = subject_teachers.find_by(subject: subject)
+    assignment&.update!(active: false)
+  end
+  
+  # Check if user has any teaching assignments
+  def has_teaching_assignments?
+    teacher? && subject_teachers.active.exists?
   end
 
   private

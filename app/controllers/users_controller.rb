@@ -36,6 +36,8 @@ class UsersController < ApplicationController
     if @user.save
       if @user.institution_admin?
         UserMailer.institution_welcome_email(@user).deliver_later
+      elsif @user.teacher?
+        UserMailer.teacher_welcome_email(@user).deliver_later
       elsif @user.student?
         UserMailer.welcome_email(@user).deliver_later
       end

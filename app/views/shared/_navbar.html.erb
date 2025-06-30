@@ -124,7 +124,9 @@
                 </div>
                 <div class="mt-1 small text-muted d-flex justify-content-between">
                   <span><%= current_user.role.titleize %></span>
-                  <span><%= current_user.xp_in_current_level %>/<%= current_user.xp_for_next_level - current_user.xp_for_current_level %> XP</span>
+                  <% if current_user.student? %>
+                    <span><%= current_user.xp_in_current_level %>/<%= current_user.xp_for_next_level - current_user.xp_for_current_level %> XP</span>
+                  <% end %>
           
                 </div>
               </div>

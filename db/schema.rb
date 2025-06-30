@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_07_161118) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_30_133911) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -154,6 +154,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_07_161118) do
     t.index ["topic_id"], name: "index_sub_topics_on_topic_id"
   end
 
+  create_table "subject_teachers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "subject_id", null: false
+    t.uuid "user_id", null: false
+    t.boolean "active", default: true
+    t.datetime "assigned_at", default: -> { "CURRENT_TIMESTAMP" }
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_subject_teachers_on_active"
+    t.index ["assigned_at"], name: "index_subject_teachers_on_assigned_at"
+    t.index ["subject_id", "user_id"], name: "index_subject_teachers_on_subject_id_and_user_id", unique: true
+    t.index ["subject_id"], name: "index_subject_teachers_on_subject_id"
+    t.index ["user_id"], name: "index_subject_teachers_on_user_id"
+  end
+
   create_table "subjects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -236,6 +251,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_07_161118) do
   add_foreign_key "quiz_sessions", "topics"
   add_foreign_key "quiz_sessions", "users", on_delete: :cascade
   add_foreign_key "sub_topics", "topics"
+  add_foreign_key "subject_teachers", "subjects"
+  add_foreign_key "subject_teachers", "users"
   add_foreign_key "subjects", "users", column: "created_by_id"
   add_foreign_key "topics", "subjects"
   add_foreign_key "user_badges", "badges"
