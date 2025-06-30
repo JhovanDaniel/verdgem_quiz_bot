@@ -51,7 +51,7 @@
               <td><%= sub_topic.questions.count %></td>
               <td>
                 <%= link_to "View", sub_topic_path(sub_topic), class: "btn btn-sm btn-outline-primary" %>
-                <% if current_user && current_user.admin? %>
+                <% if current_user && current_user.can_teach?(@topic.subject) %>
                   <%= link_to "Edit", edit_sub_topic_path(sub_topic), class: "btn btn-sm btn-outline-primary" %>
                 <% end %>
               </td>
@@ -59,6 +59,7 @@
           <% end %>
         </tbody>
       </table>
+      <%= link_to "Add Subtopic", new_topic_sub_topic_path(@topic), class: "btn btn-primary btn-sm" %>
     </div>
     <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
   <% end %>
@@ -68,7 +69,6 @@
       <div class="card-header d-flex justify-content-between align-items-center bg-white border-0">
         <h3 class="mb-0">Questions</h3>
         <div class="">
-          <%= link_to "Add Subtopic", new_topic_sub_topic_path(@topic), class: "btn btn-outline-primary btn-sm" %>
           <%= link_to "Add New Question", new_topic_question_path(@topic), class: "btn btn-primary btn-sm" %>
         </div>
         
