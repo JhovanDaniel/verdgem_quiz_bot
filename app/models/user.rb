@@ -240,11 +240,11 @@ class User < ApplicationRecord
   def assigned_subject_ids=(subject_ids)
     return unless teacher? || admin?
     
-    # Remove blank values
-    subject_ids = subject_ids.reject(&:blank?).map(&:to_i)
+    # Remove blank values and ensure they're strings
+    subject_ids = Array(subject_ids).reject(&:blank?).map(&:to_s)
     
     # Get current assignments
-    current_subject_ids = subject_teachers.active.pluck(:subject_id)
+    current_subject_ids = subject_teachers.active.pluck(:subject_id).map(&:to_s)
     
     # Subjects to add
     subjects_to_add = subject_ids - current_subject_ids
@@ -254,14 +254,16 @@ class User < ApplicationRecord
     
     # Add new assignments
     subjects_to_add.each do |subject_id|
-      subject = Subject.find(subject_id)
-      assign_to_subject!(subject)
+      if subject = Subject.find_by(id: subject_id)
+        assign_to_subject!(subject)
+      end
     end
     
     # Remove old assignments
     subjects_to_remove.each do |subject_id|
-      subject = Subject.find(subject_id)
-      remove_from_subject!(subject)
+      if subject = Subject.find_by(id: subject_id)
+        remove_from_subject!(subject)
+      end
     end
   end
   

@@ -40,6 +40,15 @@ class UsersController < ApplicationController
     end
     
     if @user.save
+      
+      if @user.teacher? && params[:user][:assigned_subject_ids].present?
+        subject_ids = params[:user][:assigned_subject_ids].reject(&:blank?)
+        subject_ids.each do |subject_id|
+          subject = Subject.find_by(id: subject_id)
+          @user.assign_to_subject!(subject) if subject
+        end
+      end
+      
       if @user.institution_admin?
         UserMailer.institution_welcome_email(@user).deliver_later
       elsif @user.teacher?

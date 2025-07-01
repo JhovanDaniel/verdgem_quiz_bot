@@ -51,8 +51,14 @@
       </div>
       
       <%= f.association :assigned_subjects,
-        collection: Subject.all, label_method: lambda { |subject| subject.name.titleize }, placeholder: 'Type to find business category',
-        input_html: {data: {controller: 'slim-select'}} %>
+                  collection: Subject.all, 
+                  label_method: :name,
+                  value_method: :id,
+                  input_html: { 
+                    multiple: true,
+                    data: { controller: 'slim-select' }
+                  },
+                  hint: "Select subjects for teachers (only applies to teacher role)" %>
       
       <div class="row">
         <div class="col-md-6">
