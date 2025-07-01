@@ -54,7 +54,7 @@
           </li>
         <% end %>
         
-        <% if current_user && current_user.student? %>
+        <% if current_user %>
           <li class="nav-item">
             <%= link_to quiz_sessions_path, class:"nav-link d-flex align-items-center" do %>
               <i class="bi bi-pencil me-1"></i>
