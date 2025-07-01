@@ -5,7 +5,7 @@
   <% end %>
   
   <div class="form-inputs" data-controller="direct-upload">
-    <%= f.input :question_type, 
+    <%= f.input :question_type,
                 collection: Question.question_types.keys.map { |k| [k.humanize, k] },
                 include_blank: false,
                 input_html: { data: { action: "change->question-form#toggleQuestionType" } } %>
