@@ -33,6 +33,7 @@ class UserMailer < ApplicationMailer
     
     mail(
       to: @user.email,
+      bcc: ["info@verdgem.com"],
       subject: "Welcome to VerdGem Quiz!"
     )
   end

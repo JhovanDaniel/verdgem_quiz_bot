@@ -51,7 +51,7 @@
       </div>
       
       <%= f.association :assigned_subjects,
-        collection: Subject.all, placeholder: 'Type to find business category',
+        collection: Subject.all, label_method: lambda { |subject| subject.name.titleize }, placeholder: 'Type to find business category',
         input_html: {data: {controller: 'slim-select'}} %>
       
       <div class="row">
