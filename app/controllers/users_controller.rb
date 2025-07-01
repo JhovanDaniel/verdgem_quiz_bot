@@ -30,14 +30,20 @@ class UsersController < ApplicationController
   def user_create
     @user = User.new(user_params)
     
-    # Generate a random password if none provided
-    @user.password = SecureRandom.hex(8) if @user.password.blank?
+    # Skip password validation and generate password if none provided
+    generated_password = nil
+    if @user.password.blank?
+      @user.skip_password_validation = true
+      generated_password = SecureRandom.hex(8)
+      @user.password = generated_password
+      @user.password_confirmation = generated_password
+    end
     
     if @user.save
       if @user.institution_admin?
         UserMailer.institution_welcome_email(@user).deliver_later
       elsif @user.teacher?
-        UserMailer.teacher_welcome_email(@user).deliver_later
+        UserMailer.teacher_welcome_email(@user, generated_password).deliver_later
       elsif @user.student?
         UserMailer.welcome_email(@user).deliver_later
       end

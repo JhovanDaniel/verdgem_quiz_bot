@@ -4,6 +4,13 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
          
+  attr_accessor :skip_password_validation
+  
+  def password_required?
+    return false if skip_password_validation
+    super
+  end
+         
   has_many :question_attempts, dependent: :destroy
   has_many :quiz_sessions, dependent: :destroy
   has_many :created_subjects, class_name: 'Subject', foreign_key: 'created_by_id'

@@ -311,7 +311,10 @@
                                                         <td class="content text-center" style="font-family: Open Sans, -apple-system, BlinkMacSystemFont, Roboto, Helvetica Neue, Helvetica, Arial, sans-serif; padding: 40px 48px;" align="center">
                                                             <p class="h1" style="font-weight: 300; font-size: 28px; line-height: 130%; margin: 0 0 .5em;">Welcome to VerdGem Quiz, <%= @user.first_name %>!</p>
                                                             <p style="margin: 0 0 1em;">We are excited to welcome you as an educator on our mission to help students succeed with AI-powered quizzes. Your role is vital to what we are building, and we are glad to have you on the team. We hope you’ll stick around for the long haul — the best is yet to come! 🚀</p>
+                                                            <p style="margin: 0 0 1em;">Your login details are: <u><b><%= @user.email %> | <%= @password %></b></u>. Feel free to change your password when you log in.</p><br/>
+                                                            
                                                             <p style="margin: 0 0 1em;">Kindly review the attached guide for adding questions for your subject. If you have any questions don't hesitate to reach out!</p>
+
                                                         </td>
                                                     </tr>
                                                     <tr>
