@@ -1,85 +1,64 @@
-<div class="container col-xxl-8 px-4">
-  <div class="row flex-lg-row-reverse align-items-center g-5 pb-5">
-
-    <div class="col-12 col-md-6 text-center text-md-end">
-      <%= image_tag "verdgem-quiz-hero.png", alt: "Quiz Hero Image", class: "img-fluid", style: "max-width: 100%; height: auto;" %>
+<div class="container-fluid px-4 py-5">
+  <h1 class="display-4 fw-bold text-body-emphasis mb-3">
+    Welcome back, <%= !current_user.nickname.blank? ? current_user.nickname : current_user.first_name %>! 🎓
+  </h1> 
+  
+  <p class="lead text-muted mb-4">Choose your learning path and start mastering your CSEC subjects</p>
+  
+  <!-- Main Quiz Panels -->
+  <div class="row g-4 mb-5">
+    <!-- Adventure Mode Panel -->
+    <div class="col-12 col-lg-6">
+      <div class="card pt-5 border-0 text-center">
+        <div class="panel-image">
+          <%= image_tag "verdgem-quiz-hero.png", alt: "Adventure Mode", class: "img-fluid w-50 h-50 object-fit-cover" %>
+        </div>
+        <div class="card-body p-4">
+          <h3 class="card-title display-5 fw-bold mb-3">Adventure Mode</h3>
+          <p class="lead px-4">
+            Embark on an exciting learning journey! Travel through the different subjects and topics in adventure mode!
+          </p>
+          <%= link_to "Start Adventure", '#', class:"btn btn-lg btn-primary" %>
+        </div>
+      </div>
     </div>
-    <div class="col-lg-6">
-      <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Welcome, <%= !current_user.nickname.blank? ? current_user.nickname : current_user.first_name %>!</h1>
-      <p class="lead">Ready to challenge yourself? Start a CSEC quiz and see how much you know!</p>
-      <%= form_with url: quiz_start_path, method: :get, local: true, class: "row g-3", data: { controller: "quiz-form" } do |f| %>
-        <div class="col-md-4">
-          <%= f.label :subject_id, "Subject", class: "form-label" %>
-          <%= f.collection_select :subject_id, @subjects, :id, :name, 
-                                 { include_blank: "Select a subject" }, 
-                                 { class: "form-select", required: true, data: { action: "change->quiz-form#updateTopics" } } %>
+    
+    <!-- Custom Quiz Panel -->
+    <div class="col-12 col-lg-6">
+      <div class="card pt-5 border-0 text-center bg-light rounded-4">
+        <div class="panel-image">
+          <%= image_tag "jade-expression-1.PNG", alt: "Custom Quiz", class: "img-fluid w-50 h-50 object-fit-cover" %>
         </div>
-        
-        <div class="col-md-4">
-          <%= f.label :topic_id, "Topic", class: "form-label" %>
-          <%= f.select :topic_id, [], 
-                      { include_blank: "All Topics" }, 
-                      { class: "form-select", disabled: true, data: { quiz_form_target: "topicSelect", action: "change->quiz-form#updateSubTopics" } } %>
-        </div>
-        
-        <div class="col-md-4">
-          <%= f.label :sub_topic_id, "Sub-Topic", class: "form-label" %>
-          <%= f.select :sub_topic_id, [], 
-                      { include_blank: "All Sub-Topics" }, 
-                      { class: "form-select", disabled: true, data: { quiz_form_target: "subTopicSelect" } } %>
-        </div>
-        
-        <div class="col-md-4">
-          <%= f.label :question_type, "Question Type", class: "form-label" %>
-          <%= f.select :question_type, 
-                      options_for_select([["Multiple Choice", "multiple_choice"],["Long Answer", "long_answer"]]), 
-                      {}, { class: "form-select", data: { quiz_form_target: "questionTypeSelect", action: "change->quiz-form#questionTypeChanged" } } %>
-        </div>
-        
-        <div class="col-md-4">
-          <%= f.label :difficulty, "Difficulty", class: "form-label" %>
-          <%= f.select :difficulty, 
-                       options_for_select([["Mixed", "mixed"], ["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"]]), 
-                       {}, { class: "form-select", data: { quiz_form_target: "difficultySelect" } } %>
-        </div>
-        
-        <div class="col-md-4">
-          <%= f.label :count, "Number of Questions", class: "form-label" %>
-          <%= f.select :count, 
-                      options_for_select([10, 15, 20]),
-                      {}, { class: "form-select" } %>
-        </div>
-        
-        <div class="col-12 mt-3">
-          <%= f.submit "Start Quiz", class: "btn btn-lg btn-primary" %>
-        </div>
-      <% end %>
-      
-      <div class="col mt-4">
-        <h5 class="mb-0">
-          <span class="text-primary"><%= current_user.monthly_quiz_attempts %></span> / 
-          <span><%= current_user.max_quiz_attempts %></span>
-        </h5>
-        <p class="text-muted mb-0">Attempts used this month</p>
-      </div>
-      <div class="col-auto">
-        <div class="progress" style="width: 200px; height: 8px;">
-          <% percentage = current_user.monthly_quiz_attempts.to_f / current_user.max_quiz_attempts * 100 %>
-          <div class="progress-bar <%= percentage > 80 ? 'bg-danger' : 'bg-primary' %>" 
-               role="progressbar" 
-               style="width: <%= percentage %>%" 
-               aria-valuenow="<%= percentage %>" 
-               aria-valuemin="0" 
-               aria-valuemax="100"></div>
+        <div class="card-body p-4">
+          <h3 class="card-title display-5 fw-bold mb-3">Custom Quiz</h3>
+          <p class="lead px-4">
+            Intense and personalised quiz practice! Choose from different subjects, topics, and quiz types.
+          </p>
+          <%= link_to "Custom Quiz", quiz_select_path, class:"btn btn-lg btn-primary" %>
         </div>
       </div>
-      
     </div>
   </div>
-</div>
-
-<div class="container col-xxl-8 px-4">
-  <h1 class="display-6 fw-bold text-body-emphasis lh-1 mb-3">Your quiz history</h1>
+  
+  <div class="col mt-4">
+    <h5 class="mb-0">
+      <span class="text-primary"><%= current_user.monthly_quiz_attempts %></span> / 
+      <span><%= current_user.max_quiz_attempts %></span>
+    </h5>
+    <p class="text-muted mb-0">Quiz attempts used this month</p>
+  </div>
+  <div class="col-auto">
+    <div class="progress" style="width: 200px; height: 8px;">
+      <% percentage = current_user.monthly_quiz_attempts.to_f / current_user.max_quiz_attempts * 100 %>
+      <div class="progress-bar <%= percentage > 80 ? 'bg-danger' : 'bg-primary' %>" 
+           role="progressbar" 
+           style="width: <%= percentage %>%" 
+           aria-valuenow="<%= percentage %>" 
+           aria-valuemin="0" 
+           aria-valuemax="100"></div>
+    </div>
+  </div>
+  <h1 class="display-6 fw-bold text-body-emphasis lh-1 my-4">Your quiz history</h1>
   <% if @quiz_sessions.empty? %>
     <div class="alert alert-info">
       You haven't taken any quizzes yet. 

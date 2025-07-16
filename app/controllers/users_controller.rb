@@ -71,6 +71,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     
     if @user.update_with_password(user_params)
+      
       redirect_to user_path(@user), notice: "User was successfully updated."
     else
       render :user_edit, status: :unprocessable_entity
