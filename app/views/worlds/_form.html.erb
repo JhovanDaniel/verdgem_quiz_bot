@@ -66,6 +66,9 @@
   
   <div class="form-actions mt-4">
     <%= f.button :submit, @world.new_record? ? "Create World" : "Update World", class: 'btn-primary' %>
+    <% if @world.persisted? %>
+      <%= link_to "Manage Levels", world_levels_path(@world), class: "btn btn-secondary ms-2" %>
+    <% end %>
     <%= link_to "Cancel", worlds_path, class: "btn btn-outline-secondary ms-2" %>
   </div>
   

@@ -1,6 +1,11 @@
 class LevelsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_level, only: [:show, :start_quiz]
+  before_action :set_world, only: [:index]
+  
+  def index
+  
+  end
   
   def show
     @world = @level.world
@@ -66,5 +71,9 @@ class LevelsController < ApplicationController
   
   def set_level
     @level = Level.find(params[:id])
+  end
+  
+  def set_world
+    @world = World.find(params[:world_id])
   end
 end

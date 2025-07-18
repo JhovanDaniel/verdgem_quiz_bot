@@ -37,7 +37,7 @@ Rails.application.routes.draw do
   end
   
   resources :worlds do
-    resources :levels, only: [:show] do
+    resources :levels, only: [:show, :index] do
       member do
         post :start_quiz
       end
