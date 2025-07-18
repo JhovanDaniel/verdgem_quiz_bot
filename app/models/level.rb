@@ -1,10 +1,10 @@
 class Level < ApplicationRecord
   belongs_to :world
   belongs_to :sub_topic
+  has_many :user_level_progresses, dependent: :destroy
   belongs_to :prerequisite_level, class_name: 'Level', optional: true
   
   has_one :dependent_levels, class_name: 'Level', foreign_key: 'prerequisite_level_id', optional: true
-  has_many :user_level_progresses, dependent: :destroy
   has_many :quiz_sessions, dependent: :destroy
   
   has_one_attached :level_icon, dependent: :destroy
@@ -24,7 +24,7 @@ class Level < ApplicationRecord
   def unlocked_for?(user)
     return true if prerequisite_level.nil?
     
-    UserWorldProgress.exists?(
+    UserLevelProgress.exists?(
       user: user, 
       level: prerequisite_level, 
       completed: true
@@ -32,7 +32,7 @@ class Level < ApplicationRecord
   end
   
   def completed_by?(user)
-    UserWorldProgress.exists?(
+    UserLevelProgress.exists?(
       user: user,
       level: self,
       completed: true
