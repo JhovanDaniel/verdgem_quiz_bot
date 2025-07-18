@@ -12,12 +12,26 @@
       <div class="col-sm-6 col-lg-4">
         <div class="card border-2 text-center">
           <div class="card-body">
+            <div class="row d-flex justify-content-between">
+              <div class="col-auto">
+                
+              </div>
+              <div class="col-auto">
+                <%= world.completion_percentage_for(current_user) %>% Complete
+              </div>
+            </div>
+      
             <%= image_tag world.world_icon.variant(resize_to_limit: [200, 200]), alt: world.name, class: "img-fluid" %>
             <p class="lead"><b class="fw-bold">Subject:</b> <%= world.subject.name %></p>
             <p class="text-muted"> <%= world.description %> </p>
             
             <div class="btn-list">
-              <%= link_to "Start Adventure", '#', class:"btn btn-lg btn-primary" %>
+              <% if world.completion_percentage_for(current_user) > 0 %>
+                <%= link_to "Continue Adventure", '#', class:"btn btn-lg btn-primary" %>
+              <% else %>
+                <%= link_to "Start Adventure", '#', class:"btn btn-lg btn-primary" %>
+              <% end %>
+              
               <% if current_user.admin? %>
                 <%= link_to "Edit", edit_world_path(world), class:"btn btn-sm btn-secondary" %>
               <% end %>
