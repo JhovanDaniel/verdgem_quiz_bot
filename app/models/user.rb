@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :created_subjects, class_name: 'Subject', foreign_key: 'created_by_id'
   has_many :user_badges, dependent: :destroy
   has_many :badges, through: :user_badges
+  has_many :user_level_progresses, dependent: :destroy
   
   has_many :subject_teachers, dependent: :destroy
   has_many :assigned_subjects, through: :subject_teachers, source: :subject
