@@ -1,6 +1,6 @@
 class WorldsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_world, only: [:show]
+  before_action :set_world, only: [:show, :edit, :update]
   
   def index
     @worlds = World.active
@@ -36,6 +36,18 @@ class WorldsController < ApplicationController
       redirect_to worlds_path, notice: 'Wolrd was successfully created.'
     else
       render :new, status: :unprocessable_entity
+    end
+  end
+  
+  def edit
+  
+  end
+  
+  def update
+    if @world.update(world_params)
+      redirect_to worlds_path, notice: 'World was successfully updated.'
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
   
