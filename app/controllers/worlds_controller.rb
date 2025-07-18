@@ -33,7 +33,7 @@ class WorldsController < ApplicationController
     @world = World.new(world_params)
     
     if @world.save
-      redirect_to worlds_path, notice: 'Wolrd was successfully created.'
+      redirect_to worlds_path, notice: 'World was successfully created.'
     else
       render :new, status: :unprocessable_entity
     end

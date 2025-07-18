@@ -1,0 +1,98 @@
+<%= simple_form_for(@level.new_record? ? [@world, @level] : @level, 
+                    html: { data: { controller: "question-form" } }) do |f| %>
+  <% f.object.errors[:base].each do |error| %>
+    <%= f.error_notification message: error %>
+  <% end %>
+
+
+  <div class="form-inputs" data-controller="direct-upload">
+    <%= f.input :world_id, as: :hidden, input_html: {value: @world.id} %>
+    
+    <%= f.input :sub_topic_id, label: @world.subject.name + " Subtopics",
+              collection: SubTopic.joins(topic: :subject).where(subjects: { id: @world.subject.id }).map { |st| [st.name.humanize, st.id] },
+              include_blank: "", required: true %>
+              
+    <%= f.input :prerequisite_level_id, label: "Prerequisite Level",
+              collection: @world.levels.map { |st| [st.name.humanize, st.id] },
+              include_blank: "" %>
+              
+    <%= f.input :name, 
+                  label: 'Name',
+                  placeholder: 'Enter name of the Level',
+                  required: true %>
+                  
+    <%= f.input :description, 
+                  label: 'Description',
+                  as: :text, 
+                  input_html: { rows: 8 },
+                  placeholder: 'Enter the description of the Level',
+                  required: true %>
+    
+    <%= f.input :difficulty, label: "Difficulty Level",
+              collection: Level::difficulties.keys, label_method: lambda { |difficulty| difficulty.titleize }, 
+              include_blank: "" %> 
+              
+    <%= f.input :question_type, label: "Question type",
+              collection: Level::question_types.keys, label_method: lambda { |question_type| question_type.titleize }, 
+              include_blank: "" %> 
+              
+    <%= f.input :question_count, label: "Question count",
+              collection: [10, 15, 20], 
+              include_blank: "" %> 
+              
+    <%= f.input :position, 
+                  label: 'Position',
+                  placeholder: 'Enter position of the Level',
+                  required: true %>
+  
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div>
+          <% if f.object.persisted? && f.object.level_icon.attached? %>
+            <%= f.hidden_field :level_icon, value: f.object.level_icon.blob.signed_id %>
+            <%= f.hidden_field :remove_level_icon, value: "0" %>
+          <% end %>
+          
+          <%= f.input :level_icon, :as => :file, label: 'Level Icon', placeholder: "Choose a file...",
+          input_html: { 
+            class: "form-control", 
+            direct_upload: true,
+            required: true,
+            accept: "image/*",
+            data: { 
+              action: 'change->direct-upload#previewImage direct-upload:end->direct-upload#uploadComplete',
+              existing_image: f.object.persisted? && f.object.level_icon.attached? ? url_for(f.object.level_icon) : '',
+              existing_filename: f.object.persisted? && f.object.level_icon.attached? ? f.object.level_icon.filename : ''
+            }
+          }%>
+          
+          <!-- Preview container -->
+          <div id="image-preview-container" class="mt-3" style="display: none;">
+            <img id="image-preview" src="" alt="Preview" class="img-thumbnail" style="max-width: 300px; max-height: 200px;">
+            <div class="mt-2">
+              <button type="button" class="btn btn-sm btn-outline-danger" data-action="click->direct-upload#removeImage">
+                <i class="bi bi-trash"></i> Remove Image
+              </button>
+            </div>
+          </div>
+          
+          <!-- File status -->
+          <div id="file-status" class="mt-2">
+            <% if f.object.persisted? && f.object.level_icon.attached? %>
+              <span class="text-success">Current file: <%= f.object.level_icon.filename %></span>
+            <% else %>
+              <span class="text-muted">No file chosen</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+  
+  <div class="form-actions mt-4">
+    <%= f.button :submit, @level.new_record? ? "Create Level" : "Update Level", class: 'btn-primary' %>
+    <%= link_to "Cancel", world_levels_path(@world), class: "btn btn-outline-secondary ms-2" %>
+  </div>
+            
+<% end %>

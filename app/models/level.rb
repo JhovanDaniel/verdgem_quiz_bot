@@ -5,8 +5,7 @@ class Level < ApplicationRecord
   belongs_to :prerequisite_level, class_name: 'Level', optional: true
   
   has_one :dependent_levels, class_name: 'Level', foreign_key: 'prerequisite_level_id'
-  has_many :quiz_sessions, dependent: :destroy
-  
+
   has_one_attached :level_icon, dependent: :destroy
   
   validates :name, presence: true
@@ -16,6 +15,7 @@ class Level < ApplicationRecord
   validates :passing_score_percentage, presence: true, numericality: { in: 70..100 }
   
   enum question_type: { mixed: 0, multiple_choice: 1, long_answer: 2 }
+  enum difficulty: [:easy, :medium, :hard]
   
   scope :active, -> { where(active: true) }
   scope :ordered, -> { order(:position) }

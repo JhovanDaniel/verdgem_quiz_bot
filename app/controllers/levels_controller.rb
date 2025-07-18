@@ -1,7 +1,7 @@
 class LevelsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_level, only: [:show, :start_quiz]
-  before_action :set_world, only: [:index]
+  before_action :set_world, only: [:index, :new, :create]
   
   def index
   
@@ -22,6 +22,20 @@ class LevelsController < ApplicationController
                              .order(created_at: :desc)
                              .limit(3)
                              .includes(:question_attempts)
+  end
+  
+  def new
+    @level = Level.new
+  end
+  
+  def create
+    @level = Level.new(level_params)
+    
+    if @level.save
+      redirect_to world_levels_path(@world), notice: 'Level was successfully created.'
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
   
   def start_quiz
@@ -75,5 +89,10 @@ class LevelsController < ApplicationController
   
   def set_world
     @world = World.find(params[:world_id])
+  end
+  
+  def level_params
+    params.require(:level).permit(:name, :description, :level_icon, :difficulty, :position, :question_type, 
+    :question_count, :passing_score_percentage, :active, :world_id, :sub_topic_id, :prerequisite_level_id)
   end
 end
