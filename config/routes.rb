@@ -36,6 +36,9 @@ Rails.application.routes.draw do
     end
   end
   
+  resources :worlds do
+    
+  end
   
   # Quiz routes
   get 'quiz/start', to: 'quiz#start', as: 'quiz_start'
