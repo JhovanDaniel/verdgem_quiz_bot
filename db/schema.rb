@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_17_000054) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_18_004204) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -90,6 +90,25 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_17_000054) do
     t.string "country"
     t.index ["active"], name: "index_institutions_on_active"
     t.index ["name"], name: "index_institutions_on_name", unique: true
+  end
+
+  create_table "levels", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "world_id", null: false
+    t.uuid "sub_topic_id", null: false
+    t.uuid "prerequisite_level_id"
+    t.string "name", null: false
+    t.text "description"
+    t.string "difficulty", null: false
+    t.integer "position", null: false
+    t.integer "question_type", default: 0
+    t.integer "question_count", default: 15
+    t.integer "passing_score_percentage", default: 70
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["prerequisite_level_id"], name: "index_levels_on_prerequisite_level_id"
+    t.index ["sub_topic_id"], name: "index_levels_on_sub_topic_id"
+    t.index ["world_id"], name: "index_levels_on_world_id"
   end
 
   create_table "question_attempts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -252,6 +271,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_17_000054) do
   add_foreign_key "answer_options", "questions"
   add_foreign_key "feedbacks", "quiz_sessions"
   add_foreign_key "feedbacks", "users"
+  add_foreign_key "levels", "levels", column: "prerequisite_level_id"
+  add_foreign_key "levels", "sub_topics"
+  add_foreign_key "levels", "worlds"
   add_foreign_key "question_attempts", "questions"
   add_foreign_key "question_attempts", "quiz_sessions"
   add_foreign_key "question_attempts", "users", on_delete: :cascade

@@ -2,6 +2,7 @@ class Subject < ApplicationRecord
   has_many :topics, dependent: :destroy
   has_many :questions, through: :topics
   belongs_to :created_by, class_name: 'User', optional: true
+  has_one :world
   
   has_many :subject_teachers, dependent: :destroy
   has_many :teachers, through: :subject_teachers, source: :user
