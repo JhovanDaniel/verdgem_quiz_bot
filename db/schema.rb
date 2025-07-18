@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_18_004204) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_18_013301) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -230,6 +230,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_18_004204) do
     t.index ["user_id"], name: "index_user_badges_on_user_id"
   end
 
+  create_table "user_level_progresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "level_id", null: false
+    t.integer "attempts", default: 0
+    t.boolean "completed", default: false
+    t.datetime "completed_at"
+    t.integer "best_score", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["level_id"], name: "index_user_level_progresses_on_level_id"
+    t.index ["user_id", "level_id"], name: "index_user_level_progresses_on_user_id_and_level_id", unique: true
+    t.index ["user_id"], name: "index_user_level_progresses_on_user_id"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -290,6 +304,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_18_004204) do
   add_foreign_key "topics", "subjects"
   add_foreign_key "user_badges", "badges"
   add_foreign_key "user_badges", "users"
+  add_foreign_key "user_level_progresses", "levels"
+  add_foreign_key "user_level_progresses", "users"
   add_foreign_key "users", "institutions"
   add_foreign_key "worlds", "subjects"
 end

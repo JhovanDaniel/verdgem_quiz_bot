@@ -1,0 +1,2 @@
+class UserLevelProgress < ApplicationRecord
+end
