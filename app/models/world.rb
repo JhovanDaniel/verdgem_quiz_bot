@@ -5,7 +5,7 @@ class World < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :position, presence: true, uniqueness: true
   
-  scope :active, -> { where(active: true) }
+  scope :active, -> { where(is_active: true) }
   scope :ordered, -> { order(:position) }
   scope :with_levels, -> { includes(:levels) }
   
@@ -15,7 +15,7 @@ class World < ApplicationRecord
     total_levels = levels.count
     return 0 if total_levels == 0
     
-    completed_levels = UserWorldProgress.joins(:level)
+    completed_levels = UserLevelProgress.joins(:level)
                                        .where(levels: { world_id: id })
                                        .where(user: user, completed: true)
                                        .count
@@ -24,7 +24,7 @@ class World < ApplicationRecord
   end
   
   def completed_levels_for(user)
-    UserWorldProgress.joins(:level)
+    UserLevelProgress.joins(:level)
                      .where(levels: { world_id: id })
                      .where(user: user, completed: true)
                      .count

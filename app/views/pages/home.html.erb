@@ -1,6 +1,6 @@
-<div class="container-fluid px-4 py-5">
-  <h1 class="display-4 fw-bold text-body-emphasis mb-3">
-    Welcome back, <%= !current_user.nickname.blank? ? current_user.nickname : current_user.first_name %>! 🎓
+<div class="container-fluid pb-5">
+  <h1 class="display-6 fw-bold text-body-emphasis mb-3">
+    Welcome back, <%= !current_user.nickname.blank? ? current_user.nickname : current_user.first_name %>!
   </h1> 
   
   <p class="lead text-muted mb-4">Choose your learning path and start mastering your CSEC subjects</p>
@@ -9,32 +9,38 @@
   <div class="row g-4 mb-5">
     <!-- Adventure Mode Panel -->
     <div class="col-12 col-lg-6">
-      <div class="card pt-5 border-0 text-center">
+      <div class="quiz-mode-card adventure-card pt-5 rounded-4 text-center position-relative overflow-hidden">
+        <div class="card-glow"></div>
         <div class="panel-image">
-          <%= image_tag "verdgem-quiz-hero.png", alt: "Adventure Mode", class: "img-fluid w-50 h-50 object-fit-cover" %>
+          <%= image_tag "verdgem-quiz-hero.png", alt: "Adventure Mode", class: "panel-img img-fluid object-fit-cover" %>
         </div>
         <div class="card-body p-4">
           <h3 class="card-title display-5 fw-bold mb-3">Adventure Mode</h3>
-          <p class="lead px-4">
+          <p class="lead card-description px-4">
             Embark on an exciting learning journey! Travel through the different subjects and topics in adventure mode!
           </p>
-          <%= link_to "Start Adventure", worlds_path, class:"btn btn-lg btn-primary" %>
+          <%= link_to worlds_path, class: "quiz-btn btn btn-lg btn-primary" do %>
+            <i class="fas fa-rocket me-2"></i>Start Adventure
+          <% end %>
         </div>
       </div>
     </div>
     
     <!-- Custom Quiz Panel -->
     <div class="col-12 col-lg-6">
-      <div class="card pt-5 border-0 text-center bg-light rounded-4">
+      <div class="quiz-mode-card custom-card bg-light pt-5 rounded-4 text-center position-relative overflow-hidden">
+        <div class="card-glow"></div>
         <div class="panel-image">
-          <%= image_tag "jade-expression-1.PNG", alt: "Custom Quiz", class: "img-fluid w-50 h-50 object-fit-cover" %>
+          <%= image_tag "jade-expression-1.PNG", alt: "Custom Quiz", class: "panel-img img-fluid object-fit-cover" %>
         </div>
         <div class="card-body p-4">
           <h3 class="card-title display-5 fw-bold mb-3">Custom Quiz</h3>
-          <p class="lead px-4">
+          <p class="lead card-description px-4">
             Intense and personalised quiz practice! Choose from different subjects, topics, and quiz types.
           </p>
-          <%= link_to "Custom Quiz", quiz_select_path, class:"btn btn-lg btn-primary" %>
+          <%= link_to quiz_select_path, class: "quiz-btn btn btn-lg btn-primary" do %>
+            <i class="fas fa-cogs me-2"></i>Custom Quiz
+          <% end %>
         </div>
       </div>
     </div>
@@ -106,3 +112,209 @@
     <%= will_paginate @quiz_sessions, renderer: WillPaginate::Bootstrap5Renderer if defined?(WillPaginate) %>
   <% end %>
 </div>
+
+<style>
+  .quiz-mode-card {
+    background: white;
+    background-clip: padding-box;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    min-height: 450px;
+    position: relative;
+  }
+
+  /* Adventure Mode Styling */
+  .adventure-card {
+    /*animation: float 3s ease-in-out infinite;*/
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .adventure-card::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background-size: 300% 300%;
+    border-radius: inherit;
+    z-index: -1;
+    animation: gradientShift 4s ease infinite;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .adventure-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Custom Quiz Styling */
+  .custom-card {
+  }
+
+  .custom-card::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background-size: 300% 300%;
+    border-radius: inherit;
+    z-index: -1;
+    animation: gradientShift 4s ease infinite;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .custom-card:hover::before {
+    opacity: 1;
+  }
+
+  /* Hover Effects */
+  .quiz-mode-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .quiz-mode-card:hover .panel-img {
+    transform: scale(1.1) rotate(2deg);
+  }
+
+  .quiz-mode-card:hover .card-title {
+    transform: scale(1.05);
+  }
+
+  .quiz-mode-card:hover .card-description {
+    transform: scale(1.02);
+  }
+
+  .quiz-mode-card:hover .quiz-btn {
+    transform: scale(1.1);
+  }
+
+  /* Panel Image Styling */
+  .panel-img {
+    width: 50%;
+    height: auto;
+    max-height: 250px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Card Content Transitions */
+  .card-title {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .card-description {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Button Styling */
+  .quiz-btn {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-adventure:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-custom:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Glow Effect */
+  .card-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.6s ease;
+    z-index: 1;
+  }
+
+  .quiz-mode-card:hover .card-glow {
+    width: 200%;
+    height: 200%;
+  }
+
+  /* Gradient Animation */
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 0%;
+    }
+    50% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 0% 0%;
+    }
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .quiz-mode-card {
+      min-height: 380px;
+    }
+    
+    .card-title {
+      font-size: 2rem !important;
+    }
+    
+    .panel-img {
+      width: 40%;
+      max-height: 120px;
+    }
+    
+    .quiz-mode-card:hover {
+      transform: translateY(-5px) scale(1.01);
+    }
+  }
+
+  /* Active state for better accessibility */
+  .quiz-mode-card:active {
+    transform: translateY(-5px) scale(0.98);
+  }
+
+  /* Focus state for keyboard navigation */
+  .quiz-mode-card:focus-within {
+    outline: 3px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+  }
+
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    .quiz-mode-card,
+    .panel-img,
+    .card-title,
+    .card-description,
+    .quiz-btn {
+      transition: none;
+    }
+    
+    .card-glow {
+      display: none;
+    }
+    
+    .adventure-card::before,
+    .custom-card::before {
+      animation: none;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+</style>
