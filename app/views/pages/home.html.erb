@@ -1,5 +1,5 @@
 <div class="container-fluid pb-5">
-  <h1 class="display-6 fw-bold text-body-emphasis mb-3">
+  <h1 class="display-6 fw-bold text-body-emphasis">
     Welcome back, <%= !current_user.nickname.blank? ? current_user.nickname : current_user.first_name %>!
   </h1> 
   
@@ -9,25 +9,26 @@
   <div class="row g-4 mb-5">
     <!-- Adventure Mode Panel -->
     <div class="col-12 col-lg-6">
-      <div class="quiz-mode-card adventure-card pt-5 rounded-4 text-center position-relative overflow-hidden">
-        <div class="card-glow"></div>
-        <div class="panel-image">
-          <%= image_tag "verdgem-quiz-hero.png", alt: "Adventure Mode", class: "panel-img img-fluid object-fit-cover" %>
+      <%= link_to worlds_path, class: "card-link-wrapper" do %>
+        <div class="quiz-mode-card adventure-card pt-5 rounded-4 text-center position-relative overflow-hidden">
+          <div class="card-glow"></div>
+          <div class="panel-image">
+            <%= image_tag "verdgem-quiz-hero.png", alt: "Adventure Mode", class: "panel-img img-fluid object-fit-cover" %>
+          </div>
+          <div class="card-body p-4">
+            <h3 class="card-title display-5 fw-bold mb-3">Adventure Mode</h3>
+            <p class="lead card-description px-2">
+              Embark on an exciting learning journey! Travel through the different subjects and topics in adventure mode!
+            </p>
+            <%= link_to "Start Adventure", worlds_path, class: "quiz-btn btn btn-lg btn-primary" %>
+          </div>
         </div>
-        <div class="card-body p-4">
-          <h3 class="card-title display-5 fw-bold mb-3">Adventure Mode</h3>
-          <p class="lead card-description px-4">
-            Embark on an exciting learning journey! Travel through the different subjects and topics in adventure mode!
-          </p>
-          <%= link_to worlds_path, class: "quiz-btn btn btn-lg btn-primary" do %>
-            <i class="fas fa-rocket me-2"></i>Start Adventure
-          <% end %>
-        </div>
-      </div>
+      <% end %>
     </div>
     
     <!-- Custom Quiz Panel -->
     <div class="col-12 col-lg-6">
+      <%= link_to quiz_select_path, class: "card-link-wrapper" do %>
       <div class="quiz-mode-card custom-card bg-light pt-5 rounded-4 text-center position-relative overflow-hidden">
         <div class="card-glow"></div>
         <div class="panel-image">
@@ -35,14 +36,13 @@
         </div>
         <div class="card-body p-4">
           <h3 class="card-title display-5 fw-bold mb-3">Custom Quiz</h3>
-          <p class="lead card-description px-4">
+          <p class="lead card-description px-2">
             Intense and personalised quiz practice! Choose from different subjects, topics, and quiz types.
           </p>
-          <%= link_to quiz_select_path, class: "quiz-btn btn btn-lg btn-primary" do %>
-            <i class="fas fa-cogs me-2"></i>Custom Quiz
-          <% end %>
+          <%= link_to "Custon Quiz", quiz_select_path, class: "quiz-btn btn btn-lg btn-primary" %>
         </div>
       </div>
+      <% end %>
     </div>
   </div>
   
@@ -114,6 +114,29 @@
 </div>
 
 <style>
+
+  /* Link wrapper styling to prevent link styles from affecting card */
+  .card-link-wrapper {
+    text-decoration: none !important;
+    color: inherit !important;
+    display: block;
+  }
+  
+  .card-link-wrapper:hover {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+  
+  .card-link-wrapper:focus {
+    text-decoration: none !important;
+    color: inherit !important;
+    outline: none;
+  }
+  
+  .card-link-wrapper:visited {
+    color: inherit !important;
+  }
+  
   .quiz-mode-card {
     background: white;
     background-clip: padding-box;
@@ -121,6 +144,7 @@
     cursor: pointer;
     min-height: 450px;
     position: relative;
+    color: black;
   }
 
   /* Adventure Mode Styling */
