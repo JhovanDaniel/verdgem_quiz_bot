@@ -6,4 +6,19 @@
       <%= link_to "Add New World", new_world_path, class: "btn btn-primary" %>
     <% end %>
   </div>
+  
+  <div class="row row-deck row-cards">
+    <% @worlds.each do |world| %>
+      <div class="col-sm-6 col-lg-4">
+        <div class="card border-2 text-center">
+          <div class="card-body">
+            <%= image_tag world.world_icon.variant(resize_to_limit: [300, 300]), alt: world.name, class: "img-fluid" %>
+            <p class="lead"><b class="fw-bold">Subject:</b> <%= world.subject.name %></p>
+            <p class="lead"> <%= world.description %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+  </div>
 </div>

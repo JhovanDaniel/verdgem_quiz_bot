@@ -4,7 +4,7 @@ class Level < ApplicationRecord
   has_many :user_level_progresses, dependent: :destroy
   belongs_to :prerequisite_level, class_name: 'Level', optional: true
   
-  has_one :dependent_levels, class_name: 'Level', foreign_key: 'prerequisite_level_id', optional: true
+  has_one :dependent_levels, class_name: 'Level', foreign_key: 'prerequisite_level_id'
   has_many :quiz_sessions, dependent: :destroy
   
   has_one_attached :level_icon, dependent: :destroy

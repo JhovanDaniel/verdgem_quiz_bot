@@ -5,7 +5,6 @@ class WorldsController < ApplicationController
   def index
     @worlds = World.active
        .includes(:subject, :levels)
-       .ordered
     
     @progress_data = build_progress_data
   end
@@ -14,8 +13,7 @@ class WorldsController < ApplicationController
     @levels = @world.levels.includes(:user_world_progresses)
     @world_progress = @world.completion_percentage_for(current_user)
     @world_status = @world.status_for(current_user)
-    @next_level = @world.next_level_for(current_user)
-    
+
     @levels_with_progress = @levels.map do |level|
       {
         level: level,
@@ -28,17 +26,27 @@ class WorldsController < ApplicationController
   end
   
   def new
-    
+    @world = World.new
   end
   
   def create
+    @world = World.new(world_params)
     
+    if @world.save
+      redirect_to worlds_path, notice: 'Wolrd was successfully created.'
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
   
   private
   
   def set_world
     @world = World.find(params[:id])
+  end
+  
+  def world_params
+    params.require(:world).permit(:name, :description, :subject_id, :is_active, :world_icon)
   end
   
   def build_progress_data
@@ -48,10 +56,8 @@ class WorldsController < ApplicationController
       progress_data[world.id] = {
         completion_percentage: world.completion_percentage_for(current_user),
         status: world.status_for(current_user),
-        next_level: world.next_level_for(current_user)&.name,
         completed_levels: world.completed_levels_for(current_user),
         total_levels: world.total_levels,
-        unlocked_levels: world.unlocked_levels_for(current_user)
       }
     end
     

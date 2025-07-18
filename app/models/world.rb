@@ -3,10 +3,8 @@ class World < ApplicationRecord
   has_many :levels, -> { where(active: true).order(:position) }, dependent: :destroy
   
   validates :name, presence: true, uniqueness: true
-  validates :position, presence: true, uniqueness: true
-  
+
   scope :active, -> { where(is_active: true) }
-  scope :ordered, -> { order(:position) }
   scope :with_levels, -> { includes(:levels) }
   
   has_one_attached :world_icon, dependent: :destroy
