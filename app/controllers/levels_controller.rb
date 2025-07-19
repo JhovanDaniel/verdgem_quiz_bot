@@ -1,7 +1,7 @@
 class LevelsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_level, only: [:show, :start_quiz, :edit, :update]
-  before_action :set_world, only: [:index, :new, :create, :edit]
+  before_action :set_level, only: [:show, :start_quiz, :edit, :update, :level_preview]
+  before_action :set_world, only: [:index, :new, :create, :edit, :level_preview]
   
   def index
   
@@ -48,6 +48,10 @@ class LevelsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+  
+  def level_preview
+    
   end
   
   def start_quiz

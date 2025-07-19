@@ -1,0 +1,16 @@
+<div class="container" id="featured-3">
+  <div class="card text-center">
+    <div class="card-body">
+      <div class="">
+        <%= image_tag @level.level_icon.variant(resize_to_limit: [200, 200]), alt: @level.name, class: "img-fluid" %>
+      </div>
+      <p class="lead"> <%= @level.description %> </p>
+      
+      
+      <%= link_to "Start Level", start_quiz_world_level_path(@world, @level) , class:"btn btn-primary",
+                method: :post, data: { turbo_preload: false } %>
+    </div>
+  </div>
+  
+</div>
+

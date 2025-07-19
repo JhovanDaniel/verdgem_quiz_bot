@@ -139,8 +139,11 @@
   <!---------- Quiz Feedback ---------->
   
   <div class="d-flex flex-column flex-md-row justify-content-between gap-2 gap-md-0 my-3 my-md-4">
+    <% if !@quiz_session.level.nil? %>
+      <%= link_to "Continue", world_path(@quiz_session.level.world), class: "btn btn-primary" %>
+    <% end %>
+    
     <%= link_to "Back to Dashboard", authenticated_root_path, class: "btn btn-outline-secondary" %>
-    <%= link_to "Start New Quiz", '#', class: "btn btn-primary" %>
   </div>
 </div>
 

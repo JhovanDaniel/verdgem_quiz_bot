@@ -16,16 +16,24 @@
   </div>
   
   <div class="row row-deck row-cards">
-    <% @world.levels.each do |level| %>
+    <% @world.levels.order(:position).each do |level| %>
         <div class="col-sm-6 col-lg-4">
           <div class="card mt-3">
             <div class="card-body">
+              <% if level.completed_by?(current_user) %>
+                <span class="badge badge-primary text-white">Complete</span>
+              <% else %>
+                <span class="badge badge-secondary">Incomplete</span>
+              <% end %>
+              
               <%= image_tag level.level_icon.variant(resize_to_limit: [200, 200]), alt: level.name, class: "img-fluid" %>
               <p><%= level.name %></p>
-              <p><b>Best Score:</b> <%=level.best_score_by(current_user) %> | <span class="text-muted"> <%=level.attempts_by(current_user) %> attempts </span></p>
+              <p><b>Best Score:</b> <%=level.best_score_by(current_user) %>% | <span class="text-muted"> <%=level.attempts_by(current_user) %> attempts </span></p>
+              <p><b>Topic: </b><%= level.sub_topic.name %></p>
+              <p><b>Difficulty: </b><%= level.difficulty.titleize %></p>
               
               <% if level.unlocked_for?(current_user) %>
-                <%= link_to "Start Level", start_quiz_world_level_path(@world, level) , class:"btn btn-primary" %>
+                <%= link_to "Start Level", level_preview_world_level_path(@world, level), class:"btn" %>
               <% else %>
                 <p class="text-danger"> Finish level <%= level.prerequisite_level.name %> to unlock </p>
               <% end %>

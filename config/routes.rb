@@ -40,6 +40,7 @@ Rails.application.routes.draw do
     resources :levels do
       member do
         get :start_quiz
+        get :level_preview
       end
     end
   end
