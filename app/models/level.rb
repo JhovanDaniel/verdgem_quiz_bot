@@ -50,7 +50,7 @@ class Level < ApplicationRecord
   end
   
   def progress_for(user)
-    user_world_progresses.find_by(user: user)
+    user_level_progresses.find_by(user: user)
   end
   
   def attempts_by(user)

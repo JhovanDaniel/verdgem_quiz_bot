@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   resources :worlds do
     resources :levels do
       member do
-        post :start_quiz
+        get :start_quiz
       end
     end
   end

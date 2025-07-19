@@ -10,19 +10,19 @@ class WorldsController < ApplicationController
   end
   
   def show
-    @levels = @world.levels.includes(:user_world_progresses)
+    @levels = @world.levels.includes(:user_level_progresses)
     @world_progress = @world.completion_percentage_for(current_user)
     @world_status = @world.status_for(current_user)
 
-    @levels_with_progress = @levels.map do |level|
-      {
-        level: level,
-        status: level.status_for(current_user),
-        progress: level.progress_for(current_user),
-        attempts: level.attempts_by(current_user),
-        best_score: level.best_score_by(current_user)
-      }
-    end
+    #@levels_with_progress = @levels.map do |level|
+      #{
+        #level: level,
+        #status: level.status_for(current_user),
+        #progress: level.progress_for(current_user),
+        #attempts: level.attempts_by(current_user),
+        #best_score: level.best_score_by(current_user)
+      #}
+    #end
   end
   
   def new
