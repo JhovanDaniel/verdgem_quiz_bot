@@ -10,6 +10,7 @@ class QuizController < ApplicationController
     @subject = Subject.find(params[:subject_id])
     @topic = Topic.find(params[:topic_id]) if params[:topic_id].present?
     @sub_topic = SubTopic.find(params[:sub_topic_id]) if params[:sub_topic_id].present?
+    @level = Level.find(params[:level_id]) if params[:level_id].present?
     
     if current_user.quiz_limit_reached?
       redirect_to authenticated_root_path, alert: "You've reached your maximum quiz attempts for this month. Please upgrade your account or try again next month!"
@@ -109,6 +110,7 @@ class QuizController < ApplicationController
     @quiz_session = current_user.quiz_sessions.create(
       subject: @subject,
       topic: @topic,
+      level: @level,
       sub_topic: @sub_topic,
       started_at: Time.current,
       max_score: @questions.sum(&:max_points),

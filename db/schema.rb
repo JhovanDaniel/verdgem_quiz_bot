@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_18_013301) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_19_191007) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -158,6 +158,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_18_013301) do
     t.text "question_ids"
     t.boolean "archived", default: false
     t.uuid "sub_topic_id"
+    t.uuid "level_id"
+    t.index ["level_id"], name: "index_quiz_sessions_on_level_id"
     t.index ["sub_topic_id"], name: "index_quiz_sessions_on_sub_topic_id"
     t.index ["subject_id"], name: "index_quiz_sessions_on_subject_id"
     t.index ["topic_id"], name: "index_quiz_sessions_on_topic_id"
@@ -293,6 +295,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_18_013301) do
   add_foreign_key "question_attempts", "users", on_delete: :cascade
   add_foreign_key "questions", "sub_topics"
   add_foreign_key "questions", "topics"
+  add_foreign_key "quiz_sessions", "levels"
   add_foreign_key "quiz_sessions", "sub_topics"
   add_foreign_key "quiz_sessions", "subjects"
   add_foreign_key "quiz_sessions", "topics"
