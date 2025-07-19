@@ -297,6 +297,7 @@ class QuizController < ApplicationController
         max_score: @total_points
       )
     end
+    @quiz_session.update_level_progress
     
     @newly_earned_badges = BadgeService.check_and_award(current_user, @quiz_session)
   end
