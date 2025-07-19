@@ -9,7 +9,7 @@ class Level < ApplicationRecord
   has_one_attached :level_icon, dependent: :destroy
   
   validates :name, presence: true
-  validates :difficulty, presence: true, inclusion: { in: %w[easy medium hard very_hard] }
+  validates :difficulty, presence: true, inclusion: { in: %w[easy medium hard] }
   validates :position, presence: true, uniqueness: { scope: :world_id }
   validates :question_count, presence: true, numericality: { greater_than: 0 }
   validates :passing_score_percentage, presence: true, numericality: { in: 70..100 }

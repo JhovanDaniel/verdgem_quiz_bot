@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_19_191007) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_19_193558) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -98,7 +98,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_19_191007) do
     t.uuid "prerequisite_level_id"
     t.string "name", null: false
     t.text "description"
-    t.string "difficulty", null: false
     t.integer "position", null: false
     t.integer "question_type", default: 0
     t.integer "question_count", default: 15
@@ -106,6 +105,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_19_191007) do
     t.boolean "active", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "difficulty"
     t.index ["prerequisite_level_id"], name: "index_levels_on_prerequisite_level_id"
     t.index ["sub_topic_id"], name: "index_levels_on_sub_topic_id"
     t.index ["world_id"], name: "index_levels_on_world_id"

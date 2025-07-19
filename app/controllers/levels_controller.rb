@@ -56,10 +56,10 @@ class LevelsController < ApplicationController
       return
     end
     
-    redirect_to start_quiz_path(
+    redirect_to quiz_start_path(
       level_id: @level.id,
       subject_id: @level.world.subject_id,
-      topic_id: @level.topic_id,
+      topic_id: @level.sub_topic.topic,
       sub_topic_id: @level.sub_topic_id,
       difficulty: @level.difficulty,
       question_type: @level.question_type,
