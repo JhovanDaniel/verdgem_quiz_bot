@@ -1,7 +1,7 @@
 class LevelsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_level, only: [:show, :start_quiz]
-  before_action :set_world, only: [:index, :new, :create]
+  before_action :set_level, only: [:show, :start_quiz, :edit, :update]
+  before_action :set_world, only: [:index, :new, :create, :edit]
   
   def index
   
@@ -35,6 +35,18 @@ class LevelsController < ApplicationController
       redirect_to world_levels_path(@world), notice: 'Level was successfully created.'
     else
       render :new, status: :unprocessable_entity
+    end
+  end
+  
+  def edit
+    
+  end
+  
+  def update
+    if @level.update(level_params)
+      redirect_to world_levels_path, notice: 'Level was successfully updated.'
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
   

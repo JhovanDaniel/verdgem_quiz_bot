@@ -1,5 +1,5 @@
-<%= simple_form_for(@level.new_record? ? [@world, @level] : @level, 
-                    html: { data: { controller: "question-form" } }) do |f| %>
+<%= simple_form_for([@world, @level], 
+  html: { data: { controller: "question-form" } }) do |f| %>
   <% f.object.errors[:base].each do |error| %>
     <%= f.error_notification message: error %>
   <% end %>

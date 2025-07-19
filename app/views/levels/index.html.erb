@@ -7,4 +7,33 @@
     <% end %>
   </div>
   
+  <div class="row row-deck row-cards">
+    <% @world.levels.each do |level| %>
+      <div class="col-sm-6 col-lg-4">
+        <div class="card border-2 text-center">
+          <div class="card-body">
+            <div class="row d-flex justify-content-between">
+              <div class="col-auto">
+                
+              </div>
+              <div class="col-auto">
+                
+              </div>
+            </div>
+      
+            <%= image_tag level.level_icon.variant(resize_to_limit: [200, 200]), alt: level.name, class: "img-fluid" %>
+            <p class="lead"><b class="fw-bold">Subject:</b> <%= level.world.subject.name %> | <b class="fw-bold">Topic:</b> <%= level.sub_topic.name %></p>
+            <div class="btn-list">
+              
+              <% if current_user.admin? %>
+                <%= link_to "Edit", edit_world_level_path(@world, level), class:"btn btn-sm btn-secondary" %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+  </div>
+  
 </div>
