@@ -14,7 +14,7 @@ class Level < ApplicationRecord
   validates :question_count, presence: true, numericality: { greater_than: 0 }
   validates :passing_score_percentage, presence: true, numericality: { in: 70..100 }
   
-  enum question_type: { mixed: 0, multiple_choice: 1, long_answer: 2 }
+  enum question_type: { mixed: 0, multiple_choice: 1, long_answer: 2 } 
   enum difficulty: [:easy, :medium, :hard]
   
   scope :active, -> { where(active: true) }
