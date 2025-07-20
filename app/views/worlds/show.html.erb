@@ -1,12 +1,16 @@
 <div class="container" id="featured-3">
   <div class="card">
     <div class="card-body">
-      <div class="row d-flex justify-content-between">
+      <div class="row d-flex justify-content-center">
         <div class="col-8">
-          <%= image_tag @world.world_icon.variant(resize_to_limit: [200, 200]), alt: @world.name, class: "img-fluid" %>
+          <%= image_tag @world.world_icon.variant(resize_to_limit: [300, 300]), alt: @world.name, class: "img-fluid" %>
           <p class="display-6 fw-bold"><%= @world.name %></p>
           <p> <%= @world.subject.name %> </p>
           <p> <%= @world.description %> </p>
+          
+          <%= link_to "Easy Levels", "#", class:"badge badge-primary text-white" %>
+          <%= link_to "Medium Levels", "#", class:"badge badge-warning" %>
+          <%= link_to "Hard Levels", "#", class:"badge badge-danger" %>
         </div>
         <div class="col-auto">
           <%= @world.completion_percentage_for(current_user) %>% Complete
@@ -33,7 +37,7 @@
               <p><b>Difficulty: </b><%= level.difficulty.titleize %></p>
               
               <% if level.unlocked_for?(current_user) %>
-                <%= link_to "Start Level", level_preview_world_level_path(@world, level), class:"btn" %>
+                <%= link_to "Start Level", level_preview_world_level_path(@world, level), class:"btn btn-primary" %>
               <% else %>
                 <p class="text-danger"> Finish level <%= level.prerequisite_level.name %> to unlock </p>
               <% end %>
