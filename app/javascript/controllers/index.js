@@ -10,6 +10,9 @@ application.register("direct-upload", DirectUploadController)
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
+import LevelFilterController from "./level_filter_controller"
+application.register("level-filter", LevelFilterController)
+
 import QuestionFormController from "./question_form_controller"
 application.register("question-form", QuestionFormController)
 

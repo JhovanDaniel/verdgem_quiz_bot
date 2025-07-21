@@ -1,4 +1,4 @@
-<div class="container" id="featured-3">
+<div class="container" id="featured-3" data-controller="level-filter">
   <div class="card">
     <div class="card-body">
       <div class="row d-flex justify-content-center">
@@ -8,9 +8,21 @@
           <p> <%= @world.subject.name %> </p>
           <p> <%= @world.description %> </p>
           
-          <%= link_to "Easy Levels", "#", class:"badge badge-primary text-white" %>
-          <%= link_to "Medium Levels", "#", class:"badge badge-warning" %>
-          <%= link_to "Hard Levels", "#", class:"badge badge-danger" %>
+          <!-- Filter buttons (no data-controller here anymore) -->
+          <div>
+            <button data-action="click->level-filter#filterLevels" 
+                    data-difficulty="all" 
+                    class="btn btn-outline-primary active">All Levels</button>
+            <button data-action="click->level-filter#filterLevels" 
+                    data-difficulty="easy" 
+                    class="btn btn-outline-success">Easy Levels</button>
+            <button data-action="click->level-filter#filterLevels" 
+                    data-difficulty="medium" 
+                    class="btn btn-outline-warning">Medium Levels</button>
+            <button data-action="click->level-filter#filterLevels" 
+                    data-difficulty="hard" 
+                    class="btn btn-outline-danger">Hard Levels</button>
+          </div>
         </div>
         <div class="col-auto">
           <%= @world.completion_percentage_for(current_user) %>% Complete
@@ -19,32 +31,53 @@
     </div>
   </div>
   
-  <div class="row row-deck row-cards">
+  <div class="row row-deck row-cards" data-level-filter-target="levelContainer">
     <% @world.levels.order(:position).each do |level| %>
-        <div class="col-sm-6 col-lg-4">
-          <div class="card mt-3">
-            <div class="card-body">
-              <% if level.completed_by?(current_user) %>
-                <span class="badge badge-primary text-white">Complete</span>
-              <% else %>
-                <span class="badge badge-secondary">Incomplete</span>
-              <% end %>
-              
-              <%= image_tag level.level_icon.variant(resize_to_limit: [200, 200]), alt: level.name, class: "img-fluid" %>
-              <p><%= level.name %></p>
-              <p><b>Best Score:</b> <%=level.best_score_by(current_user) %>% | <span class="text-muted"> <%=level.attempts_by(current_user) %> attempts </span></p>
-              <p><b>Topic: </b><%= level.sub_topic.name %></p>
-              <p><b>Difficulty: </b><%= level.difficulty.titleize %></p>
-              
-              <% if level.unlocked_for?(current_user) %>
-                <%= link_to "Start Level", level_preview_world_level_path(@world, level), class:"btn btn-primary" %>
-              <% else %>
-                <p class="text-danger"> Finish level <%= level.prerequisite_level.name %> to unlock </p>
-              <% end %>
-            </div>
+      <div class="col-sm-6 col-lg-4 level-card" data-difficulty="<%= level.difficulty %>">
+        <div class="card mt-3">
+          <div class="card-body">
+            <% if level.completed_by?(current_user) %>
+              <span class="badge badge-primary text-white">Complete</span>
+            <% else %>
+              <span class="badge badge-secondary">Incomplete</span>
+            <% end %>
+            
+            <%= image_tag level.level_icon.variant(resize_to_limit: [200, 200]), alt: level.name, class: "img-fluid" %>
+            <p><%= level.name %></p>
+            <p><b>Best Score:</b> <%=level.best_score_by(current_user) %>% | <span class="text-muted"> <%=level.attempts_by(current_user) %> attempts </span></p>
+            <p><b>Topic: </b><%= level.sub_topic.name %></p>
+            <p><b>Difficulty: </b><%= level.difficulty.titleize %></p>
+            
+            <% if level.unlocked_for?(current_user) %>
+              <%= link_to "Start Level", level_preview_world_level_path(@world, level), class:"btn btn-primary" %>
+            <% else %>
+              <p class="text-danger"> Finish level <%= level.prerequisite_level.name %> to unlock </p>
+            <% end %>
           </div>
         </div>
+      </div>
     <% end %>
   </div>
-  
 </div>
+
+<style>
+  .level-card {
+    transition: all 0.3s ease;
+  }
+  
+  .fade-in {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .fade-out {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  
+  .btn.active {
+    background-color: var(--bs-primary);
+    color: white;
+    border-color: var(--bs-primary);
+  }
+</style>

@@ -18,7 +18,7 @@ class World < ApplicationRecord
                                        .where(user: user, completed: true)
                                        .count
     
-    (completed_levels.to_f / total_levels * 100).round(2)
+    (completed_levels.to_f / total_levels * 100).round(0)
   end
   
   def completed_levels_for(user)
