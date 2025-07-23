@@ -12,9 +12,7 @@ class UsersController < ApplicationController
   
   def create
     @user = User.new(user_params)
-    if @user.nickname.nil?
-      @user.nickname = @user.first_name + @user.lastname + SecureRandom.hex(8)
-    end
+    
     # Generate a random password if none provided
     @user.password = SecureRandom.hex(8) if @user.password.blank?
     
@@ -32,9 +30,6 @@ class UsersController < ApplicationController
   def user_create
     @user = User.new(user_params)
     
-    if @user.nickname.nil?
-      @user.nickname = @user.first_name + @user.lastname + SecureRandom.hex(8)
-    end
     # Skip password validation and generate password if none provided
     generated_password = nil
     if @user.password.blank?
