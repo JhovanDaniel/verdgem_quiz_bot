@@ -28,6 +28,10 @@ class User < ApplicationRecord
   enum role: [:student, :teacher, :admin, :institution_admin]
          
   validates_presence_of :first_name, :last_name, :email, :role
+  validates :email, presence: true, uniqueness: true
+  validates :nickname, presence: true, uniqueness: true
+  
+  
   validate :check_profanity_in_nickname, if: -> { nickname.present? }
   validate :check_profanity_in_first_name, if: -> { first_name.present? }
   validate :check_profanity_in_last_name, if: -> { last_name.present? }
