@@ -69,6 +69,7 @@ Rails.application.routes.draw do
   patch 'users/:id/user_update', to: 'users#user_update', as: 'user_update_user'
   post 'reset_progress', to: 'users#reset_progress'
   get 'social', to: 'users#social', as: 'social'
+  get '/profile/:nickname', to: 'users#profile', as: :profile
   
   resources :users
   

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_admin, except: [:show, :user_edit, :user_update, :reset_progress, :social]
+  before_action :require_admin, except: [:show, :user_edit, :user_update, :reset_progress, :social, :profile]
   
   def index
     @users = User.all
@@ -87,6 +87,10 @@ class UsersController < ApplicationController
       #redirect_to root_path, alert: "You are not authorized to view this profile."
       #return
     #end
+  end
+  
+  def profile
+    @user = User.find_by!(nickname: params[:nickname])
   end
   
   def reset_progress

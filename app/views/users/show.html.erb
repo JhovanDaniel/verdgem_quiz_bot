@@ -15,6 +15,7 @@
           <p>Joined: <%= @user.created_at.strftime('%b %d, %Y') %></p>
           <% if current_user.admin? || current_user == @user %>
             <%= link_to "Edit Account", user_edit_user_path(@user), class: "btn btn-sm btn-outline-primary" %>
+            <%= link_to "My Profile", profile_path(@user.nickname), class: "btn btn-sm btn-outline-primary" %>
           <% end %>
         </div>
       </div>

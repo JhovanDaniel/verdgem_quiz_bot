@@ -1,0 +1,781 @@
+<div class="container-fluid py-4">
+  <!-- Profile Header -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="profile-hero-card position-relative overflow-hidden">
+        <div class="profile-header-bg"></div>
+        <div class="row align-items-center">
+          <div class="col-md-3 text-center">
+            <div class="profile-avatar-container">
+              <div class="profile-avatar">
+                <div class="avatar-circle">
+                  <%= @user.initials %>
+                </div>
+                <% if @user.country.present? %>
+                  <div class="country-badge">
+                    <% country_code = @user.country.strip.upcase[0..1].downcase %>
+                    <img src="https://flagcdn.com/24x18/<%= country_code %>.png" 
+                         alt="<%= @user.country %>" 
+                         title="<%= @user.country %>"
+                         width="24" height="18">
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="profile-info text-center text-md-start">
+              <h1 class="profile-name">
+                <% if !@user.nickname.blank? %>
+                  <%= @user.nickname %>
+                <% else %>
+                  <%= @user.first_name %> <%= @user.last_name %>
+                <% end %>
+              </h1>
+              <p class="profile-tagline">Level <%= @user.level %> <%= @user.role.titleize %></p>
+              <div class="level-progress-container">
+                <div class="level-bar">
+                  <div class="level-fill" style="width: <%= @user.xp_percentage %>%;"></div>
+                </div>
+                <p class="level-text">
+                  <%= @user.xp_in_current_level %> / <%= @user.xp_for_next_level - @user.xp_for_current_level %> XP
+                  (<%= @user.xp_needed_for_next_level %> to next level)
+                </p>
+              </div>
+              <p class="profile-joined">Joined <%= @user.created_at.strftime('%B %Y') %></p>
+            </div>
+          </div>
+          <div class="col-md-3 text-center">
+            <% if current_user == @user %>
+              <%= link_to user_edit_user_path(@user), class: "btn btn-outline-primary mb-2" do %>
+                <i class="fas fa-edit"></i> Edit Profile
+              <% end %>
+            <% end %>
+            <% if @user.institution.present? %>
+              <div class="institution-badge">
+                <i class="fas fa-school"></i>
+                <%= @user.institution.name %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Overview -->
+  <div class="row g-4 mb-5">
+    <div class="col-6 col-md-3">
+      <div class="stat-card kpi-card">
+        <div class="stat-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <div class="stat-value"><%= @user.total_score_from_finished_quizzes %></div>
+        <div class="stat-label">Total Points</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card kpi-card">
+        <div class="stat-icon">
+          <i class="fas fa-target"></i>
+        </div>
+        <div class="stat-value"><%= @user.score_percentage_from_finished_quizzes(nil, nil).round %>%</div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card kpi-card">
+        <div class="stat-icon">
+          <i class="fas fa-question-circle"></i>
+        </div>
+        <div class="stat-value"><%= @user.completed_questions_from_finished_quizzes_count(nil, nil) %></div>
+        <div class="stat-label">Questions</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="stat-card kpi-card">
+        <div class="stat-icon">
+          <i class="fas fa-medal"></i>
+        </div>
+        <div class="stat-value"><%= @user.badges.count %></div>
+        <div class="stat-label">Badges</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column -->
+    <div class="col-lg-8">
+      <!-- Achievement Showcase -->
+      <div class="kpi-card mb-4">
+        <div class="card-header">
+          <h3 class="mb-0">
+            <i class="fas fa-award me-2"></i>
+            Achievement Showcase
+          </h3>
+        </div>
+        <div class="card-body">
+          <% if @user.badges.any? %>
+            <div class="featured-badges mb-4">
+              <h5>Featured Badges</h5>
+              <div class="badge-showcase">
+                <% @user.featured_badges.each do |user_badge| %>
+                  <div class="featured-badge-item">
+                    <% if user_badge.badge.badge_image.attached? %>
+                      <%= image_tag user_badge.badge.badge_image, class: "badge-image", alt: user_badge.badge.name %>
+                    <% else %>
+                      <div class="badge-placeholder">
+                        <i class="fas fa-medal"></i>
+                      </div>
+                    <% end %>
+                    <div class="badge-info">
+                      <h6><%= user_badge.badge.name %></h6>
+                      <p><%= user_badge.badge.description %></p>
+                      <small class="text-muted">Earned <%= time_ago_in_words(user_badge.earned_at) %> ago</small>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            
+            <div class="recent-badges">
+              <h5>Recent Achievements</h5>
+              <div class="badge-grid">
+                <% @user.recent_badges.each do |user_badge| %>
+                  <div class="badge-item">
+                    <% if user_badge.badge.badge_image.attached? %>
+                      <%= image_tag user_badge.badge.badge_image, class: "badge-thumb", alt: user_badge.badge.name %>
+                    <% else %>
+                      <div class="badge-thumb placeholder">
+                        <i class="fas fa-medal"></i>
+                      </div>
+                    <% end %>
+                    <div class="badge-tooltip">
+                      <strong><%= user_badge.badge.name %></strong><br>
+                      <%= user_badge.badge.description %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+            
+            <div class="text-center mt-3">
+              <%= link_to "View All Badges", badges_path, class: "btn btn-outline-primary" %>
+            </div>
+          <% else %>
+            <div class="text-center py-5">
+              <i class="fas fa-medal text-muted" style="font-size: 3rem;"></i>
+              <h4 class="mt-3">No badges yet!</h4>
+              <p class="text-muted">Start taking quizzes to earn your first badge.</p>
+              <%= link_to "Start Quiz", quiz_select_path, class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Level Progress -->
+      <div class="kpi-card mb-4">
+        <div class="card-header">
+          <h3 class="mb-0">
+            <i class="fas fa-chart-line me-2"></i>
+            Adventure Progress
+          </h3>
+        </div>
+        <div class="card-body">
+          <% if @user.user_level_progresses.any? %>
+            <div class="level-progress-list">
+              <% @user.user_level_progresses.joins(:level).includes(level: :world).order('user_level_progresses.completed_at DESC').limit(5).each do |progress| %>
+                <div class="level-progress-item">
+                  <div class="level-icon">
+                    <% if progress.completed? %>
+                      <i class="fas fa-check-circle text-success"></i>
+                    <% else %>
+                      <i class="fas fa-play-circle text-primary"></i>
+                    <% end %>
+                  </div>
+                  <div class="level-details">
+                    <h6><%= progress.level.name %></h6>
+                    <p class="mb-1"><%= progress.level.world.name %></p>
+                    <small class="text-muted">
+                      <% if progress.completed? %>
+                        Completed <%= time_ago_in_words(progress.completed_at) %> ago
+                        • Best Score: <%= progress.best_score %>%
+                      <% else %>
+                        <%= progress.attempts %> attempt<%= 's' if progress.attempts != 1 %>
+                      <% end %>
+                    </small>
+                  </div>
+                  <div class="level-status">
+                    <% if progress.completed? %>
+                      <span class="badge bg-success">Completed</span>
+                    <% else %>
+                      <span class="badge bg-primary">In Progress</span>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <div class="text-center mt-3">
+              <%= link_to "Continue Adventure", worlds_path, class: "btn btn-primary" %>
+            </div>
+          <% else %>
+            <div class="text-center py-5">
+              <i class="fas fa-map text-muted" style="font-size: 3rem;"></i>
+              <h4 class="mt-3">Adventure awaits!</h4>
+              <p class="text-muted">Start your learning journey in Adventure Mode.</p>
+              <%= link_to "Start Adventure", worlds_path, class: "btn btn-primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="kpi-card">
+        <div class="card-header">
+          <h3 class="mb-0">
+            <i class="fas fa-history me-2"></i>
+            Recent Activity
+          </h3>
+        </div>
+        <div class="card-body">
+          <% if @user.quiz_sessions.any? %>
+            <div class="activity-timeline">
+              <% @user.quiz_sessions.order(created_at: :desc).limit(5).each do |session| %>
+                <div class="activity-item">
+                  <div class="activity-icon">
+                    <% if session.completed? %>
+                      <i class="fas fa-check-circle text-success"></i>
+                    <% else %>
+                      <i class="fas fa-clock text-warning"></i>
+                    <% end %>
+                  </div>
+                  <div class="activity-content">
+                    <h6>
+                      <% if session.completed? %>
+                        Completed Quiz
+                      <% else %>
+                        Started Quiz
+                      <% end %>
+                    </h6>
+                    <p class="mb-1"><%= session.subject.name %></p>
+                    <% if session.completed? %>
+                      <span class="badge <%= session.score_percentage >= 70 ? 'bg-success' : 'bg-danger' %>">
+                        <%= session.score_percentage %>%
+                      </span>
+                    <% end %>
+                    <small class="text-muted d-block">
+                      <%= time_ago_in_words(session.created_at) %> ago
+                    </small>
+                  </div>
+                  <div class="activity-actions">
+                    <%= link_to "View", quiz_session_path(session), class: "btn btn-sm btn-outline-primary" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <div class="text-center mt-3">
+              <%= link_to "View All Activity", quiz_sessions_path, class: "btn btn-outline-primary" %>
+            </div>
+          <% else %>
+            <div class="text-center py-5">
+              <i class="fas fa-clock text-muted" style="font-size: 3rem;"></i>
+              <h4 class="mt-3">No activity yet!</h4>
+              <p class="text-muted">Take your first quiz to see activity here.</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-lg-4">
+      <!-- Performance Summary -->
+      <div class="kpi-card mb-4">
+        <div class="card-header">
+          <h3 class="mb-0">
+            <i class="fas fa-chart-pie me-2"></i>
+            Performance
+          </h3>
+        </div>
+        <div class="card-body">
+          <% if @user.question_attempts.any? %>
+            <!-- Subject Performance -->
+            <div class="performance-breakdown">
+              <% Subject.all.each do |subject| %>
+                <% attempts = @user.completed_questions.joins(question: { topic: :subject }).where(topics: { subject_id: subject.id }) %>
+                <% if attempts.any? %>
+                  <div class="subject-performance">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h6 class="mb-0"><%= subject.name %></h6>
+                      <% performance = (attempts.sum(:score).to_f / attempts.joins(:question).sum(:max_points) * 100).round %>
+                      <span class="badge <%= performance >= 70 ? 'bg-success' : (performance >= 50 ? 'bg-warning' : 'bg-danger') %>">
+                        <%= performance %>%
+                      </span>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                      <div class="progress-bar <%= performance >= 70 ? 'bg-success' : (performance >= 50 ? 'bg-warning' : 'bg-danger') %>" 
+                           style="width: <%= performance %>%;"></div>
+                    </div>
+                    <small class="text-muted"><%= attempts.count %> questions attempted</small>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-4">
+              <i class="fas fa-chart-bar text-muted" style="font-size: 2rem;"></i>
+              <p class="mt-2 mb-0">No performance data yet</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="kpi-card mb-4">
+        <div class="card-header">
+          <h3 class="mb-0">
+            <i class="fas fa-bolt me-2"></i>
+            Quick Stats
+          </h3>
+        </div>
+        <div class="card-body">
+          <div class="quick-stat">
+            <div class="stat-row">
+              <span>Current Streak</span>
+              <strong>5 days</strong>
+            </div>
+            <div class="stat-row">
+              <span>Best Score</span>
+              <strong>
+                <% best_session = @user.quiz_sessions.where.not(completed_at: nil).order(:total_score).last %>
+                <%= best_session&.score_percentage&.round || 0 %>%
+              </strong>
+            </div>
+            <div class="stat-row">
+              <span>Levels Completed</span>
+              <strong><%= @user.user_level_progresses.where(completed: true).count %></strong>
+            </div>
+            <div class="stat-row">
+              <span>Quiz Attempts</span>
+              <strong><%= @user.monthly_quiz_attempts %> / <%= @user.max_quiz_attempts %></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="kpi-card">
+        <div class="card-header">
+          <h3 class="mb-0">
+            <i class="fas fa-rocket me-2"></i>
+            Quick Actions
+          </h3>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-2">
+            <%= link_to quiz_select_path, class: "btn btn-primary" do %>
+              <i class="fas fa-play me-2"></i>Start Custom Quiz
+            <% end %>
+            <%= link_to worlds_path, class: "btn btn-outline-primary" do %>
+              <i class="fas fa-map me-2"></i>Continue Adventure
+            <% end %>
+            <%= link_to leaderboard_path, class: "btn btn-outline-secondary" do %>
+              <i class="fas fa-trophy me-2"></i>View Leaderboard
+            <% end %>
+            <% if current_user == @user %>
+              <%= link_to user_edit_user_path(@user), class: "btn btn-outline-info" do %>
+                <i class="fas fa-cog me-2"></i>Settings
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Profile Page Styles */
+.profile-hero-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border: none;
+}
+
+.profile-header-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20px 20px 0 0;
+  z-index: 1;
+}
+
+.profile-avatar-container {
+  position: relative;
+  z-index: 2;
+}
+
+.profile-avatar {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  border: 4px solid white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.country-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: white;
+  border-radius: 8px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.profile-info {
+  position: relative;
+  z-index: 2;
+  margin-top: 2rem;
+}
+
+.profile-name {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.profile-tagline {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.level-progress-container {
+  margin: 1rem 0;
+}
+
+.level-bar {
+  width: 100%;
+  height: 12px;
+  background: #e9ecef;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.level-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.level-text {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0;
+}
+
+.institution-badge {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.stat-icon {
+  font-size: 2rem;
+  color: #667eea;
+  margin-bottom: 1rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.card-header {
+  background: none;
+  border: none;
+  padding: 1.5rem 1.5rem 0;
+}
+
+.card-header h3 {
+  color: #333;
+  font-weight: 600;
+}
+
+.featured-badges {
+  margin-bottom: 2rem;
+}
+
+.badge-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.featured-badge-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.featured-badge-item:hover {
+  transform: translateX(5px);
+}
+
+.badge-image, .badge-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.badge-placeholder {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.badge-info h6 {
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.badge-info p {
+  margin-bottom: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 1rem;
+}
+
+.badge-item {
+  position: relative;
+  text-align: center;
+}
+
+.badge-thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.badge-thumb:hover {
+  transform: scale(1.1);
+}
+
+.badge-thumb.placeholder {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  margin: 0 auto;
+}
+
+.badge-tooltip {
+  visibility: hidden;
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: normal;
+  max-width: 200px;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.badge-item:hover .badge-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.level-progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.level-progress-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: transform 0.2s ease;
+}
+
+.level-progress-item:hover {
+  transform: translateX(5px);
+}
+
+.level-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.level-details {
+  flex: 1;
+}
+
+.level-details h6 {
+  margin-bottom: 0.25rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.level-details p {
+  margin-bottom: 0.25rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.activity-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-content h6 {
+  margin-bottom: 0.25rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.activity-content p {
+  margin-bottom: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.performance-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.subject-performance h6 {
+  color: #333;
+  font-weight: 600;
+}
+
+.quick-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: between;
+  align-items: center;
+}
+
+.stat-row span {
+  color: #666;
+}
+
+.stat-row strong {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .profile-name {
+    font-size: 2rem;
+  }
+  
+  .profile-info {
+    margin-top: 1rem;
+  }
+  
+  .badge-grid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  }
+  
+  .featured-badge-item {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+</style>
