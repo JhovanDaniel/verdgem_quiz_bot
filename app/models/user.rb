@@ -4,8 +4,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
          
-  before_validation :ensure_nickname
-         
   attr_accessor :skip_password_validation
   
   def password_required?
@@ -312,19 +310,6 @@ class User < ApplicationRecord
   end
 
   private
-
-  def ensure_nickname
-    return unless nickname.blank?
-
-    loop do
-      self.nickname = generate_nickname
-      break unless User.exists?(nickname: nickname)
-    end
-  end
-
-  def generate_nickname
-    "#{first_name.downcase}#{last_name.downcase}#{SecureRandom.alphanumeric(5).downcase}"
-  end
   
   def check_profanity_in_nickname
     check_profanity_in_attribute(:nickname)
