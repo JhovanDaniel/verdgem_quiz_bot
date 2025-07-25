@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_19_193558) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_25_174626) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -232,6 +232,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_19_193558) do
     t.index ["user_id"], name: "index_user_badges_on_user_id"
   end
 
+  create_table "user_follows", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "follower_id", null: false
+    t.uuid "followee_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["followee_id"], name: "index_user_follows_on_followee_id"
+    t.index ["follower_id", "followee_id"], name: "index_user_follows_on_follower_and_followee", unique: true
+    t.index ["follower_id"], name: "index_user_follows_on_follower_id"
+  end
+
   create_table "user_level_progresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "level_id", null: false
@@ -307,6 +317,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_19_193558) do
   add_foreign_key "topics", "subjects"
   add_foreign_key "user_badges", "badges"
   add_foreign_key "user_badges", "users"
+  add_foreign_key "user_follows", "users", column: "followee_id", on_delete: :cascade
+  add_foreign_key "user_follows", "users", column: "follower_id", on_delete: :cascade
   add_foreign_key "user_level_progresses", "levels"
   add_foreign_key "user_level_progresses", "users"
   add_foreign_key "users", "institutions"
