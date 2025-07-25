@@ -71,7 +71,16 @@ Rails.application.routes.draw do
   get 'social', to: 'users#social', as: 'social'
   get '/profile/:nickname', to: 'users#profile', as: :profile
   
-  resources :users
+  resources :users do
+    
+    # Following routes
+    resources :user_follows, only: [:create, :destroy], path: 'follows'
+     
+    # Following-related pages
+    get 'following', to: 'user_follows#following'
+    get 'followers', to: 'user_follows#followers'
+    get 'mutual', to: 'user_follows#mutual'
+  end
   
   authenticated :user, -> (user) { user.teacher? || user.admin? } do
     root to: "pages#teacher_dashboard", as: :teacher_root
