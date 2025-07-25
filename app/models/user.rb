@@ -22,6 +22,12 @@ class User < ApplicationRecord
   has_many :assigned_subjects, through: :subject_teachers, source: :subject
   has_many :active_subject_assignments, -> { where(subject_teachers: { active: true }) }, 
            through: :subject_teachers, source: :subject
+           
+  has_many :active_follows, class_name: 'UserFollow', foreign_key: 'follower_id', dependent: :destroy
+  has_many :passive_follows, class_name: 'UserFollow', foreign_key: 'followee_id', dependent: :destroy
+  
+  has_many :following, through: :active_follows, source: :followee
+  has_many :followers, through: :passive_follows, source: :follower
   
   belongs_to :institution, optional: true
          
@@ -307,6 +313,57 @@ class User < ApplicationRecord
   # Check if user has any teaching assignments
   def has_teaching_assignments?
     teacher? && subject_teachers.active.exists?
+  end
+  
+  #-------------------- Follow Methods ----------------------------#
+  
+  def follow(user)
+    return false if user == self
+    return false if following?(user)
+    
+    active_follows.create(followee: user)
+  end
+  
+  def unfollow(user)
+    active_follows.find_by(followee: user)&.destroy
+  end
+  
+  def following?(user)
+    following.include?(user)
+  end
+  
+  def followers_count
+    followers.count
+  end
+  
+  def following_count
+    following.count
+  end
+  
+  # Get users that both follow each other (mutual follows)
+  def mutual_follows
+    following.joins(:active_follows).where(user_follows: { followee_id: id })
+  end
+  
+  # Get suggested users to follow (users with mutual connections)
+  def suggested_follows(limit: 5)
+    # Users followed by people you follow, but not by you
+    User.joins(:passive_follows)
+        .where(user_follows: { follower_id: following.pluck(:id) })
+        .where.not(id: following.pluck(:id) + [id])
+        .group(:id)
+        .order('COUNT(user_follows.id) DESC')
+        .limit(limit)
+  end
+  
+  # Get activity feed from followed users (recent quiz sessions)
+  def following_activity(limit: 10)
+    QuizSession.joins(:user)
+               .where(user_id: following.pluck(:id))
+               .where.not(completed_at: nil)
+               .includes(:user, :subject, :topic)
+               .order(completed_at: :desc)
+               .limit(limit)
   end
 
   private
