@@ -5,7 +5,7 @@
       <div class="profile-hero-card position-relative overflow-hidden">
         <div class="row align-items-center">
           <div class="col-md-3 text-center">
-            <div class="profile-avatar-container">
+            <div class="profile-avatar-container mb-4">
               <div class="profile-avatar">
                 <div class="avatar-circle">
                   <%= @user.initials %>
@@ -21,6 +21,30 @@
                 <% end %>
               </div>
             </div>
+            <% if current_user == @user %>
+              <%= link_to user_edit_user_path(@user), class: "btn btn-outline-primary mb-2" do %>
+                <i class="fas fa-edit"></i> Edit Profile
+              <% end %>
+            <% end %>
+            
+            <% if !(@user == current_user) && !current_user.following?(@user) %>
+              <% if !current_user.following?(@user) %>
+                <%= link_to "Follow", user_user_follows_path(@user), 
+                data: { 
+                  turbo_method: :post,
+                  turbo_confirm: "Follow this user?" 
+                },
+                class: "btn btn-primary" %>
+              <% end %>
+            <% else %>
+              <% follow_record = current_user.active_follows.find_by(followee: @user) %>
+              <%= link_to "Unfollow", user_user_follow_path(@user, follow_record), 
+                  data: { 
+                    turbo_method: :delete,
+                    turbo_confirm: "Are you sure you want to unfollow #{@user.name}?" 
+                  },
+                  class: "btn btn-danger" %>
+            <% end %>
           </div>
           <div class="col-md-6">
             <div class="profile-info text-center text-md-start">
@@ -45,31 +69,6 @@
             </div>
           </div>
           <div class="col-md-3 text-center">
-            <% if current_user == @user %>
-              <%= link_to user_edit_user_path(@user), class: "btn btn-outline-primary mb-2" do %>
-                <i class="fas fa-edit"></i> Edit Profile
-              <% end %>
-            <% end %>
-            
-            <% if !(@user == current_user) && !current_user.following?(@user) %>
-              <% if !current_user.following?(@user) %>
-                <%= link_to "Follow", user_user_follows_path(@user), 
-                data: { 
-                  turbo_method: :post,
-                  turbo_confirm: "Follow this user?" 
-                },
-                class: "btn btn-primary" %>
-              <% end %>
-            <% else %>
-              <% follow_record = current_user.active_follows.find_by(followee: @user) %>
-              <%= link_to "Unfollow", user_user_follow_path(@user, follow_record), 
-                  data: { 
-                    turbo_method: :delete,
-                    turbo_confirm: "Are you sure you want to unfollow #{@user.name}?" 
-                  },
-                  class: "btn btn-outline-danger" %>
-            <% end %>
-            
             <% if @user.institution.present? %>
               <div class="">
                 <%= image_tag @user.institution.institution_logo, 

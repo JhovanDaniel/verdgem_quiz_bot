@@ -6,11 +6,7 @@ class UserFollowsController < ApplicationController
     @follow = current_user.active_follows.build(followee: @user)
     
     if @follow.save
-      respond_to do |format|
-        format.html { redirect_back(fallback_location: user_path(@user), notice: "Now following #{@user.name}") }
-        format.json { render json: { status: 'success', message: 'Following user', followers_count: @user.followers_count } }
-        format.turbo_stream
-      end
+      redirect_to authenticated_root_path, notice: "You are now following #{@user.nickname}"
     else
       respond_to do |format|
         format.html { redirect_back(fallback_location: user_path(@user), alert: @follow.errors.full_messages.join(', ')) }
@@ -23,11 +19,7 @@ class UserFollowsController < ApplicationController
     @follow = current_user.active_follows.find_by(followee: @user)
     
     if @follow&.destroy
-      respond_to do |format|
-        format.html { redirect_back(fallback_location: user_path(@user), notice: "Unfollowed #{@user.name}") }
-        format.json { render json: { status: 'success', message: 'Unfollowed user', followers_count: @user.followers_count } }
-        format.turbo_stream
-      end
+      redirect_to authenticated_root_path, notice: "You have unfollowed #{@user.nickname}"
     else
       respond_to do |format|
         format.html { redirect_back(fallback_location: user_path(@user), alert: "Unable to unfollow user") }
