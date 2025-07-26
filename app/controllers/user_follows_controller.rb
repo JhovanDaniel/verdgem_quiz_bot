@@ -31,7 +31,7 @@ class UserFollowsController < ApplicationController
   # Show users that the current user is following
   def following
     @user = User.find(params[:user_id])
-    @following = @user.following.includes(:institution).page(params[:page]).per(20)
+    @following = @user.following.includes(:institution)
     
     # Security check
     unless current_user.admin? || current_user == @user
@@ -43,7 +43,7 @@ class UserFollowsController < ApplicationController
   # Show users that are following the current user
   def followers
     @user = User.find(params[:user_id])
-    @followers = @user.followers.includes(:institution).page(params[:page]).per(20)
+    @followers = @user.followers.includes(:institution)
     
     # Security check
     unless current_user.admin? || current_user == @user

@@ -1,0 +1,248 @@
+<div class="container-xl">
+  <!-- Header Section -->
+  <div class="page-header d-print-none">
+    <div class="row g-2 align-items-center mb-4">
+      <div class="col">
+        <div class="d-flex align-items-center">
+          <div>
+            <h2 class="page-title mb-0">
+              <%= @user.name %>'s Followers
+            </h2>
+            <div class="text-muted">
+              <strong><%= @user.followers_count %></strong> 
+              follower<%= 's' unless @user.followers_count == 1 %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-auto ms-auto d-print-none">
+        <div class="btn-list">
+          <%= link_to '#', class: "btn btn-outline-primary" do %>
+            <i class="bi bi-person-plus me-1"></i>
+            Following (<%= @user.following_count %>)
+          <% end %>
+          <% if current_user == @user %>
+            <%= link_to '#', class: "btn btn-primary" do %>
+              <i class="bi bi-search me-1"></i>
+              Find Users
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Followers Grid -->
+  <div class="row row-cards">
+    <% if @followers.any? %>
+      <% @followers.each do |follower| %>
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+          <div class="card hover-card">
+            <div class="card-body text-center">
+              <!-- Avatar -->
+              <div class="avatar avatar-xl mx-auto mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <span class="avatar-initials text-white">
+                  <%= follower.initials %>
+                </span>
+              </div>
+
+              <!-- User Info -->
+              <h4 class="card-title mb-1">
+                <%= link_to follower.name, profile_path(follower.nickname), class: "text-decoration-none" %>
+              </h4>
+              <div class="text-muted mb-2">@<%= follower.nickname %></div>
+              
+              <!-- Institution -->
+              <% if follower.institution %>
+                <div class="small text-muted mb-2">
+                  <i class="bi bi-building me-1"></i>
+                  <%= follower.institution.name %>
+                </div>
+              <% end %>
+
+              <!-- Mutual Follow Badge -->
+              <% if current_user&.following?(follower) %>
+                <span class="badge bg-success mb-3">
+                  <i class="bi bi-arrow-left-right me-1"></i>
+                  Mutual Follow
+                </span>
+              <% else %>
+                <div class="mb-3"></div>
+              <% end %>
+
+              <!-- User Stats -->
+              <div class="row text-center mb-3">
+                <div class="col-4">
+                  <div class="fw-bold text-muted"><%= follower.followers_count %></div>
+                  <div class="small text-muted">Followers</div>
+                </div>
+                <div class="col-4">
+                  <div class="fw-bold text-muted"><%= follower.following_count %></div>
+                  <div class="small text-muted">Following</div>
+                </div>
+                <div class="col-4">
+                  <div class="fw-bold text-muted"><%= follower.level %></div>
+                  <div class="small text-muted">Level</div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <% if current_user && follower != current_user %>
+                <div class="btn-list">
+                  <%= link_to profile_path(follower.nickname), class: "btn btn-outline-primary btn-sm" do %>
+                    <i class="bi bi-person me-1"></i>
+                    View Profile
+                  <% end %>
+                  
+                  <% if current_user.following?(follower) %>
+                    <%= link_to user_follows_path(follower), 
+                        data: { 
+                          turbo_method: :delete,
+                          turbo_confirm: "Unfollow #{follower.name}?" 
+                        },
+                        class: "btn btn-outline-danger btn-sm" do %>
+                      <i class="bi bi-person-dash me-1"></i>
+                      Unfollow
+                    <% end %>
+                  <% else %>
+                    <%= link_to user_follows_path(follower), 
+                        data: { turbo_method: :post },
+                        class: "btn btn-success btn-sm" do %>
+                      <i class="bi bi-person-plus me-1"></i>
+                      Follow Back
+                    <% end %>
+                  <% end %>
+                </div>
+              <% elsif follower == current_user %>
+                <span class="badge bg-secondary">
+                  <i class="bi bi-person-check me-1"></i>
+                  You
+                </span>
+              <% else %>
+                <%= link_to profile_path(follower.nickname), class: "btn btn-primary btn-sm" do %>
+                  <i class="bi bi-person me-1"></i>
+                  View Profile
+                <% end %>
+              <% end %>
+
+              <!-- Follow Date -->
+              <div class="small text-muted mt-2">
+                <% follow_record = @user.passive_follows.find_by(follower: follower) %>
+                <% if follow_record %>
+                  Following since <%= follow_record.created_at.strftime("%b %Y") %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Empty State -->
+      <div class="col-12">
+        <div class="empty">
+          <p class="empty-title">No followers found</p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Quick Stats Sidebar (Optional) -->
+<% if @followers.any? %>
+  <div class="position-fixed bottom-0 end-0 m-3" style="z-index: 1000;">
+    <div class="card bg-dark text-white" style="min-width: 200px;">
+      <div class="card-body py-2">
+        <div class="row text-center">
+          <div class="col-6">
+            <div class="fw-bold"><%= @user.followers.where('user_follows.created_at > ?', 30.days.ago).count %></div>
+            <div class="small">New (30d)</div>
+          </div>
+          <div class="col-6">
+            <div class="fw-bold"><%= @user.mutual_follows.count %></div>
+            <div class="small">Mutual</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+function copyProfileLink() {
+  const profileUrl = '<%= user_url(@user) %>';
+  navigator.clipboard.writeText(profileUrl).then(function() {
+    // Show a toast notification
+    const toast = document.createElement('div');
+    toast.className = 'toast position-fixed top-0 end-0 m-3';
+    toast.innerHTML = `
+      <div class="toast-body bg-success text-white rounded">
+        <i class="bi bi-check-circle me-2"></i>Profile link copied!
+      </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  });
+}
+
+// Add hover effects for cards
+document.addEventListener('DOMContentLoaded', function() {
+  const cards = document.querySelectorAll('.hover-card');
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-2px)';
+      this.style.transition = 'transform 0.2s ease';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+    });
+  });
+});
+</script>
+
+<style>
+.hover-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.avatar-initials {
+  font-size: 1.5rem;
+}
+
+.btn-list .btn {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.btn-list .btn:last-child {
+  margin-right: 0;
+}
+
+@media (max-width: 768px) {
+  .avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 1.2rem;
+  }
+  
+  .avatar-initials {
+    font-size: 1.2rem;
+  }
+}
+</style>
