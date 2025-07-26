@@ -10,7 +10,9 @@
             </h2>
             <div class="text-muted">
               <strong><%= @user.followers_count %></strong> 
-              follower<%= 's' unless @user.followers_count == 1 %>
+              follower<%= 's' unless @user.followers_count == 1 %> |  
+              <strong><%= @user.following_count %></strong> 
+              following
             </div>
           </div>
         </div>
@@ -144,6 +146,10 @@
         </div>
       </div>
     <% end %>
+  </div>
+  
+  <div class="my-4">
+    <%= link_to "Back to Social Dashboad", social_path, class: "btn btn-outline-primary" %>
   </div>
 </div>
 

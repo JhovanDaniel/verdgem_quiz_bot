@@ -3,133 +3,97 @@
     <h2 class="display-6 fw-bold">Social Dashboard</h2>
   </div>
   
-  <!-- Combined Following & Followers Card -->
-  <div class="card hover-card border-0 shadow-sm mb-4">
-    <div class="card-body">
-      <!-- Header with Stats and Find Users Button -->
-      <div class="row align-items-center mb-4">
-        <div class="col-sm-6 col-lg-3">
-          <div class="">
-            <div class="h2 mb-1"><%= @user.following_count %></div>
-            <div class="text-muted small">Following</div>
-          </div>
-        </div>
-        
-        <div class="col-sm-6 col-lg-3">
-          <div class="">
-            <div class="h2 mb-1"><%= @user.followers_count %></div>
-            <div class="text-muted small">Followers</div>
-          </div>
-        </div>
-        
-        <div class="col-sm-12 col-lg-6 text-lg-end text-center mt-3 mt-lg-0">
-          <div class="btn-group" role="group">
-            <%= link_to user_following_path(@user), class: "btn btn-outline-primary btn-sm" do %>
-              View Following
-            <% end %>
-            <%= link_to user_followers_path(@user), class: "btn btn-outline-primary btn-sm" do %>
-              View Followers
-            <% end %>
-            <%= link_to '#', class: "btn btn-primary btn-sm" do %>
-              <i class="bi bi-search me-1"></i>Find Users
-            <% end %>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Following & Followers Avatars Section -->
-      <div class="mb-4">
-        <% if @user.following.any? || @user.followers.any? %>
-          <!-- Following Avatars -->
-          <% if @user.following.any? %>
-            <div class="mb-3">
-              <div class="d-flex flex-wrap gap-3">
-                <% @user.following.limit(6).each_with_index do |followed_user, index| %>
-                  <div class="text-center">
-                    <%= link_to profile_path(followed_user.nickname), class: "text-decoration-none" do %>
-                      <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center mb-2" 
-                           style="width: 45px; height: 45px; border-radius: 50%; font-size: 0.75rem;">
-                        <%= followed_user.initials %>
-                      </div>
-                      <small class="text-muted d-block" style="font-size: 0.7rem;">
-                        <%= followed_user.nickname %>
-                      </small>
-                    <% end %>
-                  </div>
-                <% end %>
-                
-                <% if @user.following_count > 6 %>
-                  <%= link_to following_user_path(@user), class: "text-decoration-none" do %>
-                    <div class="text-center">
-                      <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center mb-2" 
-                           style="width: 45px; height: 45px; border-radius: 50%; border: 2px dashed #dee2e6; font-size: 0.65rem;">
-                        +<%= @user.following_count - 6 %>
-                      </div>
-                      <small class="text-muted d-block" style="font-size: 0.7rem;">more</small>
-                    </div>
-                  <% end %>
-                <% end %>
-              </div>
-            </div>
-          <% end %>
-  
-          <!-- Followers Avatars -->
-          <% if @user.followers.any? %>
-            <div class="mb-3">
-              <div class="d-flex flex-wrap gap-3">
-                <% @user.followers.limit(6).each_with_index do |follower, index| %>
-                  <div class="text-center position-relative">
-                    <%= link_to profile_path(follower.nickname), class: "text-decoration-none" do %>
-                      <div class="avatar-circle bg-success text-white d-flex align-items-center justify-content-center mb-2" 
-                           style="width: 45px; height: 45px; border-radius: 50%; font-size: 0.75rem;">
-                        <%= follower.initials %>
-                      </div>
-                      <small class="text-muted d-block" style="font-size: 0.7rem;">
-                        <%= follower.nickname %>
-                      </small>
-                    <% end %>
-                    
-                    <!-- Show mutual follow indicator -->
-                    <% if current_user&.following?(follower) %>
-                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" 
-                            style="font-size: 0.5rem; margin-top: 3px; margin-left: -3px;" 
-                            title="Mutual follow">
-                        <i class="bi bi-arrow-left-right"></i>
-                      </span>
-                    <% end %>
-                  </div>
-                <% end %>
-                
-                <% if @user.followers_count > 6 %>
-                  <%= link_to followers_user_path(@user), class: "text-decoration-none" do %>
-                    <div class="text-center">
-                      <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center mb-2" 
-                           style="width: 45px; height: 45px; border-radius: 50%; border: 2px dashed #dee2e6; font-size: 0.65rem;">
-                        +<%= @user.followers_count - 6 %>
-                      </div>
-                      <small class="text-muted d-block" style="font-size: 0.7rem;">more</small>
-                    </div>
-                  <% end %>
-                <% end %>
-              </div>
-            </div>
-          <% end %>
-        <% else %>
-          <!-- Empty State -->
-          <div class="text-center py-4">
-            <div class="mb-3">
-              <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
-            </div>
-            <h6 class="text-muted mb-2">No social connections yet</h6>
-            <p class="text-muted small mb-3">Start following other users to build your network!</p>
-          </div>
+  <!-- Followers Card -->
+  <div class="card hover-card border-0 shadow-sm mb-5">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0 text-body-emphasis">
+        <i class="bi bi-person-hearts me-2"></i>
+        Followers
+      </h4>
+      <div class="btn-group" role="group">
+        <%= link_to user_following_path(@user), class: "btn btn-outline-primary btn-sm" do %>
+          View Following
         <% end %>
+        <%= link_to user_followers_path(@user), class: "btn btn-outline-primary btn-sm" do %>
+          View Followers
+        <% end %>
+        <%= link_to '#', class: "btn btn-primary btn-sm" do %>
+          <i class="bi bi-search me-1"></i>Find Users
+        <% end %>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row align-items-center">
+        <div class="col-12 col-md-6 mt-3 mt-md-0">
+          <div class="d-flex flex-wrap gap-2">
+            <!-- Following & Followers Avatars Section -->
+            <div class="">
+              <% if @user.followers.any? %>
+                <!-- Followers Avatars -->
+                <% if @user.followers.any? %>
+                  <div class="mb-3">
+                    <div class="d-flex flex-wrap gap-3">
+                      <% @user.followers.limit(6).each_with_index do |follower, index| %>
+                        <div class="text-center position-relative">
+                          <%= link_to profile_path(follower.nickname), class: "text-decoration-none" do %>
+                            <div class="avatar-circle bg-success text-white d-flex align-items-center justify-content-center mb-2" 
+                                 style="width: 45px; height: 45px; border-radius: 50%; font-size: 0.75rem;">
+                              <%= follower.initials %>
+                            </div>
+                            <small class="text-muted d-block" style="font-size: 0.7rem;">
+                              <%= follower.nickname %>
+                            </small>
+                          <% end %>
+                          
+                          <!-- Show mutual follow indicator -->
+                          <% if current_user&.following?(follower) %>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" 
+                                  style="font-size: 0.5rem; margin-top: 3px; margin-left: -3px;" 
+                                  title="Mutual follow">
+                              <i class="bi bi-arrow-left-right"></i>
+                            </span>
+                          <% end %>
+                        </div>
+                      <% end %>
+                      
+                      <% if @user.followers_count > 6 %>
+                        <%= link_to user_followers_path(@user), class: "text-decoration-none" do %>
+                          <div class="text-center">
+                            <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center mb-2" 
+                                 style="width: 45px; height: 45px; border-radius: 50%; border: 2px dashed #dee2e6; font-size: 0.65rem;">
+                              +<%= @user.followers_count - 6 %>
+                            </div>
+                            <small class="text-muted d-block" style="font-size: 0.7rem;">more</small>
+                          </div>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              <% else %>
+                <!-- Empty State -->
+                <div class="text-center">
+                  <div class="mb-3">
+                    <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+                  </div>
+                  <h6 class="text-muted mb-2">No social connections yet</h6>
+                  <p class="text-muted small mb-3">Start following other users to build your network!</p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-3 text-md-end mt-3 mt-md-0">
+          <p class="text-muted mb-1">
+            <strong><%= @user.followers_count %></strong> followers | <strong><%= @user.following_count %></strong> following
+          </p>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Study Group Section -->
-  <div class="card hover-card border-0 shadow-sm mb-4">
+  <div class="card hover-card border-0 shadow-sm mb-5">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0 text-body-emphasis">
         <i class="bi bi-people-fill text-primary me-2"></i>
@@ -205,7 +169,7 @@
 
   <!-- Institution Section -->
   <% if !current_user.institution.nil? %>
-  <div class="card border-0 shadow-sm mb-4">
+  <div class="card hover-card border-0 shadow-sm mb-5">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0 text-body-emphasis">
         <i class="bi bi-building me-2"></i>
