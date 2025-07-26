@@ -3,116 +3,93 @@
     <h2 class="display-6 fw-bold">Social Dashboard</h2>
   </div>
   
-  <!-- Friends Section -->
-  <div class="card border-0 shadow-sm mb-4">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-      <h4 class="mb-0 text-body-emphasis">
-        <i class="bi bi-person-hearts text-success me-2"></i>
-        Friends
-      </h4>
-      <div>
-        <a href="#" class="btn btn-outline-success btn-sm"><i class="bi bi-plus me-1"></i>Add Friend</a>
-        <a href="#" class="btn btn-outline-success btn-sm">View All Friends</a>
-      </div>
-    </div>
+  <!-- Combined Following & Followers Card -->
+  <div class="card hover-card border-0 shadow-sm mb-4">
     <div class="card-body">
-      <div class="row align-items-center">
-        <div class="col-12 col-md-8">
-          <div class="d-flex flex-wrap gap-3">
-            <!-- Friend Avatar 1 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+      <!-- Following Section -->
+      <div class="row row-deck row-cards">
+        <div class="col-sm-6 col-lg-3">
+          <div class="card border-0">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="subheader">Following</div>
+                <div class="ms-auto lh-1">
+                </div>
               </div>
-              <small class="text-muted">Sarah J.</small>
+              <div class="d-flex align-items-baseline">
+                <div class="h1 mb-3 me-2"><%= @user.following_count %></div>
+              </div>
             </div>
-            <!-- Friend Avatar 2 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-success text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
-              </div>
-              <small class="text-muted">Mike R.</small>
-            </div>
-            <!-- Friend Avatar 3 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-info text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
-              </div>
-              <small class="text-muted">Alex K.</small>
-            </div>
-            <!-- Friend Avatar 4 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-warning text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
-              </div>
-              <small class="text-muted">Emma L.</small>
-            </div>
-            <!-- Friend Avatar 5 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-danger text-white d-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
-              </div>
-              <small class="text-muted">David S.</small>
-            </div>
-            <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center" 
-                   style="width: 60px; height: 60px; border-radius: 50%; border: 2px dashed #dee2e6;">
-                <span style="font-size: 0.8rem;">+247</span>
-              </div>
           </div>
         </div>
-        <div class="col-12 col-md-4 text-md-end mt-3 mt-md-0">
-          <p class="text-muted mb-1">
-            <strong>24</strong> total friends
-          </p>
-          <small class="text-muted">Last active: 2 hours ago</small>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Achievements Section -->
-  <div class="card border-0 shadow-sm mb-4">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center">
-      <h4 class="mb-0 text-body-emphasis">
-        <i class="bi bi-trophy-fill text-warning me-2"></i>
-        Recent Achievements
-      </h4>
-      <a href="#" class="btn btn-outline-warning btn-sm">View All Badges</a>
-    </div>
-    <div class="card-body">
-      <div class="row align-items-center">
-        <div class="col-11 col-md-9">
-          <div class="d-flex flex-wrap gap-3">
-            <% @user.user_badges.order(created_at: :desc).limit(5).each do |user_badge|%>
-              <div class="badge-container">
-                <%= image_tag user_badge.badge.badge_image, 
-                  alt: user_badge.badge.name, style:"width:80px;",
-                  class: "badge-thumb-image" if user_badge.badge.badge_image.attached? %>
-                <span class="badge-tooltip">
-                  <%= user_badge.badge.name %>: <%= user_badge.badge.description %>
-                </span>
+        
+        <div class="col-sm-6 col-lg-3">
+          <div class="card border-0">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="subheader">Followers</div>
+                <div class="ms-auto lh-1">
+                </div>
               </div>
-            <% end %>
-            <% if @user.user_badges.count > 5 %>
-            <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center" 
-                 style="width: 80px; height: 80px; border-radius: 50%; border: 2px dashed #dee2e6;">
-              <span style="font-size: 0.8rem;">+<%= @user.user_badges.count - 5 %></span>
+              <div class="d-flex align-items-baseline">
+                <div class="h1 mb-3 me-2"><%= @user.followers_count %></div>
+              </div>
             </div>
-            <% end %>
           </div>
         </div>
-        <div class="col-12 col-md-3 text-md-end mt-3 mt-md-0">
-          <p class="text-muted mb-1">
-            <strong><%= @user.user_badges.count %></strong> total badges
-          </p>
-          <small class="text-muted">Latest earned: Quiz Master</small>
-        </div>
+      </div>
+      
+      
+      <div class="mb-4">
+        <% if @user.following.any? %>
+          <div class="d-flex flex-wrap gap-3 mb-2">
+            <% @user.following.limit(4).each_with_index do |followed_user, index| %>
+              <div class="text-center">
+                <%= link_to user_path(followed_user), class: "text-decoration-none" do %>
+                  <div class="avatar-circle <%= avatar_color_class(index) %> text-white d-flex align-items-center justify-content-center mb-2" 
+                       style="width: 50px; height: 50px; border-radius: 50%; font-size: 0.8rem;">
+                    <%= followed_user.initials %>
+                  </div>
+                  <small class="text-muted d-block" style="font-size: 0.75rem;">
+                    <%= followed_user.first_name %> <%= followed_user.last_name.first %>.
+                  </small>
+                <% end %>
+              </div>
+            <% end %>
+            
+            <% if @user.following_count > 4 %>
+              <%= link_to following_user_path(@user), class: "text-decoration-none" do %>
+                <div class="text-center">
+                  <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center mb-2" 
+                       style="width: 50px; height: 50px; border-radius: 50%; border: 2px dashed #dee2e6; font-size: 0.7rem;">
+                    +<%= @user.following_count - 4 %>
+                  </div>
+                  <small class="text-muted d-block" style="font-size: 0.75rem;">more</small>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+          <small class="text-muted">
+            <strong><%= @user.following_count %></strong> following
+            <% if @user.following.any? %>
+              • Recent: <%= time_ago_in_words(@user.active_follows.recent.first.created_at) %> ago
+            <% end %>
+          </small>
+        <% else %>
+          <div class="text-center py-3">
+            <i class="bi bi-person-plus text-muted" style="font-size: 2rem;"></i>
+            <p class="text-muted small mb-2 mt-2">Not following anyone yet</p>
+            <a href="#" class="btn btn-primary btn-sm">
+              <i class="bi bi-search me-1"></i>Find Users
+            </a>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
 
   <!-- Study Group Section -->
-  <div class="card border-0 shadow-sm mb-4">
+  <div class="card hover-card border-0 shadow-sm mb-4">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0 text-body-emphasis">
         <i class="bi bi-people-fill text-primary me-2"></i>
@@ -253,11 +230,11 @@
 
 <style>
 
-.card {
+.hover-card {
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.card:hover {
+.hover-card:hover {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 

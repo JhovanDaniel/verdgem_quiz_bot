@@ -102,7 +102,7 @@ class UsersController < ApplicationController
   end
   
   def social
-    @user = current_user@user = current_user
+    @user = current_user
     @recent_followers = @user.followers.order(created_at: :desc).limit(5)
     #@suggested_follows = @user.suggested_follows
     @mutual_follows = @user.mutual_follows.limit(5)

@@ -50,10 +50,31 @@
                 <i class="fas fa-edit"></i> Edit Profile
               <% end %>
             <% end %>
+            
+            <% if !(@user == current_user) && !current_user.following?(@user) %>
+              <% if !current_user.following?(@user) %>
+                <%= link_to "Follow", user_user_follows_path(@user), 
+                data: { 
+                  turbo_method: :post,
+                  turbo_confirm: "Follow this user?" 
+                },
+                class: "btn btn-primary" %>
+              <% end %>
+            <% else %>
+              <% follow_record = current_user.active_follows.find_by(followee: @user) %>
+              <%= link_to "Unfollow", user_user_follow_path(@user, follow_record), 
+                  data: { 
+                    turbo_method: :delete,
+                    turbo_confirm: "Are you sure you want to unfollow #{@user.name}?" 
+                  },
+                  class: "btn btn-outline-danger" %>
+            <% end %>
+            
             <% if @user.institution.present? %>
-              <div class="institution-badge">
-                <i class="fas fa-school"></i>
-                <%= @user.institution.name %>
+              <div class="">
+                <%= image_tag @user.institution.institution_logo, 
+                    alt: @user.institution.name, width: 100,
+                    class: "p-2 mx-2" if @user.institution.institution_logo.attached? %>
               </div>
             <% end %>
           </div>
@@ -115,30 +136,7 @@
         </div>
         <div class="card-body">
           <% if @user.badges.any? %>
-            <div class="featured-badges mb-4">
-              <h5>Featured Badges</h5>
-              <div class="badge-showcase">
-                <% @user.featured_badges.each do |user_badge| %>
-                  <div class="featured-badge-item">
-                    <% if user_badge.badge.badge_image.attached? %>
-                      <%= image_tag user_badge.badge.badge_image, class: "badge-image", alt: user_badge.badge.name %>
-                    <% else %>
-                      <div class="badge-placeholder">
-                        <i class="fas fa-medal"></i>
-                      </div>
-                    <% end %>
-                    <div class="badge-info">
-                      <h6><%= user_badge.badge.name %></h6>
-                      <p><%= user_badge.badge.description %></p>
-                      <small class="text-muted">Earned <%= time_ago_in_words(user_badge.earned_at) %> ago</small>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-            </div>
-            
             <div class="recent-badges">
-              <h5>Recent Achievements</h5>
               <div class="badge-grid">
                 <% @user.recent_badges.each do |user_badge| %>
                   <div class="badge-item">
