@@ -17,9 +17,9 @@
       </div>
       <div class="col-auto ms-auto d-print-none">
         <div class="btn-list">
-          <%= link_to '#', class: "btn btn-outline-primary" do %>
+          <%= link_to user_followers_path(@user), class: "btn btn-outline-primary" do %>
             <i class="bi bi-person-plus me-1"></i>
-            Following (<%= @user.following_count %>)
+            Followers (<%= @user.followers_count %>)
           <% end %>
           <% if current_user == @user %>
             <%= link_to '#', class: "btn btn-primary" do %>
@@ -36,7 +36,7 @@
   <div class="row row-cards">
     <% if @following.any? %>
       <% @following.each do |following| %>
-        <div class="col-sm-6 col-lg-4 col-xl-3">
+        <div class="col-sm-6 col-lg-4 col-xl-4">
           <div class="card hover-card">
             <div class="card-body text-center">
               <!-- Avatar -->
@@ -105,7 +105,7 @@
                       Unfollow
                     <% end %>
                   <% else %>
-                    <%= link_to user_follows_path(following), 
+                    <%= link_to user_user_follows_path(following), 
                         data: { turbo_method: :post },
                         class: "btn btn-success btn-sm" do %>
                       <i class="bi bi-person-plus me-1"></i>
@@ -146,26 +146,6 @@
     <% end %>
   </div>
 </div>
-
-<!-- Quick Stats Sidebar (Optional) -->
-<% if @following.any? %>
-  <div class="position-fixed bottom-0 end-0 m-3" style="z-index: 1000;">
-    <div class="card bg-dark text-white" style="min-width: 200px;">
-      <div class="card-body py-2">
-        <div class="row text-center">
-          <div class="col-6">
-            <div class="fw-bold"><%= @user.following.where('user_follows.created_at > ?', 30.days.ago).count %></div>
-            <div class="small">New (30d)</div>
-          </div>
-          <div class="col-6">
-            <div class="fw-bold"><%= @user.mutual_follows.count %></div>
-            <div class="small">Mutual</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-<% end %>
 
 <script>
 function copyProfileLink() {
