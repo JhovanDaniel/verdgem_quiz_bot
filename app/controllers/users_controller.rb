@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_admin, except: [:show, :user_edit, :user_update, :reset_progress, :social, :profile]
+  before_action :require_admin, except: [:show, :user_edit, :user_update, :reset_progress, :social, :profile,
+  :find_users]
   
   def index
     @users = User.all
@@ -107,6 +108,28 @@ class UsersController < ApplicationController
     #@suggested_follows = @user.suggested_follows
     @mutual_follows = @user.mutual_follows.limit(5)
     @following_activity = @user.following_activity
+  end
+  
+  def find_users
+    @search_query = params[:search]
+    @users = User.none  # Start with empty relation
+    
+    if @search_query.present?
+      # Search by nickname (case-insensitive)
+      search_term = "%#{@search_query.downcase}%"
+      @users = User.where("LOWER(nickname) LIKE ?", search_term)
+                   .where.not(id: current_user.id)  # Exclude current user
+                   .includes(:institution, :user_badges, :badges)
+                   .order(:nickname)
+      
+      # Optionally limit results to prevent performance issues
+      @users = @users.limit(50)
+    end
+    
+    # Track search analytics (optional)
+    if @search_query.present? && @users.any?
+      Rails.logger.info "User search: '#{@search_query}' returned #{@users.count} results"
+    end
   end
   
   private

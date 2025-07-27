@@ -70,6 +70,7 @@ Rails.application.routes.draw do
   post 'reset_progress', to: 'users#reset_progress'
   get 'social', to: 'users#social', as: 'social'
   get '/profile/:nickname', to: 'users#profile', as: :profile
+  get 'find_users', to: 'users#find_users', as: :find_users
   
   resources :users do
     

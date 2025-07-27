@@ -1,0 +1,304 @@
+<div class="container-xl">
+  <!-- Header Section -->
+  <div class="page-header d-print-none">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="display-6 fw-bold">Find Users</h2>
+    </div>
+  </div>
+
+  <!-- Search Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <%= form_with url: find_users_path, method: :get, local: true, class: "row g-3 align-items-end" do |form| %>
+            <div class="col-md-8 my-auto">
+              <%= form.label :search, "Search by nickname", class: "form-label" %>
+              <%= form.text_field :search, 
+                  value: @search_query, 
+                  placeholder: "Enter nickname to search for users...", 
+                  class: "form-control form-control-lg",
+                  autofocus: true %>
+            </div>
+            <div class="col-md-4">
+              <div class="btn-group w-100">
+                <%= form.submit "Search Users", class: "btn btn-primary" %>
+                <% if @search_query.present? %>
+                  <%= link_to find_users_path, class: "btn btn-outline-secondary" do %>
+                    Clear
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Results -->
+  <% if @search_query.present? %>
+    <!-- Results Header -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">
+            <% if @users.any? %>
+              Found <%= pluralize(@users.count, 'user') %> for "<%= @search_query %>"
+            <% else %>
+              No users found for "<%= @search_query %>"
+            <% end %>
+          </h4>
+          <% if @users.any? %>
+            <small class="text-muted">
+              Showing <%= @users.count %> result<%= 's' unless @users.count == 1 %>
+            </small>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Grid -->
+    <div class="row row-cards">
+      <% if @users.any? %>
+        <% @users.each do |user| %>
+          <div class="col-sm-6 col-lg-4 col-xl-4">
+            <div class="card hover-card h-100">
+              <div class="card-body text-center d-flex flex-column">
+                <!-- Avatar -->
+                <div class="avatar avatar-xl mx-auto mb-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                  <span class="avatar-initials text-white">
+                    <%= user.initials %>
+                  </span>
+                </div>
+
+                <!-- User Info -->
+                <h4 class="card-title mb-1">
+                  <%= link_to user.name, profile_path(user.nickname), class: "text-decoration-none" %>
+                </h4>
+                <div class="text-primary fw-bold mb-2">@<%= user.nickname %></div>
+                
+                <!-- Institution -->
+                <% if user.institution %>
+                  <div class="small text-muted mb-3">
+                    <i class="bi bi-building me-1"></i>
+                    <%= user.institution.name %>
+                  </div>
+                <% else %>
+                  <div class="mb-3"></div>
+                <% end %>
+
+                <!-- User Stats -->
+                <div class="row text-center mb-3">
+                  <div class="col-4">
+                    <div class="fw-bold text-muted"><%= user.followers_count %></div>
+                    <div class="small text-muted">Followers</div>
+                  </div>
+                  <div class="col-4">
+                    <div class="fw-bold text-muted"><%= user.following_count %></div>
+                    <div class="small text-muted">Following</div>
+                  </div>
+                  <div class="col-4">
+                    <div class="fw-bold text-muted"><%= user.level %></div>
+                    <div class="small text-muted">Level</div>
+                  </div>
+                </div>
+
+                <!-- Badges (if any) -->
+                <% if user.badges.any? %>
+                  <div class="mb-3">
+                    <% user.badges.limit(3).each do |badge| %>
+                      <span class="badge bg-secondary me-1" title="<%= badge.description %>">
+                        <%= badge.name %>
+                      </span>
+                    <% end %>
+                    <% if user.badges.count > 3 %>
+                      <span class="badge bg-light text-muted">+<%= user.badges.count - 3 %></span>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <!-- Mutual Connection Info -->
+                <% if current_user.following?(user) %>
+                  <div class="alert alert-success py-2 mb-3" role="alert">
+                    <i class="bi bi-person-check me-1"></i>
+                    You're following this user
+                  </div>
+                <% elsif user.following?(current_user) %>
+                  <div class="alert alert-info py-2 mb-3" role="alert">
+                    <i class="bi bi-person-hearts me-1"></i>
+                    This user follows you
+                  </div>
+                <% else %>
+                  <div class="mb-3"></div>
+                <% end %>
+
+                <!-- Action Buttons -->
+                <div class="mt-auto">
+                  <div class="btn-list justify-content-center">
+                    <%= link_to profile_path(user.nickname), class: "btn btn-outline-primary btn-sm" do %>
+                      <i class="bi bi-person me-1"></i>
+                      View Profile
+                    <% end %>
+                    
+                    <% if current_user.following?(user) %>
+                      <%= link_to user_user_follows_path(user), 
+                          data: { 
+                            turbo_method: :delete,
+                            turbo_confirm: "Unfollow #{user.name}?" 
+                          },
+                          class: "btn btn-outline-danger btn-sm" do %>
+                        <i class="bi bi-person-dash me-1"></i>
+                        Unfollow
+                      <% end %>
+                    <% else %>
+                      <%= link_to user_user_follows_path(user), 
+                          data: { turbo_method: :post },
+                          class: "btn btn-success btn-sm" do %>
+                        <i class="bi bi-person-plus me-1"></i>
+                        Follow
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <!-- No Results Found -->
+        <div class="col-12">
+          <div class="empty">
+            <div class="empty-img">
+              <i class="bi bi-search" style="font-size: 5rem; color: #dee2e6;"></i>
+            </div>
+            <p class="empty-title">No users found</p>
+            <p class="empty-subtitle text-muted">
+              We couldn't find any users with the nickname "<strong><%= @search_query %></strong>".
+              <br>
+              Try searching with a different nickname or check the spelling.
+            </p>
+            <div class="empty-action">
+              <%= link_to find_users_path, class: "btn btn-primary" do %>
+                <i class="bi bi-search me-1"></i>
+                Try Another Search
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <!-- Initial State - No Search Yet -->
+    <div class="row">
+      <div class="col-12">
+        <div class="empty">
+          <div class="empty-img">
+            <i class="bi bi-people" style="font-size: 5rem; color: #dee2e6;"></i>
+          </div>
+          <p class="empty-title">Ready to find new connections?</p>
+          <p class="empty-subtitle text-muted">
+            Enter a nickname in the search bar above to discover other users.
+            <br>
+            You can search for partial nicknames too!
+          </p>
+          <div class="empty-action">
+            <div class="row justify-content-center">
+              <div class="col-md-6">
+                <%= form_with url: find_users_path, method: :get, local: true, class: "input-group" do |form| %>
+                  <%= form.text_field :search, 
+                      placeholder: "Quick search...", 
+                      class: "form-control" %>
+                  <%= form.submit "Search", class: "btn btn-primary" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Search Tips -->
+  <% unless @search_query.present? %>
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="card bg-light">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-lightbulb text-warning me-2"></i>
+              Search Tips
+            </h5>
+            <div class="row">
+              <div class="col-md-4">
+                <h6><i class="bi bi-search me-1"></i> Search by Nickname</h6>
+                <p class="small text-muted">Use the exact nickname or part of it to find users.</p>
+              </div>
+              <div class="col-md-4">
+                <h6><i class="bi bi-type me-1"></i> Case Insensitive</h6>
+                <p class="small text-muted">Search works regardless of uppercase or lowercase letters.</p>
+              </div>
+              <div class="col-md-4">
+                <h6><i class="bi bi-lightning me-1"></i> Quick Results</h6>
+                <p class="small text-muted">Results are limited to 50 users for faster loading.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<style>
+.hover-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.avatar-initials {
+  font-size: 1.5rem;
+}
+
+.btn-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.btn-list .btn {
+  flex: 1;
+  min-width: fit-content;
+}
+
+@media (max-width: 768px) {
+  .avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 1.2rem;
+  }
+  
+  .avatar-initials {
+    font-size: 1.2rem;
+  }
+  
+  .btn-list .btn {
+    flex: 1 1 100%;
+  }
+}
+</style>
