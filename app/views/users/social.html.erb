@@ -24,7 +24,7 @@
     </div>
     <div class="card-body">
       <div class="row align-items-center">
-        <div class="col-12 col-md-6 mt-3 mt-md-0">
+        <div class="col-12 col-md-9 mt-3 mt-md-0">
           <div class="d-flex flex-wrap gap-2">
             <!-- Following & Followers Avatars Section -->
             <div class="">
@@ -37,7 +37,7 @@
                         <div class="text-center position-relative">
                           <%= link_to profile_path(follower.nickname), class: "text-decoration-none" do %>
                             <div class="avatar-circle bg-success text-white d-flex align-items-center justify-content-center mb-2" 
-                                 style="width: 45px; height: 45px; border-radius: 50%; font-size: 0.75rem;">
+                                 style="width: 60px; height: 60px; border-radius: 50%; font-size: 0.75rem;">
                               <%= follower.initials %>
                             </div>
                             <small class="text-muted d-block" style="font-size: 0.7rem;">
@@ -60,7 +60,7 @@
                         <%= link_to user_followers_path(@user), class: "text-decoration-none" do %>
                           <div class="text-center">
                             <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center mb-2" 
-                                 style="width: 45px; height: 45px; border-radius: 50%; border: 2px dashed #dee2e6; font-size: 0.65rem;">
+                                 style="width: 60px; height: 60px; border-radius: 50%; border: 2px dashed #dee2e6; font-size: 0.65rem;">
                               +<%= @user.followers_count - 6 %>
                             </div>
                             <small class="text-muted d-block" style="font-size: 0.7rem;">more</small>
@@ -224,11 +224,7 @@
 
   <!-- Quick Actions -->
   <div class="d-flex flex-column flex-md-row justify-content-between gap-2 gap-md-0 my-4">
-    <a href="#" class="btn btn-outline-secondary">Back to Dashboard</a>
-    <div class="d-flex gap-2">
-      <a href="#" class="btn btn-success">Add Friends</a>
-      <a href="#" class="btn btn-primary">Join Study Group</a>
-    </div>
+    <%= link_to "Back to Dashboard", authenticated_root_path ,class:"btn btn-outline-primary" %>
   </div>
 </div>
 
