@@ -75,7 +75,8 @@ Rails.application.routes.draw do
   resources :users do
     
     # Following routes
-    resources :user_follows, only: [:create, :destroy], path: 'follows'
+    post 'follows', to: 'user_follows#create'
+    delete 'follows', to: 'user_follows#destroy'
      
     # Following-related pages
     get 'following', to: 'user_follows#following'

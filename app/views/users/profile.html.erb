@@ -29,7 +29,7 @@
             
             <% if !(@user == current_user) && !current_user.following?(@user) %>
               <% if !current_user.following?(@user) %>
-                <%= link_to "Follow", user_user_follows_path(@user), 
+                <%= link_to "Follow", user_follows_path(@user), 
                 data: { 
                   turbo_method: :post,
                   turbo_confirm: "Follow this user?" 
@@ -38,7 +38,7 @@
               <% end %>
             <% elsif !(@user == current_user) %>
               <% follow_record = current_user.active_follows.find_by(followee: @user) %>
-              <%= link_to "Unfollow", user_user_follow_path(@user, follow_record), 
+              <%= link_to "Unfollow", user_follow_path(@user, follow_record), 
                   data: { 
                     turbo_method: :delete,
                     turbo_confirm: "Are you sure you want to unfollow #{@user.name}?" 

@@ -142,17 +142,17 @@
                     <% end %>
                     
                     <% if current_user.following?(user) %>
-                      <%= link_to user_user_follows_path(user), 
-                          data: { 
-                            turbo_method: :delete,
-                            turbo_confirm: "Unfollow #{user.name}?" 
-                          },
-                          class: "btn btn-outline-danger btn-sm" do %>
+                      <%= link_to user_follows_path(user), 
+                        data: { 
+                          turbo_method: :delete,
+                          turbo_confirm: "Unfollow #{user.nickname}?" 
+                        },
+                        class: "btn btn-outline-danger btn-sm" do %>
                         <i class="bi bi-person-dash me-1"></i>
                         Unfollow
                       <% end %>
                     <% else %>
-                      <%= link_to user_user_follows_path(user), 
+                      <%= link_to user_follows_path(user), 
                           data: { turbo_method: :post },
                           class: "btn btn-success btn-sm" do %>
                         <i class="bi bi-person-plus me-1"></i>
