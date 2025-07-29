@@ -1,0 +1,2 @@
+class StudyGroupMembership < ApplicationRecord
+end

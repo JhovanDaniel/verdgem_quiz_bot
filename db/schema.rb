@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_25_174626) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_29_235420) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -166,6 +166,48 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_174626) do
     t.index ["user_id"], name: "index_quiz_sessions_on_user_id"
   end
 
+  create_table "study_group_memberships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "study_group_id", null: false
+    t.uuid "user_id", null: false
+    t.integer "role", default: 0
+    t.integer "status", default: 0
+    t.datetime "joined_at"
+    t.datetime "last_active_at"
+    t.text "join_message"
+    t.uuid "invited_by_id"
+    t.integer "points_contributed", default: 0
+    t.integer "monthly_points_contributed", default: 0
+    t.integer "quizzes_completed_in_group", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["points_contributed"], name: "index_study_group_memberships_on_points_contributed"
+    t.index ["role"], name: "index_study_group_memberships_on_role"
+    t.index ["status"], name: "index_study_group_memberships_on_status"
+    t.index ["study_group_id", "user_id"], name: "index_study_group_memberships_uniqueness", unique: true
+    t.index ["study_group_id"], name: "index_study_group_memberships_on_study_group_id"
+    t.index ["user_id"], name: "index_study_group_memberships_on_user_id"
+  end
+
+  create_table "study_groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.text "description"
+    t.uuid "created_by_id", null: false
+    t.boolean "is_active", default: true
+    t.text "clan_motto"
+    t.string "clan_color", default: "#3b82f6"
+    t.integer "total_points", default: 0
+    t.integer "monthly_points", default: 0
+    t.datetime "last_points_reset_at"
+    t.datetime "archived_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_id"], name: "index_study_groups_on_created_by_id"
+    t.index ["is_active"], name: "index_study_groups_on_is_active"
+    t.index ["monthly_points"], name: "index_study_groups_on_monthly_points"
+    t.index ["name"], name: "index_study_groups_on_name"
+    t.index ["total_points"], name: "index_study_groups_on_total_points"
+  end
+
   create_table "sub_topics", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
@@ -310,6 +352,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_25_174626) do
   add_foreign_key "quiz_sessions", "subjects"
   add_foreign_key "quiz_sessions", "topics"
   add_foreign_key "quiz_sessions", "users", on_delete: :cascade
+  add_foreign_key "study_group_memberships", "study_groups", on_delete: :cascade
+  add_foreign_key "study_group_memberships", "users", column: "invited_by_id", on_delete: :nullify
+  add_foreign_key "study_group_memberships", "users", on_delete: :cascade
+  add_foreign_key "study_groups", "users", column: "created_by_id", on_delete: :cascade
   add_foreign_key "sub_topics", "topics"
   add_foreign_key "subject_teachers", "subjects"
   add_foreign_key "subject_teachers", "users"
