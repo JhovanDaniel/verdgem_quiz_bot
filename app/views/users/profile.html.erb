@@ -37,8 +37,7 @@
                 class: "btn btn-primary" %>
               <% end %>
             <% elsif !(@user == current_user) %>
-              <% follow_record = current_user.active_follows.find_by(followee: @user) %>
-              <%= link_to "Unfollow", user_follow_path(@user, follow_record), 
+              <%= link_to "Unfollow", user_follows_path(@user), 
                   data: { 
                     turbo_method: :delete,
                     turbo_confirm: "Are you sure you want to unfollow #{@user.name}?" 
