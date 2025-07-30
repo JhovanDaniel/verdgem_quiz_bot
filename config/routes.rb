@@ -84,6 +84,28 @@ Rails.application.routes.draw do
     get 'mutual', to: 'user_follows#mutual'
   end
   
+  resources :study_groups do
+    member do
+      post :join
+      delete :leave
+      post :invite_user
+      delete :remove_member
+      patch :promote_member
+      patch :demote_member
+    end
+    
+    collection do
+      get :leaderboards
+    end
+  end
+  
+  resources :study_group_invitations, only: [:index, :show] do
+    member do
+      patch :accept
+      patch :decline
+    end
+  end
+  
   authenticated :user, -> (user) { user.teacher? || user.admin? } do
     root to: "pages#teacher_dashboard", as: :teacher_root
   end
