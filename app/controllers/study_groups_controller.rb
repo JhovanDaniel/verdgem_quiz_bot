@@ -19,12 +19,28 @@ class StudyGroupsController < ApplicationController
   end
   
   def show
+    @membership = @study_group.user_membership(current_user)
+    @top_contributors = @study_group.top_contributors(10)
   end
   
   def join
+    if current_user.study_group_member?
+      redirect_back(fallback_location: @study_group, 
+        alert: "You must leave your current study group (#{current_user.current_study_group.name}) before joining another.")
+    elsif @study_group.add_member(current_user)
+      redirect_to @study_group, notice: "Welcome to #{@study_group.name}! You've joined the clan."
+    else
+      redirect_back(fallback_location: @study_group, alert: 'Unable to join this study group.')
+    end
   end
   
   def leave
+    if current_user.leave_current_study_group
+      redirect_to study_groups_path, notice: 'You have left your study group.'
+    else
+      redirect_back(fallback_location: @study_group, 
+        alert: 'Cannot leave - you are the only leader. Promote another member first.')
+    end
   end
   
   def invite_user

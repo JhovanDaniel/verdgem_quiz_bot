@@ -30,8 +30,9 @@ class User < ApplicationRecord
   has_many :followers, through: :passive_follows, source: :follower
   
   has_many :study_group_memberships, dependent: :destroy
-  has_many :study_groups, through: :study_group_memberships
-  has_many :created_study_groups, class_name: 'StudyGroup', foreign_key: 'created_by_id', dependent: :destroy
+  has_one :active_study_group_membership, -> { where(status: :active) }, 
+          class_name: 'StudyGroupMembership'
+  has_one :current_study_group, through: :active_study_group_membership, source: :study_group
   
   has_many :sent_study_group_invitations, class_name: 'StudyGroupInvitation', 
            foreign_key: 'inviter_id', dependent: :destroy

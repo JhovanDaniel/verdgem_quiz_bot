@@ -6,7 +6,13 @@ class StudyGroupMembership < ApplicationRecord
   enum role: { member: 0, admin: 1, leader: 2 }
   enum status: { pending: 0, active: 1, inactive: 2, banned: 3 }
   
-  validates :user_id, uniqueness: { scope: :study_group_id }
+  # Validate that user can only have one active membership
+  validates :user_id, uniqueness: { 
+    scope: :status, 
+    conditions: -> { where(status: :active) },
+    message: "can only belong to one active study group at a time"
+  }
+  
   
   scope :recent, -> { order(joined_at: :desc) }
   scope :by_contribution, -> { order(points_contributed: :desc) }
