@@ -379,6 +379,10 @@ class User < ApplicationRecord
   
   #-------------------- Study Group Methods ----------------------------#
   
+  def is_study_group_member?
+    study_group_memberships.active.exists?
+  end
+
   def study_group_member?(group)
     study_group_memberships.active.exists?(study_group: group)
   end

@@ -99,62 +99,40 @@
         <i class="bi bi-people-fill text-primary me-2"></i>
         My Study Group
       </h4>
-      <a href="#" class="btn btn-outline-primary btn-sm">Group Details</a>
+      <% if @user.is_study_group_member? %>
+        <a href="#" class="btn btn-outline-primary btn-sm">Group Details</a>
+      <% else %>
+        <%= link_to new_study_group_path, class: "btn btn-sm btn-primary" do %>
+          <i class="bi bi-plus me-1"></i>Create Study Group
+        <% end %>
+      <% end %>
+      
     </div>
     <div class="card-body">
       <div class="row align-items-center">
         <div class="col-12 col-md-3">
-          <h5 class="text-primary mb-2">Mathematics Masters</h5>
-          <small class="text-muted">Created 3 weeks ago</small>
+          <h5 class="text-primary mb-2"><%= @user.is_study_group_member? ? @user.study_group : "No study group yet" %></h5>
+          <small class="text-muted"><%= @user.is_study_group_member? ? @user.study_group.created_at : "You can join a study group or create your own!" %></small>
         </div>
         <div class="col-12 col-md-6 mt-3 mt-md-0">
           <div class="d-flex flex-wrap gap-2">
-            <!-- Group Member 1 -->
+            <% @user.study_groups.first.members.limit(5).each do |student| %>
+              <%= link_to user_path(student) do %>
+                <div class="text-center text-white">
+                  <div class="avatar-circle mx-auto" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">
+                      <%= student.initials %>
+                  </div>
+                  <small class="d-block mt-2 text-black"><%= student.name %></small>
+                </div>
+              <% end %>
+            <% end %>
+            <!-- More indicator -->
             <div class="text-center">
-              <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center" 
-                   style="width: 45px; height: 45px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
+              <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center" 
+                   style="width: 60px; height: 60px; border-radius: 50%; border: 2px dashed #dee2e6;">
+                <span style="font-size: 0.8rem;">+<%= @user.institution.users.where(role: :student).count - 5 %></span>
               </div>
             </div>
-            <!-- Group Member 2 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-success text-white d-flex align-items-center justify-content-center" 
-                   style="width: 45px; height: 45px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
-              </div>
-            </div>
-            <!-- Group Member 3 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-info text-white d-flex align-items-center justify-content-center" 
-                   style="width: 45px; height: 45px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
-              </div>
-            </div>
-            <!-- Group Member 4 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-warning text-white d-flex align-items-center justify-content-center" 
-                   style="width: 45px; height: 45px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
-              </div>
-            </div>
-            <!-- Group Member 5 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-danger text-white d-flex align-items-center justify-content-center" 
-                   style="width: 45px; height: 45px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
-              </div>
-            </div>
-            <!-- Group Member 6 -->
-            <div class="text-center">
-              <div class="avatar-circle bg-secondary text-white d-flex align-items-center justify-content-center" 
-                   style="width: 45px; height: 45px; border-radius: 50%;">
-                <i class="bi bi-person-fill" style="font-size: 1.2rem;"></i>
-              </div>
-            </div>
-            <div class="avatar-circle bg-light text-muted d-flex align-items-center justify-content-center" 
-                   style="width: 40px; height: 40px; border-radius: 50%; border: 2px dashed #dee2e6;">
-                <span style="font-size: 0.8rem;">+247</span>
-              </div>
           </div>
         </div>
         <div class="col-12 col-md-3 text-md-end mt-3 mt-md-0">

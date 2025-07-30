@@ -1,10 +1,44 @@
 class StudyGroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_study_group, only: [:show, :edit, :update, :destroy, :join, :leave, :invite_user, :remove_member, :promote_member, :demote_member]
+  before_action :set_study_group, only: [:show, :edit, :update, :join, :leave, :invite_user, :remove_member, :promote_member, :demote_member]
   before_action :require_membership, only: [:show]
   before_action :require_admin, only: [:edit, :update, :invite_user, :remove_member, :promote_member, :demote_member]
-  before_action :require_leader, only: [:destroy]
+  before_action :require_leader, only: []
   
+  def new
+    @study_group = StudyGroup.new
+  end
+  
+  def create
+  end
+  
+  def edit
+  end
+  
+  def update
+  end
+  
+  def show
+  end
+  
+  def join
+  end
+  
+  def leave
+  end
+  
+  def invite_user
+  end
+  
+  def remove_member
+  end
+  
+  def promote_member
+  end
+  
+  def demote_member
+  end
+    
   def index
     @study_groups = StudyGroup.active.includes(:active_members, :creator)
     
@@ -31,18 +65,6 @@ class StudyGroupsController < ApplicationController
     end
     
     @study_groups = @study_groups.page(params[:page]).per(12) if defined?(Kaminari)
-    
-    # Leaderboards
-  def leaderboards
-    @all_time_leaders = StudyGroup.active.top_by_points.limit(20)    @monthly_leaders = StudyGroup.active.top_monthly.limit(20)
-    
-    @user_groups_rankings = current_user.active_study_groups.map do |group|
-      {
-        group: group,
-        all_time_rank: group.clan_rank,
-        monthly_rank: StudyGroup.active.where('monthly_points > ?', group.monthly_points).count + 1
-      }
-    end
   end
   
   private

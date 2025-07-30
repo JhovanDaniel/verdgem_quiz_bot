@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_30_000819) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_30_142224) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -201,9 +201,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_30_000819) do
     t.index ["points_contributed"], name: "index_study_group_memberships_on_points_contributed"
     t.index ["role"], name: "index_study_group_memberships_on_role"
     t.index ["status"], name: "index_study_group_memberships_on_status"
-    t.index ["study_group_id", "user_id"], name: "index_study_group_memberships_uniqueness", unique: true
     t.index ["study_group_id"], name: "index_study_group_memberships_on_study_group_id"
     t.index ["user_id"], name: "index_study_group_memberships_on_user_id"
+    t.index ["user_id"], name: "index_study_group_memberships_unique_active_user", unique: true, where: "(status = 0)"
   end
 
   create_table "study_groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
