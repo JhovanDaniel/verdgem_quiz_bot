@@ -1,0 +1,39 @@
+<%= simple_form_for(@study_group) do |f| %>
+  <% f.object.errors[:base].each do |error| %>
+    <%= f.error_notification message: error %>
+  <% end %>
+  
+  <div class="form-inputs" data-controller="direct-upload">
+    <%= f.input :name, 
+                label: 'Study Group Name',
+                placeholder: 'Enter name of the study group',
+                required: true %>
+                
+    <%= f.input :description, 
+                label: 'Description (optional)',
+                as: :text, 
+                input_html: { rows: 8 },
+                placeholder: 'Enter the description of the study group' %>
+                
+    
+    <%= f.input :clan_motto, 
+                label: 'Group motto (optional)',
+                as: :text, 
+                input_html: { rows: 2 },
+                placeholder: 'Enter a motto for the group' %>
+                
+    <%= f.input :clan_color, 
+            label: 'Study Group Color',
+            as: :string,
+            hint: "Select your study group color",
+            input_html: { 
+              type: 'color',
+              class: 'form-control form-control-color',
+              value: f.object.clan_color || '#3b82f6'
+            } %>
+    
+    <%= f.input :created_by_id, as: :hidden,
+                input_html: { value: current_user } %>
+  </div>
+  
+<% end %>
