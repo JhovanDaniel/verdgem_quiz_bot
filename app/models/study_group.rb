@@ -27,6 +27,8 @@ class StudyGroup < ApplicationRecord
   
   before_create :ensure_creator_membership
   
+  has_one_attached :group_icon, dependent: :destroy
+  
   def member_count
     active_members.count
   end
