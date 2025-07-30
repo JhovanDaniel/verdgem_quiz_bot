@@ -1,0 +1,2 @@
+class StudyGroupInvitation < ApplicationRecord
+end

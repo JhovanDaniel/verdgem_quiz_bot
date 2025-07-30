@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_29_235420) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_30_000819) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -164,6 +164,24 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_29_235420) do
     t.index ["subject_id"], name: "index_quiz_sessions_on_subject_id"
     t.index ["topic_id"], name: "index_quiz_sessions_on_topic_id"
     t.index ["user_id"], name: "index_quiz_sessions_on_user_id"
+  end
+
+  create_table "study_group_invitations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "study_group_id", null: false
+    t.uuid "inviter_id", null: false
+    t.uuid "invitee_id", null: false
+    t.integer "status", default: 0
+    t.text "message"
+    t.datetime "expires_at"
+    t.datetime "responded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_at"], name: "index_study_group_invitations_on_expires_at"
+    t.index ["invitee_id"], name: "index_study_group_invitations_on_invitee_id"
+    t.index ["inviter_id"], name: "index_study_group_invitations_on_inviter_id"
+    t.index ["status"], name: "index_study_group_invitations_on_status"
+    t.index ["study_group_id", "invitee_id"], name: "index_study_group_invitations_uniqueness", unique: true
+    t.index ["study_group_id"], name: "index_study_group_invitations_on_study_group_id"
   end
 
   create_table "study_group_memberships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -352,6 +370,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_29_235420) do
   add_foreign_key "quiz_sessions", "subjects"
   add_foreign_key "quiz_sessions", "topics"
   add_foreign_key "quiz_sessions", "users", on_delete: :cascade
+  add_foreign_key "study_group_invitations", "study_groups", on_delete: :cascade
+  add_foreign_key "study_group_invitations", "users", column: "invitee_id", on_delete: :cascade
+  add_foreign_key "study_group_invitations", "users", column: "inviter_id", on_delete: :cascade
   add_foreign_key "study_group_memberships", "study_groups", on_delete: :cascade
   add_foreign_key "study_group_memberships", "users", column: "invited_by_id", on_delete: :nullify
   add_foreign_key "study_group_memberships", "users", on_delete: :cascade
