@@ -100,7 +100,7 @@
         My Study Group
       </h4>
       <% if @user.is_study_group_member? %>
-        <a href="#" class="btn btn-outline-primary btn-sm">Group Details</a>
+        <%= link_to "Group Details", study_group_path(@user.current_study_group), class:"btn btn-outline-primary btn-sm" %>
       <% else %>
         <%= link_to new_study_group_path, class: "btn btn-sm btn-primary" do %>
           <i class="bi bi-plus me-1"></i>Create Study Group
@@ -111,14 +111,14 @@
     <div class="card-body">
       <div class="row align-items-center">
         <div class="col-12 col-md-3">
-          <h5 class="text-primary mb-2"><%= @user.is_study_group_member? ? @user.current_study_group : "No study group yet" %></h5>
-          <small class="text-muted"><%= @user.is_study_group_member? ? @user.current_study_group.created_at : "You can join a study group or create your own!" %></small>
+          <h5 class="text-primary mb-2"><%= @user.is_study_group_member? ? @user.current_study_group.name : "No study group yet" %></h5>
+          <small class="text-muted"><%= @user.is_study_group_member? ? format_date(@user.current_study_group.created_at) : "You can join a study group or create your own!" %></small>
         </div>
         <div class="col-12 col-md-6 mt-3 mt-md-0">
           <div class="d-flex flex-wrap gap-2">
             <% if @user.is_study_group_member? %>
               <% @user.current_study_group.members.limit(5).each do |student| %>
-                <%= link_to user_path(student) do %>
+                <%= link_to profile_path(student.nickname) do %>
                   <div class="text-center text-white">
                     <div class="avatar-circle mx-auto" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">
                         <%= student.initials %>
@@ -145,7 +145,7 @@
               <strong><%= @user.current_study_group.members.count %></strong> members
             <% end %>
           </p>
-          <small class="text-muted"><%= @user.is_study_group_member? ? @user.current_study_group.total_points + "total points" : "" %></small>
+          <small class="text-muted"><%= @user.is_study_group_member? ? "#{@user.current_study_group.total_points} total points" : "" %></small>
         </div>
       </div>
     </div>

@@ -10,6 +10,14 @@ class StudyGroupsController < ApplicationController
   end
   
   def create
+    @study_group = StudyGroup.new(study_group_params)
+    @study_group.created_by_id = current_user.id
+
+    if @study_group.save
+      redirect_to study_group_path(@study_group), notice: "Study group was successfully created."
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
   
   def edit
@@ -20,7 +28,8 @@ class StudyGroupsController < ApplicationController
   
   def show
     @membership = @study_group.user_membership(current_user)
-    @top_contributors = @study_group.top_contributors(10)
+    @members = @study_group.members
+    #@top_contributors = @study_group.top_contributors(10)
   end
   
   def join
@@ -108,7 +117,7 @@ class StudyGroupsController < ApplicationController
   end
   
   def study_group_params
-    params.require(:study_group).permit(:name, :description, :clan_motto, :is_private, :max_members, 
-                                        :subject_focus, :group_rules, :clan_banner_color, :clan_icon)
+    params.require(:study_group).permit(:name, :description, :clan_motto, :clan_color, :group_icon,
+                                        :created_by_id)
   end
 end

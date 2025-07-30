@@ -17,7 +17,6 @@ class StudyGroup < ApplicationRecord
   validates :name, presence: true, length: { minimum: 3, maximum: 50 }, uniqueness: true
   validates :description, length: { maximum: 500 }
   validates :clan_motto, length: { maximum: 200 }
-  validates :max_members, presence: true, numericality: { greater_than: 1, less_than_or_equal_to: 100 }
   validates :created_by_id, presence: true
   validates :clan_color, format: { with: /\A#[0-9A-Fa-f]{6}\z/, message: "must be a valid hex color" }
   

@@ -1,0 +1,135 @@
+<div class="container py-4">
+  <!-- Hero Section -->
+  <div class="institution-hero-section p-4 p-md-5">
+      <div class="row align-items-center">
+          <div class="col-md-8">
+              <div class="d-flex align-items-center mb-3">
+                  <%= image_tag @study_group.group_icon, 
+                    alt: @study_group.name,
+                    class: "institution-logo p-2 mx-2" if @study_group.group_icon.attached? %>
+                  <div>
+                      <h1 class="display-6 fw-bold mb-2"><%= @study_group.name %></h1>
+                  </div>
+              </div>
+              <p class="lead mb-0 opacity-90">
+                  <%= @study_group.description %>
+              </p>
+              <small class="text-white">Text </small>
+          </div>
+          <% if current_user.admin? %>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+              <%= link_to edit_study_group(@study_group), class:"btn btn-outline-primary bg-white" do %>
+                <i class="bi bi-pencil"></i> Edit
+              <% end %>
+            </div>
+          <% end %>
+      </div>
+  </div>
+
+  <!-- Stats Section -->
+  <div class="row mb-4">
+      <div class="col-md-3 col-6 mb-3">
+          <div class="stats-card text-center">
+              <div class="display-6 fw-bold"><%= @study_group.members.where(role: :student).count %></div>
+              <div class="text-muted fw-medium">Total Members</div>
+          </div>
+      </div>
+      <div class="col-md-3 col-6 mb-3">
+          <div class="stats-card text-center">
+              <div class="display-6 fw-bold">Placeholder</div>
+              <div class="text-muted fw-medium">Completion Rate</div>
+          </div>
+      </div>
+      <div class="col-md-3 col-6 mb-3">
+          <div class="stats-card text-center">
+              <div class="display-6 fw-bold">Placeholder</div>
+              <div class="text-muted fw-medium">Quizzes Completed</div>
+          </div>
+      </div>
+      <div class="col-md-3 col-6 mb-3">
+          <div class="stats-card text-center">
+              <div class="display-6 fw-bold">Placeholder</div>
+              <div class="text-muted fw-medium">Avg. Score</div>
+          </div>
+      </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="row">
+      <!-- Left Column -->
+      <div class="col-lg-8 mb-4">
+          <!-- Students Section -->
+          <div class="info-card mb-4">
+              <h5><i class="bi bi-people-fill"></i>Members</h5>
+              <div class="d-flex flex-wrap gap-3 mb-3">
+                <% @study_group.members.where(role: :student).each do |student| %>
+                  <%= link_to user_path(student) do %>
+                    <div class="text-center mx-auto text-white">
+                      <div class="avatar-circle mx-auto" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">
+                          <%= student.initials %>
+                      </div>
+                      <small class="d-block mt-2 text-black"><%= student.name %></small>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+              <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted">
+                    <i class="bi bi-clock me-1"></i> Last activity: 
+                    <% if @last_quiz_activity&.completed_at %>
+                      <%= time_ago_in_words(@last_quiz_activity.completed_at) %> ago
+                    <% else %>
+                      No quiz activity yet
+                    <% end %>
+                  </small>
+              </div>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="info-card">
+            <h5><i class="bi bi-activity"></i>Recent Activity</h5>
+            <%# @recent_quiz_sessions.each do |activity| %>
+              <div class="activity-item d-flex align-items-start mb-3">
+                <div class="avatar-circle text-white me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); font-size: 0.8rem;">
+                    JD
+                </div>
+                <div class="flex-grow-1">
+                    <div class="fw-medium">Jane Doe completed Quiz: Maths</div>
+                    <small class="text-muted">2 weeks ago</small>
+                </div>
+            </div>
+            <%# end %>
+          </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-lg-4">
+
+        <!-- Quick Actions -->
+        <% if current_user.admin? or current_user.study_group_admin?(@study_group) %>
+          <div class="info-card">
+            <h5><i class="bi bi-lightning-fill"></i>Quick Actions</h5>
+            <div class="d-grid gap-2">
+              <%= link_to edit_study_group_path(@study_group) do %>
+              <button class="btn btn-outline-primary">
+                  <i class="bi bi-file-earmark-text me-2"></i>Edit Study Group
+              </button>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Navigation -->
+  <div class="d-flex justify-content-between align-items-center">
+    <% if current_user.admin? %>
+      <%= link_to "Back to institutions", institutions_path,  class:"btn btn-outline-primary"%>
+    <% else %>
+      <%= link_to "Back to home", authenticated_root_path, class:"btn btn-outline-primary" %>
+    <% end %>
+  </div>
+</div>
+
