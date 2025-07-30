@@ -130,25 +130,23 @@ class StudyGroup < ApplicationRecord
     return false if points <= 0
     
     # Create point log
-    study_group_point_logs.create!(
-      user: user,
-      points_earned: points,
-      activity_type: activity_type,
-      description: description,
-      quiz_session: quiz_session,
-      earned_date: Date.current
-    )
+    #study_group_point_logs.create!(
+      #user: user,
+      #points_earned: points,
+      #activity_type: activity_type,
+      #description: description,
+      #quiz_session: quiz_session,
+      #earned_date: Date.current
+    #)
     
     # Update group totals
     increment!(:total_points, points)
-    increment!(:weekly_points, points)
     increment!(:monthly_points, points)
     
     # Update member contribution
     membership = user_membership(user)
     if membership
       membership.increment!(:points_contributed, points)
-      membership.increment!(:weekly_points_contributed, points)
       membership.increment!(:monthly_points_contributed, points)
       membership.increment!(:quizzes_completed_in_group) if activity_type == 'quiz_completion'
       membership.update!(last_active_at: Time.current)

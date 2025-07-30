@@ -299,6 +299,10 @@ class QuizController < ApplicationController
     end
     @quiz_session.update_level_progress
     
+    if @quiz_session.completed_at.present? && @quiz_session.total_score.present?
+      add_quiz_points_to_study_groups(@quiz_session)
+    end
+    
     @newly_earned_badges = BadgeService.check_and_award(current_user, @quiz_session)
   end
   
@@ -382,4 +386,23 @@ class QuizController < ApplicationController
        .first
     end
   end
+  
+  private
+  
+  def add_quiz_points_to_study_groups(quiz_session)
+    user = quiz_session.user
+    points_earned = quiz_session.total_score
+    
+    # Add points to all active study groups the user belongs to
+    user.active_study_groups.each do |study_group|
+      study_group.add_points(
+        user,
+        points_earned,
+        'quiz_completion',
+        description: "Quiz completed: #{quiz_session.subject&.name || 'General'}",
+        quiz_session: quiz_session
+      )
+    end
+  end
+  
 end
