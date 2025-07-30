@@ -29,6 +29,17 @@ class User < ApplicationRecord
   has_many :following, through: :active_follows, source: :followee
   has_many :followers, through: :passive_follows, source: :follower
   
+  has_many :study_group_memberships, dependent: :destroy
+  has_many :study_groups, through: :study_group_memberships
+  has_many :created_study_groups, class_name: 'StudyGroup', foreign_key: 'created_by_id', dependent: :destroy
+  
+  has_many :sent_study_group_invitations, class_name: 'StudyGroupInvitation', 
+           foreign_key: 'inviter_id', dependent: :destroy
+  has_many :received_study_group_invitations, class_name: 'StudyGroupInvitation', 
+           foreign_key: 'invitee_id', dependent: :destroy
+  has_many :pending_study_group_invitations, -> { where(status: :pending) }, 
+           class_name: 'StudyGroupInvitation', foreign_key: 'invitee_id'
+  
   belongs_to :institution, optional: true
          
   enum role: [:student, :teacher, :admin, :institution_admin]
@@ -365,7 +376,26 @@ class User < ApplicationRecord
                .order(completed_at: :desc)
                .limit(limit)
   end
+  
+  #-------------------- Study Group Methods ----------------------------#
+  
+  def study_group_member?(group)
+    study_group_memberships.active.exists?(study_group: group)
+  end
+  
+  def study_group_admin?(group)
+    membership = study_group_memberships.active.find_by(study_group: group)
+    membership&.admin? || membership&.leader?
+  end
 
+  def study_group_leader?(group)
+    study_group_memberships.active.exists?(study_group: group, role: :leader)
+  end
+  
+  def study_group_leader?(group)
+    study_group_memberships.active.exists?(study_group: group, role: :leader)
+  end
+  
   private
   
   def check_profanity_in_nickname
