@@ -336,6 +336,10 @@ class User < ApplicationRecord
     active_follows.create(followee: user)
   end
   
+  def new_follows
+    passive_follows.where(new_follow: true)
+  end
+  
   def unfollow(user)
     active_follows.find_by(followee: user)&.destroy
   end

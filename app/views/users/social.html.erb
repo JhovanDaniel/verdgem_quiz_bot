@@ -3,6 +3,38 @@
     <h2 class="display-6 fw-bold">Social Dashboard</h2>
   </div>
   
+  <% if @new_followers.any? %>
+    <div class="mb-4 alert alert-success alert-dismissible fade show" role="alert" id="new-followers-alert">
+      <i class="bi bi-person-plus-fill me-2"></i>
+      <strong>New Followers!</strong> 
+      <%= pluralize(@new_followers.count, 'person') %> started following you:
+      
+      <div class="mt-2">
+        <% @new_followers.each do |follow| %>
+          <span class="badge bg-primary me-1">
+            <%= link_to follow.follower.name, profile_path(follow.follower.nickname), 
+                class: "text-white text-decoration-none" %>
+          </span>
+        <% end %>
+      </div>
+      
+      <button type="button" class="btn-close" data-bs-dismiss="alert" id="close-new-followers"></button>
+    </div>
+    
+    <script>
+      document.getElementById('close-new-followers').addEventListener('click', function() {
+        // Mark as seen when closing
+        fetch('<%= mark_new_followers_seen_path %>', {
+          method: 'GET',
+          headers: {
+            'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content,
+            'Content-Type': 'application/json'
+          }
+        });
+      });
+    </script>
+  <% end %>
+  
   <!-- Followers Card -->
   <div class="card hover-card border-0 shadow-sm mb-5">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">

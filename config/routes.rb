@@ -71,6 +71,7 @@ Rails.application.routes.draw do
   get 'social', to: 'users#social', as: 'social'
   get '/profile/:nickname', to: 'users#profile', as: :profile
   get 'find_users', to: 'users#find_users', as: :find_users
+  get 'mark_new_followers_seen', to: 'users#mark_new_followers_seen'
   
   resources :users do
     

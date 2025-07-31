@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
   before_action :require_admin, except: [:show, :user_edit, :user_update, :reset_progress, :social, :profile,
-  :find_users]
+  :find_users, :mark_new_followers_seen]
   
   def index
     @users = User.all
@@ -108,6 +108,14 @@ class UsersController < ApplicationController
     #@suggested_follows = @user.suggested_follows
     @mutual_follows = @user.mutual_follows.limit(5)
     @following_activity = @user.following_activity
+    
+    @new_followers = @user.new_follows
+    #@new_followers.update_all(new_follow: false) if @new_followers.any?
+  end
+  
+  def mark_new_followers_seen
+    current_user.passive_follows.where(new_follow: true).update_all(new_follow: false)
+    redirect_back(fallback_location: social_path)
   end
   
   def find_users
