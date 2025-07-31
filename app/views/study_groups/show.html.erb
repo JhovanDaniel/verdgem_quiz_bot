@@ -103,21 +103,101 @@
           
           <!-- Invite friends -->
           <% if current_user.study_group_admin?(@study_group) %>
-            <div class="info-card">
-              <h5><i class="bi bi-plus"></i>Invite Followers</h5>
-              <%# @recent_quiz_sessions.each do |activity| %>
-                <div class="activity-item d-flex align-items-start mb-3">
-                  <div class="avatar-circle text-white me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); font-size: 0.8rem;">
-                      JD
-                  </div>
-                  <div class="flex-grow-1">
-                      <div class="fw-medium">Jane Doe completed Quiz: Maths</div>
-                      <small class="text-muted">2 weeks ago</small>
-                  </div>
+  <div class="info-card">
+    <h5><i class="bi bi-person-plus me-2"></i>Invite Followers</h5>
+    
+    <% if current_user.followers.any? %>
+      <% current_user.followers.limit(5).each do |follower| %>
+        <div class="activity-item d-flex align-items-center mb-3">
+          <div class="avatar-circle text-white me-3" 
+               style="width: 40px; height: 40px; background: linear-gradient(135deg, <%= ['#22c55e', '#3b82f6', '#8b5cf6', '#f59e0b', '#ef4444'].sample %> 0%, <%= ['#15803d', '#1d4ed8', '#7c3aed', '#d97706', '#dc2626'].sample %> 100%); font-size: 0.8rem;">
+            <%= follower.initials %>
+          </div>
+          <div class="flex-grow-1">
+            <div class="fw-medium"><%= follower.name %></div>
+            <small class="text-muted">@<%= follower.nickname %></small>
+          </div>
+          <div class="ms-auto">
+            <% if @study_group.member?(follower) %>
+              <span class="badge bg-success">
+                <i class="bi bi-check-circle me-1"></i>Member
+              </span>
+            <% elsif @study_group.pending_invitation?(follower) %>
+              <span class="badge bg-warning">
+                <i class="bi bi-clock me-1"></i>Invited
+              </span>
+            <% else %>
+              <%= link_to invite_user_study_group_path(@study_group, invitee: follower.id),
+                  class: "btn btn-xs btn-primary" do %>
+                <i class="bi bi-plus-circle me-1"></i>Invite
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
+      <% if current_user.followers.count > 5 %>
+        <div class="text-center mt-3">
+          <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#inviteModal">
+            <i class="bi bi-search me-1"></i>
+            View All Followers (<%= current_user.followers.count %>)
+          </button>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="text-center py-3">
+        <i class="bi bi-person-plus text-muted" style="font-size: 2rem;"></i>
+        <p class="text-muted small mb-0 mt-2">No followers to invite</p>
+        <small class="text-muted">Get more followers to expand your clan!</small>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<!-- Modal for viewing all followers (optional) -->
+<div class="modal fade" id="inviteModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-person-plus me-2"></i>
+          Invite Followers to <%= @study_group.name %>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <% current_user.followers.each do |follower| %>
+            <div class="col-md-6 mb-3">
+              <div class="d-flex align-items-center p-2 border rounded">
+                <div class="avatar-circle text-white me-3" 
+                     style="width: 35px; height: 35px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); font-size: 0.75rem;">
+                  <%= follower.initials %>
+                </div>
+                <div class="flex-grow-1">
+                  <div class="fw-medium small"><%= follower.name %></div>
+                  <small class="text-muted">@<%= follower.nickname %></small>
+                </div>
+                <div class="ms-auto">
+                  <% if @study_group.member?(follower) %>
+                    <span class="badge bg-success small">Member</span>
+                  <% elsif @study_group.pending_invitation?(follower) %>
+                    <span class="badge bg-warning small">Invited</span>
+                  <% else %>
+                    <%= link_to invite_user_study_group_path(@study_group, invitee: follower.id),
+                        class: "btn btn-xs btn-primary" do %>
+                      <i class="bi bi-plus"></i>
+                    <% end %>
+                  <% end %>
+                </div>
               </div>
-              <%# end %>
             </div>
           <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
 
       <!-- Right Column -->

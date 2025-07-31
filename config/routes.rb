@@ -89,7 +89,7 @@ Rails.application.routes.draw do
     member do
       post :join
       delete :leave
-      post :invite_user
+      get :invite_user
       delete :remove_member
       patch :promote_member
       patch :demote_member

@@ -72,13 +72,12 @@ class StudyGroup < ApplicationRecord
   def invite_user(invitee, inviter, message: nil)
     return false if member?(invitee) || pending_invitation?(invitee)
     return false unless can_invite?(inviter)
-    return false if full?
-    
+
     study_group_invitations.create!(
       inviter: inviter,
       invitee: invitee,
       message: message,
-      expires_at: 7.days.from_now
+      expires_at: 15.days.from_now
     )
   end
   

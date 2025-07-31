@@ -53,6 +53,17 @@ class StudyGroupsController < ApplicationController
   end
   
   def invite_user
+    puts "Params: #{params.inspect}"
+    puts "Invitee param: #{params[:invitee]}"
+    invitee = User.find(params[:invitee])
+    
+    if @study_group.invite_user(invitee, current_user)
+      redirect_back(fallback_location: @study_group, 
+        notice: "Invitation sent to #{invitee.name}!")
+    else
+      redirect_back(fallback_location: @study_group, 
+        alert: "Unable to invite #{invitee.name}. They may already be a member or have a pending invitation.")
+    end
   end
   
   def remove_member

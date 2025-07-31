@@ -28,7 +28,7 @@ class StudyGroupInvitation < ApplicationRecord
   end
   
   def set_expiry_date
-    self.expires_at ||= 7.days.from_now
+    self.expires_at ||= 15.days.from_now
   end
   
 end
