@@ -5,7 +5,7 @@
           <div class="col-md-8">
               <div class="d-flex align-items-center mb-3">
                   <%= image_tag @study_group.group_icon, 
-                    alt: @study_group.name,
+                    alt: @study_group.name, width: 200, height: 200,
                     class: "institution-logo p-2 mx-2" if @study_group.group_icon.attached? %>
                   <div>
                       <h1 class="display-6 fw-bold mb-2"><%= @study_group.name %></h1>
@@ -36,20 +36,20 @@
       </div>
       <div class="col-md-3 col-6 mb-3">
           <div class="stats-card text-center">
-              <div class="display-6 fw-bold">Placeholder</div>
-              <div class="text-muted fw-medium">Completion Rate</div>
-          </div>
-      </div>
-      <div class="col-md-3 col-6 mb-3">
-          <div class="stats-card text-center">
-              <div class="display-6 fw-bold">Placeholder</div>
+              <div class="display-6 fw-bold"><%= @study_group.study_group_memberships.sum(:quizzes_completed_in_group) %></div>
               <div class="text-muted fw-medium">Quizzes Completed</div>
           </div>
       </div>
       <div class="col-md-3 col-6 mb-3">
           <div class="stats-card text-center">
-              <div class="display-6 fw-bold">Placeholder</div>
-              <div class="text-muted fw-medium">Avg. Score</div>
+              <div class="display-6 fw-bold"><%= @study_group.monthly_points %></div>
+              <div class="text-muted fw-medium">Points This Month</div>
+          </div>
+      </div>
+      <div class="col-md-3 col-6 mb-3">
+          <div class="stats-card text-center">
+              <div class="display-6 fw-bold"><%= @study_group.total_points %></div>
+              <div class="text-muted fw-medium">Total Points</div>
           </div>
       </div>
   </div>
@@ -100,6 +100,24 @@
             </div>
             <%# end %>
           </div>
+          
+          <!-- Invite friends -->
+          <% if current_user.study_group_admin?(@study_group) %>
+            <div class="info-card">
+              <h5><i class="bi bi-plus"></i>Invite Followers</h5>
+              <%# @recent_quiz_sessions.each do |activity| %>
+                <div class="activity-item d-flex align-items-start mb-3">
+                  <div class="avatar-circle text-white me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); font-size: 0.8rem;">
+                      JD
+                  </div>
+                  <div class="flex-grow-1">
+                      <div class="fw-medium">Jane Doe completed Quiz: Maths</div>
+                      <small class="text-muted">2 weeks ago</small>
+                  </div>
+              </div>
+              <%# end %>
+            </div>
+          <% end %>
       </div>
 
       <!-- Right Column -->
@@ -108,11 +126,11 @@
         <!-- Quick Actions -->
         <% if current_user.admin? or current_user.study_group_admin?(@study_group) %>
           <div class="info-card">
-            <h5><i class="bi bi-lightning-fill"></i>Quick Actions</h5>
+            <h5>Quick Actions</h5>
             <div class="d-grid gap-2">
               <%= link_to edit_study_group_path(@study_group) do %>
               <button class="btn btn-outline-primary">
-                  <i class="bi bi-file-earmark-text me-2"></i>Edit Study Group
+                  <i class="bi bi-pencil me-2"></i>Edit Study Group
               </button>
               <% end %>
             </div>
