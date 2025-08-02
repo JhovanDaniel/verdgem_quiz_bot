@@ -33,7 +33,7 @@
   
   <div class="row row-deck row-cards" data-level-filter-target="levelContainer">
     <% @world.levels.order(:position).each do |level| %>
-      <div class="col-sm-6 col-lg-3 level-card" data-difficulty="<%= level.difficulty %>">
+      <div class="col-sm-6 col-lg-4 level-card" data-difficulty="<%= level.difficulty %>">
         <div class="card mt-3">
           <div class="card-body">
             <% if level.completed_by?(current_user) %>

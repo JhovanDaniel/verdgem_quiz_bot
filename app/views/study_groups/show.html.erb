@@ -125,19 +125,39 @@
           </div>
 
           <!-- Activity Feed -->
-          <div class="info-card mb-4">
-            <h5><i class="bi bi-activity"></i>Recent Activity</h5>
-            <%# @recent_quiz_sessions.each do |activity| %>
-              <div class="activity-item d-flex align-items-start mb-3">
-                <div class="avatar-circle text-white me-3" style="width: 40px; height: 40px; background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); font-size: 0.8rem;">
-                    JD
+          <div class="info-card">
+            <h5><i class="bi bi-activity"></i> Recent Activity</h5>
+            
+            <% if @recent_activity.any? %>
+              <% @recent_activity.each do |activity| %>
+                <div class="activity-item d-flex align-items-start mb-3">
+                  <div class="avatar-circle text-white me-3" 
+                       style="width: 40px; height: 40px; background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); font-size: 0.8rem;">
+                    <%= activity.user.initials %>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="fw-medium">
+                      <b><%= link_to activity.user.nickname, profile_path(activity.user.nickname), class:"" %></b> completed Quiz: <%= activity.subject.name %>
+                      <% if activity.topic %>
+                        - <%= activity.topic.name %>
+                      <% end %>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-muted"><%= time_ago_in_words(activity.completed_at) %> ago</small>
+                      <small class="text-success fw-medium">
+                        <%= activity.total_score %>/<%= activity.max_score %> points
+                      </small>
+                    </div>
+                  </div>
                 </div>
-                <div class="flex-grow-1">
-                    <div class="fw-medium">Jane Doe completed Quiz: Maths</div>
-                    <small class="text-muted">2 weeks ago</small>
-                </div>
-            </div>
-            <%# end %>
+              <% end %>
+            <% else %>
+              <div class="text-center py-3">
+                <i class="bi bi-clock-history text-muted" style="font-size: 2rem;"></i>
+                <p class="text-muted small mb-0 mt-2">No recent quiz activity</p>
+                <small class="text-muted">Members' quiz completions will appear here</small>
+              </div>
+            <% end %>
           </div>
           
           <!-- Invite friends -->

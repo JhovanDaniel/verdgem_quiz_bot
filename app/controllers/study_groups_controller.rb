@@ -34,7 +34,8 @@ class StudyGroupsController < ApplicationController
   def show
     @membership = @study_group.user_membership(current_user)
     @members = @study_group.members
-    #@top_contributors = @study_group.top_contributors(10)
+    
+    @recent_activity = recent_member_activity(5)
   end
   
   def join
@@ -132,8 +133,23 @@ class StudyGroupsController < ApplicationController
     end
   end
   
+  def recent_member_activity(limit)
+    # Subquery to get member join dates
+    member_data = @study_group.active_memberships
+                             .select(:user_id, :joined_at)
+    
+    QuizSession.joins(:user, :subject)
+               .joins("INNER JOIN (#{member_data.to_sql}) AS memberships ON quiz_sessions.user_id = memberships.user_id")
+               .where.not(completed_at: nil)
+               .where('quiz_sessions.completed_at >= memberships.joined_at')
+               .includes(:user, :subject, :topic)
+               .order(completed_at: :desc)
+               .limit(limit)
+  end
+  
   def study_group_params
     params.require(:study_group).permit(:name, :description, :clan_motto, :clan_color, :group_icon,
                                         :created_by_id)
   end
+  
 end
