@@ -45,7 +45,7 @@ class StudyGroupsController < ApplicationController
   
   def leave
     if current_user.leave_current_study_group
-      redirect_to study_groups_path, notice: 'You have left your study group.'
+      redirect_to social_path, notice: 'You have left your study group.'
     else
       redirect_back(fallback_location: @study_group, 
         alert: 'Cannot leave - you are the only leader. Promote another member first.')

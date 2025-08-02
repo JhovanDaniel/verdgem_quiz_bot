@@ -24,7 +24,7 @@
             Following (<%= @user.following_count %>)
           <% end %>
           <% if current_user == @user %>
-            <%= link_to '#', class: "btn btn-primary" do %>
+            <%= link_to find_users_path, class: "btn btn-primary" do %>
               <i class="bi bi-search me-1"></i>
               Find Users
             <% end %>

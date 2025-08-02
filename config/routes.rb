@@ -88,7 +88,7 @@ Rails.application.routes.draw do
   resources :study_groups do
     member do
       post :join
-      delete :leave
+      get :leave
       get :invite_user
       delete :remove_member
       patch :promote_member

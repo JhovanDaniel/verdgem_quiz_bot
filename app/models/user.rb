@@ -405,6 +405,22 @@ class User < ApplicationRecord
     study_group_memberships.active.exists?(study_group: group, role: :leader)
   end
   
+  def leave_current_study_group
+    study_group = current_study_group
+    return false unless study_group_member?(study_group)
+    
+    membership = active_study_group_membership
+
+    # Prevent leaving if only leader with other members
+    if membership.leader? && study_group.admins.count == 1 && study_group.members.count > 1
+      return false
+    end
+    
+    # Leave the group by deleting the membership
+    membership.destroy
+    true
+  end
+  
   private
   
   def check_profanity_in_nickname
