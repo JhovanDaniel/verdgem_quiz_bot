@@ -24,6 +24,11 @@ class StudyGroupsController < ApplicationController
   end
   
   def update
+    if @study_group.update(study_group_params)
+      redirect_to study_group_path(@study_group), notice: 'Study group was successfully updated.'
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
   
   def show
