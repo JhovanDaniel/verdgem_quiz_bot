@@ -60,29 +60,68 @@
       <div class="col-lg-8 mb-4">
           <!-- Students Section -->
           <div class="info-card mb-4">
-              <h5><i class="bi bi-people-fill"></i>Members</h5>
-              <div class="d-flex flex-wrap gap-3 mb-3">
-                <% @study_group.members.where(role: :student).each do |student| %>
-                  <%= link_to user_path(student) do %>
-                    <div class="text-center mx-auto text-white">
-                      <div class="avatar-circle mx-auto" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);">
-                          <%= student.initials %>
+            <h5><i class="bi bi-people-fill"></i>Members</h5>
+              
+            <div class="row g-3">
+              <% @study_group.active_memberships.includes(:user).order(role: :desc).each do |membership| %>
+                <div class="col-12 col-md-6 col-lg-6">
+                  <div class="card h-100 <%= 'border-warning' if membership.leader? %>">
+                    <div class="card-body">
+                      <!-- Header with avatar and name -->
+                      <%= link_to profile_path(membership.user.nickname) do %>
+                        <div class="d-flex align-items-center mb-3">
+                          <div class="avatar-circle text-white me-3" 
+                               style="width: 50px; height: 50px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); font-size: 1rem;">
+                            <%= membership.user.initials %>
+                          </div>
+                          <div class="flex-grow-1">
+                            <h6 class="card-title mb-1"><%= membership.user.nickname %></h6>
+                          </div>
+                        </div>
+                      <% end %>
+                      
+                      <!-- Stats -->
+                      <div class="row text-center mb-3">
+                        <div class="col-6">
+                          <div class="fw-bold text-primary"><%= membership.monthly_points_contributed %></div>
+                          <small class="text-muted">Month Points</small>
+                        </div>
+                        <div class="col-6">
+                          <div class="fw-bold text-success"><%= membership.points_contributed %></div>
+                          <small class="text-muted">Total Points</small>
+                        </div>
                       </div>
-                      <small class="d-block mt-2 text-black"><%= student.name %></small>
+                      
+                      <!-- Actions -->
+                      <% if @study_group.can_manage?(current_user) && membership.user != current_user %>
+                        <div class="d-grid gap-2">
+                          <% if membership.member? %>
+                            <%= link_to "Promote to Admin", promote_member_study_group_path(@study_group, member_id: membership.user.id), 
+                                method: :patch, 
+                                class: "btn btn-sm btn-outline-primary" %>
+                          <% elsif membership.admin? && @study_group.leader?(current_user) %>
+                            <%= link_to "Demote", demote_member_study_group_path(@study_group, member_id: membership.user.id), 
+                                method: :patch, 
+                                class: "btn btn-sm btn-outline-warning" %>
+                          <% end %>
+                        </div>
+                      <% end %>
                     </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <small class="text-muted">
+                  <i class="bi bi-clock me-1"></i> Last activity: 
+                  <% if @last_quiz_activity&.completed_at %>
+                    <%= time_ago_in_words(@last_quiz_activity.completed_at) %> ago
+                  <% else %>
+                    No quiz activity yet
                   <% end %>
-                <% end %>
-              </div>
-              <div class="d-flex justify-content-between align-items-center">
-                  <small class="text-muted">
-                    <i class="bi bi-clock me-1"></i> Last activity: 
-                    <% if @last_quiz_activity&.completed_at %>
-                      <%= time_ago_in_words(@last_quiz_activity.completed_at) %> ago
-                    <% else %>
-                      No quiz activity yet
-                    <% end %>
-                  </small>
-              </div>
+                </small>
+            </div>
+            
           </div>
 
           <!-- Activity Feed -->
