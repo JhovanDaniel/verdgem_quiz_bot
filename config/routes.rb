@@ -102,8 +102,8 @@ Rails.application.routes.draw do
   
   resources :study_group_invitations, only: [:index, :show] do
     member do
-      patch :accept
-      patch :decline
+      get :accept
+      get :decline
     end
   end
   

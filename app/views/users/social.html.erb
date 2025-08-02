@@ -3,6 +3,45 @@
     <h2 class="display-6 fw-bold">Social Dashboard</h2>
   </div>
   
+  <% if @user.pending_study_group_invitations.any? %>
+    <div class="mb-4 alert alert-info alert-dismissible fade show" role="alert" id="pending-invitations-alert">
+      <i class="bi bi-envelope-plus-fill me-2"></i>
+      <strong>Study Group Invitations!</strong> 
+      You have <%= pluralize(@user.pending_study_group_invitations.count, 'pending invitation') %>:
+      
+      <div class="mt-2">
+        <% @user.pending_study_group_invitations.each do |invitation| %>
+          <div class="d-flex align-items-center justify-content-between rounded p-2 mb-2">
+            <div>
+              <span class="fw-medium">Study group <b><%= invitation.study_group.name %></b></span>
+              <small class="text-white d-block">
+                Invited by <%= invitation.inviter.name %> 
+                <%= time_ago_in_words(invitation.created_at) %> ago
+              </small>
+            </div>
+            <div class="btn-group btn-group-sm">
+              <%= link_to "Accept", accept_study_group_invitation_path(invitation),
+                  class: "btn btn-success btn-sm",
+                  data: { turbo_confirm: "Join #{invitation.study_group.name}?" } %>
+              <%= link_to "Decline", decline_study_group_invitation_path(invitation),
+                  class: "btn btn-danger btn-sm",
+                  data: { turbo_confirm: "Decline invitation to #{invitation.study_group.name}?" } %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <button type="button" class="btn-close" data-bs-dismiss="alert" id="close-invitations"></button>
+    </div>
+    
+    <script>
+      document.getElementById('close-invitations').addEventListener('click', function() {
+        // Just dismiss the alert - invitations remain active until user responds
+        console.log('Study group invitations alert dismissed');
+      });
+    </script>
+  <% end %>
+  
   <% if @new_followers.any? %>
     <div class="mb-4 alert alert-success alert-dismissible fade show" role="alert" id="new-followers-alert">
       <i class="bi bi-person-plus-fill me-2"></i>

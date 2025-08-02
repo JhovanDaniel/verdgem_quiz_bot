@@ -17,7 +17,7 @@ class StudyGroupInvitationsController < ApplicationController
   
   def accept
     if @invitation.accept!
-      redirect_to @invitation.study_group, notice: "Welcome to #{@invitation.study_group.name}! You've successfully joined the clan."
+      redirect_to @invitation.study_group, notice: "Welcome to #{@invitation.study_group.name}! You've successfully joined the study group."
     else
       redirect_to study_group_invitations_path, alert: 'Unable to accept invitation. The group may be full.'
     end
@@ -25,7 +25,7 @@ class StudyGroupInvitationsController < ApplicationController
   
   def decline
     @invitation.decline!
-    redirect_to study_group_invitations_path, notice: 'Invitation declined.'
+    redirect_to social_path, notice: 'Invitation declined.'
   end
   
   private

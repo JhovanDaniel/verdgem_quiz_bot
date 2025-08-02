@@ -70,19 +70,44 @@ class StudyGroup < ApplicationRecord
   end
   
   def invite_user(invitee, inviter, message: nil)
-    return false if member?(invitee) || pending_invitation?(invitee)
+    return false if member?(invitee)
     return false unless can_invite?(inviter)
-
-    study_group_invitations.create!(
-      inviter: inviter,
-      invitee: invitee,
-      message: message,
-      expires_at: 15.days.from_now
-    )
+    
+    # Check for existing invitation
+    existing_invitation = study_group_invitations.find_by(invitee: invitee)
+    
+    if existing_invitation
+      # If there's a pending invitation, don't create a new one
+      return false if existing_invitation.pending?
+      
+      # If invitation was declined or expired, update it to pending again
+      if existing_invitation.declined? || existing_invitation.expired?
+        existing_invitation.update!(
+          inviter: inviter,
+          message: message,
+          status: :pending,
+          expires_at: 7.days.from_now,
+          responded_at: nil,
+          created_at: Time.current  # Reset the invitation date
+        )
+        return existing_invitation
+      end
+      
+      # If invitation was accepted, they're probably already a member
+      return false
+    else
+      # Create new invitation
+      study_group_invitations.create!(
+        inviter: inviter,
+        invitee: invitee,
+        message: message,
+        expires_at: 7.days.from_now
+      )
+    end
   end
   
   def add_member(user, role: :member, invited_by: nil)
-    return false if member?(user) || full?
+    return false if member?(user)
     
     membership = study_group_memberships.create!(
       user: user,

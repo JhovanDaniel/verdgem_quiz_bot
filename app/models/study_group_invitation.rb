@@ -11,7 +11,7 @@ class StudyGroupInvitation < ApplicationRecord
   before_create :set_expiry_date
   
   def accept!
-    return false if expired? || study_group.full?
+    return false if expired?
     
     transaction do
       study_group.add_member(invitee, invited_by: inviter)

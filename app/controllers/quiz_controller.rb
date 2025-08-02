@@ -394,15 +394,14 @@ class QuizController < ApplicationController
     points_earned = quiz_session.total_score
     
     # Add points to all active study groups the user belongs to
-    user.active_study_groups.each do |study_group|
-      study_group.add_points(
-        user,
-        points_earned,
-        'quiz_completion',
-        description: "Quiz completed: #{quiz_session.subject&.name || 'General'}",
-        quiz_session: quiz_session
-      )
-    end
+    
+    user.current_study_group.add_points(
+      user,
+      points_earned,
+      'quiz_completion',
+      description: "Quiz completed: #{quiz_session.subject&.name || 'General'}",
+      quiz_session: quiz_session
+    )
   end
   
 end
