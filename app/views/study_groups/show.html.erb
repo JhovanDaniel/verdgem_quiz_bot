@@ -93,16 +93,28 @@
                       </div>
                       
                       <!-- Actions -->
-                      <% if @study_group.can_manage?(current_user) && membership.user != current_user %>
-                        <div class="d-grid gap-2">
+                      <% if @study_group.admin?(current_user) && membership.user != current_user %>
+                        <div class="btn-group btn-group-sm">
                           <% if membership.member? %>
-                            <%= link_to "Promote to Admin", promote_member_study_group_path(@study_group, member_id: membership.user.id), 
+                            <%= link_to "Promote to Admin", promote_study_group_study_group_membership_path(@study_group, membership), 
                                 method: :patch, 
-                                class: "btn btn-sm btn-outline-primary" %>
+                                class: "btn btn-outline-primary" %>
                           <% elsif membership.admin? && @study_group.leader?(current_user) %>
-                            <%= link_to "Demote", demote_member_study_group_path(@study_group, member_id: membership.user.id), 
+                            <%= link_to "Promote to Leader", promote_study_group_study_group_membership_path(@study_group, membership), 
                                 method: :patch, 
-                                class: "btn btn-sm btn-outline-warning" %>
+                                class: "btn btn-warning",
+                                data: { confirm: "This will make #{membership.user.name} the leader and demote you to admin. Continue?" } %>
+                          <% end %>
+                          
+                          <!-- Demote button logic -->
+                          <% if membership.admin? && !@study_group.leader?(current_user) %>
+                            <!-- Only show demote if current user is also admin (self-demotion) -->
+                          <% elsif membership.leader? && @study_group.leader?(current_user) %>
+                            <!-- Leaders can't demote themselves through this button -->
+                          <% else %>
+                            <%= link_to "Demote", demote_study_group_study_group_membership_path(@study_group, membership), 
+                                method: :patch, 
+                                class: "btn btn-outline-warning" %>
                           <% end %>
                         </div>
                       <% end %>
@@ -121,11 +133,10 @@
                   <% end %>
                 </small>
             </div>
-            
           </div>
 
           <!-- Activity Feed -->
-          <div class="info-card">
+          <div class="info-card mb-4">
             <h5><i class="bi bi-activity"></i> Recent Activity</h5>
             
             <% if @recent_activity.any? %>

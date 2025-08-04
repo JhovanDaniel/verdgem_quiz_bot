@@ -90,9 +90,13 @@ Rails.application.routes.draw do
       post :join
       get :leave
       get :invite_user
-      delete :remove_member
-      patch :promote_member
-      patch :demote_member
+    end
+    
+    resources :study_group_memberships, only: [:destroy], path: 'members' do
+      member do
+        get :promote
+        get :demote
+      end
     end
     
     collection do

@@ -35,7 +35,7 @@ class StudyGroupsController < ApplicationController
     @membership = @study_group.user_membership(current_user)
     @members = @study_group.members
     
-    @recent_activity = recent_member_activity(5)
+    @recent_activity = recent_member_activity(8)
   end
   
   def join
