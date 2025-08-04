@@ -96,24 +96,28 @@
                       <% if @study_group.admin?(current_user) && membership.user != current_user %>
                         <div class="btn-group btn-group-sm">
                           <% if membership.member? %>
-                            <%= link_to "Promote to Admin", promote_study_group_study_group_membership_path(@study_group, membership), 
-                                method: :patch, 
+                            <%= link_to "Promote to Admin", promote_study_group_study_group_membership_path(@study_group, membership),
+                                data: { 
+                                  turbo_method: :get,
+                                  turbo_confirm: "Are you sure you want to promote #{membership.user.nickname} to admin?" 
+                                },
                                 class: "btn btn-outline-primary" %>
                           <% elsif membership.admin? && @study_group.leader?(current_user) %>
                             <%= link_to "Promote to Leader", promote_study_group_study_group_membership_path(@study_group, membership), 
-                                method: :patch, 
-                                class: "btn btn-warning",
-                                data: { confirm: "This will make #{membership.user.name} the leader and demote you to admin. Continue?" } %>
+                                data: { 
+                                  turbo_method: :get,
+                                  turbo_confirm: "Are you sure you want to promote #{membership.user.nickname} to leader? This will make #{membership.user.nickname} the leader and demote you to admin." 
+                                },
+                                class: "btn btn-warning"%>
                           <% end %>
                           
                           <!-- Demote button logic -->
-                          <% if membership.admin? && !@study_group.leader?(current_user) %>
-                            <!-- Only show demote if current user is also admin (self-demotion) -->
-                          <% elsif membership.leader? && @study_group.leader?(current_user) %>
-                            <!-- Leaders can't demote themselves through this button -->
-                          <% else %>
+                          <% if membership.admin? && @study_group.leader?(current_user) %>
                             <%= link_to "Demote", demote_study_group_study_group_membership_path(@study_group, membership), 
-                                method: :patch, 
+                                data: { 
+                                  turbo_method: :get,
+                                  turbo_confirm: "Are you sure you want to demote #{membership.user.nickname} to member?" 
+                                },
                                 class: "btn btn-outline-warning" %>
                           <% end %>
                         </div>
