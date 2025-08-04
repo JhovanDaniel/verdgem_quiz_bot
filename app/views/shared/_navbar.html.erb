@@ -68,9 +68,9 @@
             <%= link_to social_path, class:"nav-link d-flex align-items-center" do %>
               <i class="bi bi-people me-1"></i>
               <span>Social</span>
-                <% if current_user.passive_follows.where(new_follow: true).count > 0 %>
+                <% if current_user.new_social_activity > 0 %>
                   <span class="badge bg-danger mx-1">
-                    <%= current_user.passive_follows.where(new_follow: true).count %>
+                    <%= current_user.new_social_activity %>
                   </span>
                 <% end %>
               

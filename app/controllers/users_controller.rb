@@ -118,6 +118,11 @@ class UsersController < ApplicationController
     redirect_back(fallback_location: social_path)
   end
   
+  #def mark_new_invitations_seen
+    #current_user.received_study_group_invitations.where(new_invitation: true).update_all(new_invitation: false)
+    #redirect_back(fallback_location: social_path)
+  #end
+  
   def find_users
     @search_query = params[:search]
     @users = User.none  # Start with empty relation

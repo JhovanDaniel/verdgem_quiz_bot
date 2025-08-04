@@ -33,13 +33,6 @@
       
       <button type="button" class="btn-close" data-bs-dismiss="alert" id="close-invitations"></button>
     </div>
-    
-    <script>
-      document.getElementById('close-invitations').addEventListener('click', function() {
-        // Just dismiss the alert - invitations remain active until user responds
-        console.log('Study group invitations alert dismissed');
-      });
-    </script>
   <% end %>
   
   <% if @new_followers.any? %>

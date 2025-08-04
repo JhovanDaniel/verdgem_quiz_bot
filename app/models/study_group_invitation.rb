@@ -15,12 +15,12 @@ class StudyGroupInvitation < ApplicationRecord
     
     transaction do
       study_group.add_member(invitee, invited_by: inviter)
-      update!(status: :accepted, responded_at: Time.current)
+      update!(status: :accepted, responded_at: Time.current, new_invitation: false)
     end
   end
   
   def decline!
-    update!(status: :declined, responded_at: Time.current)
+    update!(status: :declined, responded_at: Time.current, new_invitation: false)
   end
   
   def expired?

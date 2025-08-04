@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_31_125815) do
+ActiveRecord::Schema[7.1].define(version: 2025_08_04_135039) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -176,6 +176,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_31_125815) do
     t.datetime "responded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "new_invitation", default: true
     t.index ["expires_at"], name: "index_study_group_invitations_on_expires_at"
     t.index ["invitee_id"], name: "index_study_group_invitations_on_invitee_id"
     t.index ["inviter_id"], name: "index_study_group_invitations_on_inviter_id"

@@ -327,6 +327,11 @@ class User < ApplicationRecord
     teacher? && subject_teachers.active.exists?
   end
   
+  #-------------------- Social Methods ----------------------------#
+  def new_social_activity
+    passive_follows.where(new_follow: true).count + received_study_group_invitations.where(new_invitation: true).count
+  end
+  
   #-------------------- Follow Methods ----------------------------#
   
   def follow(user)
