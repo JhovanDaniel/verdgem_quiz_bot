@@ -323,7 +323,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_135039) do
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "re_member_created_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"

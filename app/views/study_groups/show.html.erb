@@ -120,6 +120,17 @@
                                 },
                                 class: "btn btn-outline-warning" %>
                           <% end %>
+                          
+                          <!-- Remove members -->
+                          <% current_user_membership = @study_group.user_membership(current_user) %>
+                          <% if current_user.can_remove_member?(current_user_membership, membership) %>
+                            <%= link_to "Remove Member", study_group_study_group_membership_path(@study_group, membership), 
+                                class: "btn btn-sm btn-outline-danger",
+                                data: { 
+                                  turbo_method: :delete,
+                                  turbo_confirm: "Are you sure you want to remove #{membership.user.name} from #{@study_group.name}? This action cannot be undone." 
+                                } %>
+                          <% end %>
                         </div>
                       <% end %>
                     </div>

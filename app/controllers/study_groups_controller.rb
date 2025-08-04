@@ -1,8 +1,8 @@
 class StudyGroupsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_study_group, only: [:show, :edit, :update, :join, :leave, :invite_user, :remove_member, :promote_member, :demote_member]
+  before_action :set_study_group, only: [:show, :edit, :update, :join, :leave, :invite_user, :remove_member]
   before_action :require_membership, only: [:show]
-  before_action :require_admin, only: [:edit, :update, :invite_user, :remove_member, :promote_member, :demote_member]
+  before_action :require_admin, only: [:edit, :update, :invite_user, :remove_member]
   before_action :require_leader, only: []
   
   def new
@@ -73,12 +73,6 @@ class StudyGroupsController < ApplicationController
   end
   
   def remove_member
-  end
-  
-  def promote_member
-  end
-  
-  def demote_member
   end
     
   def index

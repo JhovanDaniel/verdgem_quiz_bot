@@ -56,14 +56,26 @@ class StudyGroupMembershipsController < ApplicationController
   end
   
   def destroy
+    member_name = @membership.user.name
+    
+    # Prevent removing the only leader
     if @membership.leader? && @study_group.admins.count == 1
       redirect_back(fallback_location: @study_group, 
-        alert: "Cannot remove the only leader. Promote another member first.")
-    else
-      @membership.destroy
-      redirect_back(fallback_location: @study_group, 
-        notice: "#{@membership.user.name} has been removed from the study group.")
+        alert: "Cannot remove the only leader. Promote another member to admin first.")
+      return
     end
+    
+    # Prevent non-leaders from removing leaders or other admins (except themselves)
+    current_membership = @study_group.user_membership(current_user)
+    unless can_remove_member?(current_membership)
+      redirect_back(fallback_location: @study_group, 
+        alert: "You don't have permission to remove this member.")
+      return
+    end
+    
+    @membership.destroy
+    redirect_back(fallback_location: @study_group, 
+      notice: "#{member_name} has been removed from #{@study_group.name}.")
   end
   
   private
@@ -94,6 +106,22 @@ class StudyGroupMembershipsController < ApplicationController
     
     # Admins can only demote themselves
     current_membership.admin? && @membership == current_membership
+  end
+  
+  def can_remove_member?(current_membership)
+    # Leaders can remove anyone except themselves if they're the only leader
+    if current_membership.leader?
+      return false if @membership.leader? && @study_group.admins.count == 1
+      return true
+    end
+    
+    # Admins can only remove regular members and themselves
+    if current_membership.admin?
+      return true if @membership.member? || @membership == current_membership
+      return false
+    end
+    
+    false
   end
 
 end
