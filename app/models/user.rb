@@ -420,7 +420,9 @@ class User < ApplicationRecord
     if membership.leader? && study_group.admins.count == 1 && study_group.members.count > 1
       return false
     end
-    
+    # Set invitation 
+    received_study_group_invitations.where(study_group_id: study_group.id).update!(
+      status: :declined)
     # Leave the group by deleting the membership
     membership.destroy
     true

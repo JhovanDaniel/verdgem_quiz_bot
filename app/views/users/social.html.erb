@@ -22,10 +22,16 @@
             <div class="btn-group btn-group-sm">
               <%= link_to "Accept", accept_study_group_invitation_path(invitation),
                   class: "btn btn-success btn-sm",
-                  data: { turbo_confirm: "Join #{invitation.study_group.name}?" } %>
+                  data: { 
+                    turbo_method: :get,
+                    turbo_confirm: "Join #{invitation.study_group.name}?" 
+                  } %>
               <%= link_to "Decline", decline_study_group_invitation_path(invitation),
                   class: "btn btn-danger btn-sm",
-                  data: { turbo_confirm: "Decline invitation to #{invitation.study_group.name}?" } %>
+                  data: { 
+                    turbo_method: :get,
+                    turbo_confirm: "Decline invitation to #{invitation.study_group.name}?" 
+                  } %>
             </div>
           </div>
         <% end %>
