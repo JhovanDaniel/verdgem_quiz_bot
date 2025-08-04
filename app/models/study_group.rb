@@ -85,6 +85,7 @@ class StudyGroup < ApplicationRecord
         existing_invitation.update!(
           inviter: inviter,
           message: message,
+          new_invitation: true,
           status: :pending,
           expires_at: 7.days.from_now,
           responded_at: nil,
