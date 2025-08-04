@@ -19,7 +19,7 @@ class StudyGroupInvitationsController < ApplicationController
     if @invitation.accept!
       redirect_to @invitation.study_group, notice: "Welcome to #{@invitation.study_group.name}! You've successfully joined the study group."
     else
-      redirect_to study_group_invitations_path, alert: 'Unable to accept invitation. The group may be full.'
+      redirect_to social_path, alert: 'Unable to accept invitation. You cannot be in more than one study group.'
     end
   end
   

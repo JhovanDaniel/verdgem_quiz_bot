@@ -12,6 +12,7 @@ class StudyGroupInvitation < ApplicationRecord
   
   def accept!
     return false if expired?
+    return false if invitee.current_study_group
     
     transaction do
       study_group.add_member(invitee, invited_by: inviter)
