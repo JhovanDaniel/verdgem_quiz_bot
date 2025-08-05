@@ -357,34 +357,33 @@
           </div>
         </div>
       </div>
-
-      <!-- Quick Actions -->
-      <div class="kpi-card">
-        <div class="card-header">
-          <h3 class="mb-0">
-            <i class="fas fa-rocket me-2"></i>
-            Quick Actions
-          </h3>
-        </div>
-        <div class="card-body">
-          <div class="d-grid gap-2">
-            <%= link_to quiz_select_path, class: "btn btn-primary" do %>
-              <i class="fas fa-play me-2"></i>Start Custom Quiz
-            <% end %>
-            <%= link_to worlds_path, class: "btn btn-outline-primary" do %>
-              <i class="fas fa-map me-2"></i>Continue Adventure
-            <% end %>
-            <%= link_to leaderboard_path, class: "btn btn-outline-secondary" do %>
-              <i class="fas fa-trophy me-2"></i>View Leaderboard
-            <% end %>
-            <% if current_user == @user %>
-              <%= link_to user_edit_user_path(@user), class: "btn btn-outline-info" do %>
-                <i class="fas fa-cog me-2"></i>Settings
+      
+      <% if @user == current_user %>
+        <!-- Quick Actions -->
+        <div class="kpi-card">
+          <div class="card-header">
+            <h3 class="mb-0">
+              <i class="fas fa-rocket me-2"></i>
+              Quick Actions
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="d-grid gap-2">
+              <%= link_to worlds_path, class: "btn btn-primary" do %>
+                <i class="fas fa-map me-2"></i>Continue Adventure
               <% end %>
-            <% end %>
+              <%= link_to quiz_select_path, class: "btn btn-outline-primary" do %>
+                <i class="fas fa-play me-2"></i>Start Custom Quiz
+              <% end %>
+              <% if current_user == @user %>
+                <%= link_to user_edit_user_path(@user), class: "btn btn-outline-primary" do %>
+                  <i class="fas fa-cog me-2"></i>Edit Account
+                <% end %>
+              <% end %>
+            </div>
           </div>
         </div>
-      </div>
+      <% end %>
     </div>
   </div>
 </div>
