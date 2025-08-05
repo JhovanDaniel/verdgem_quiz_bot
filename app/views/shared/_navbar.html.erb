@@ -37,8 +37,16 @@
             <span>Home</span>
           <% end %>
         </li>
-
         
+        <% if current_user && (current_user.admin? or current_user.teacher?) %>
+          <li class="nav-item">
+            <%= link_to subjects_path, class:"nav-link d-flex align-items-center" do %>
+              <i class="bi bi-journal me-1"></i>
+              <span>Subject</span>
+            <% end %>
+          </li>
+        <% end %>
+
         <li class="nav-item">
           <%= link_to worlds_path, class:"nav-link d-flex align-items-center" do %>
             <i class="bi bi-backpack4 me-1"></i>
