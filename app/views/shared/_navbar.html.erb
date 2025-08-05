@@ -37,11 +37,19 @@
             <span>Home</span>
           <% end %>
         </li>
+
         
         <li class="nav-item">
-          <%= link_to subjects_path, class:"nav-link d-flex align-items-center" do %>
-            <i class="bi bi-journal me-1"></i>
-            <span>Subjects</span>
+          <%= link_to worlds_path, class:"nav-link d-flex align-items-center" do %>
+            <i class="bi bi-backpack4 me-1"></i>
+            <span>Adventure</span>
+          <% end %>
+        </li>
+        
+        <li class="nav-item">
+          <%= link_to quiz_select_path, class:"nav-link d-flex align-items-center" do %>
+            <i class="bi bi-check2-square me-1"></i>
+            <span>Custom Quiz</span>
           <% end %>
         </li>
         
@@ -50,15 +58,6 @@
             <%= link_to institution_path(current_user.institution), class:"nav-link d-flex align-items-center" do %>
               <i class="bi bi-building me-1"></i>
               <span>Institution</span>
-            <% end %>
-          </li>
-        <% end %>
-        
-        <% if current_user %>
-          <li class="nav-item">
-            <%= link_to quiz_sessions_path, class:"nav-link d-flex align-items-center" do %>
-              <i class="bi bi-pencil me-1"></i>
-              <span>Quiz Sessions</span>
             <% end %>
           </li>
         <% end %>
@@ -84,15 +83,6 @@
             <span>Leaderboard</span>
           <% end %>
         </li>
-          
-        <% if current_user && current_user.student? %>
-          <li class="nav-item">
-            <%= link_to reports_path, class:"nav-link d-flex align-items-center" do %>
-              <i class="bi bi-file-earmark-bar-graph me-1"></i>
-              <span>Reports</span>
-            <% end %>
-          </li>
-        <% end %>
           
         <% if current_user && current_user.admin? %>
           <li class="nav-item">
